@@ -1,7 +1,14 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  // Disable telemetry and tracing to avoid file lock issues
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+  },
+  // Fix workspace root warning
+  outputFileTracingRoot: __dirname,
+}
 
 export default nextConfig;
