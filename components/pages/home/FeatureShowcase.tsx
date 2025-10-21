@@ -62,8 +62,6 @@ export function FeatureShowcase() {
               description={feature.description}
               features={feature.features}
               color={feature.color}
-              showButton={true}
-              buttonText="Learn More"
             />
           ))}
         </div>

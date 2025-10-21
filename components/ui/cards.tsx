@@ -12,9 +12,6 @@ interface FeatureCardProps {
   description: string
   features?: string[]
   color?: string
-  showButton?: boolean
-  buttonText?: string
-  onButtonClick?: () => void
 }
 
 export function FeatureCard({
@@ -22,10 +19,7 @@ export function FeatureCard({
   title,
   description,
   features,
-  color = "from-purple-500 to-pink-500",
-  showButton = false,
-  buttonText = "Learn More",
-  onButtonClick
+  color = "from-purple-500 to-pink-500"
 }: FeatureCardProps) {
   return (
     <Card className="group bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-purple-500/50 transition-all duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/20">
@@ -43,7 +37,7 @@ export function FeatureCard({
         </p>
 
         {features && features.length > 0 && (
-          <ul className="space-y-3 mb-8">
+          <ul className="space-y-3">
             {features.map((item, idx) => (
               <li key={idx} className="flex items-start text-gray-300">
                 <span className="text-purple-400 mr-3 flex-shrink-0 mt-0.5">✓</span>
@@ -51,16 +45,6 @@ export function FeatureCard({
               </li>
             ))}
           </ul>
-        )}
-
-        {showButton && (
-          <Button
-            variant="outline"
-            className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105"
-            onClick={onButtonClick}
-          >
-            {buttonText}
-          </Button>
         )}
       </CardContent>
     </Card>
@@ -76,7 +60,6 @@ interface SimpleCardProps {
   showButton?: boolean
   buttonText?: string
   onButtonClick?: () => void
-  href?: string
 }
 
 export function SimpleCard({
@@ -86,17 +69,8 @@ export function SimpleCard({
   color = "from-purple-500/20",
   showButton = false,
   buttonText = "Learn More",
-  onButtonClick,
-  href
+  onButtonClick
 }: SimpleCardProps) {
-  const handleClick = () => {
-    if (href) {
-      window.location.href = href
-    } else if (onButtonClick) {
-      onButtonClick()
-    }
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -104,8 +78,6 @@ export function SimpleCard({
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.5, ease: [0.6, 0.05, 0.01, 0.9] }}
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
-      onClick={handleClick}
-      className="cursor-pointer"
     >
       <Card className="h-full bg-white/5 backdrop-blur-sm border-white/10 hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300 group hover:shadow-2xl hover:shadow-purple-500/20">
         <CardContent className="p-6">
@@ -123,7 +95,7 @@ export function SimpleCard({
           {showButton && (
             <Button
               variant="outline"
-              className="w-full mt-4 bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/50 hover:scale-105 transition-all"
+              className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer"
               onClick={(e) => {
                 e.stopPropagation()
                 if (onButtonClick) onButtonClick()
@@ -185,7 +157,7 @@ export function PricingCard({
           ))}
         </ul>
         <Button
-          className={`w-full h-12 text-base font-bold transition-all duration-300 ${
+          className={`w-full h-12 text-base font-bold transition-all duration-300 cursor-pointer ${
             popular
               ? 'bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 hover:from-purple-700 hover:via-purple-600 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 hover:scale-105'
               : 'bg-white/10 hover:bg-white/20 text-white border border-white/20 hover:border-white/30 hover:scale-105'
