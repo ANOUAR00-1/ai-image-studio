@@ -105,11 +105,18 @@ export function Navigation({}: NavigationProps = {}) {
                       Dashboard
                     </DropdownMenuItem>
                     <DropdownMenuItem 
-                      onClick={() => router.push('/account')}
+                      onClick={() => router.push('/settings')}
                       className="text-gray-300 focus:text-white focus:bg-white/10 cursor-pointer"
                     >
                       <Settings className="h-4 w-4 mr-2" />
                       Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => router.push('/account')}
+                      className="text-gray-300 focus:text-white focus:bg-white/10 cursor-pointer"
+                    >
+                      <User className="h-4 w-4 mr-2" />
+                      Account
                     </DropdownMenuItem>
                     <DropdownMenuItem 
                       onClick={() => router.push('/pricing')}

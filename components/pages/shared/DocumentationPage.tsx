@@ -12,6 +12,7 @@ import {
   ChevronRight,
   ExternalLink
 } from "lucide-react"
+import Link from "next/link"
 
 export function DocumentationPage() {
   const sections = [
@@ -19,45 +20,49 @@ export function DocumentationPage() {
       title: 'Getting Started',
       icon: BookOpen,
       color: 'from-blue-500 to-cyan-500',
+      link: '/documentation/getting-started',
       articles: [
-        { title: 'Quick Start Guide', description: 'Get up and running in 5 minutes', link: '#' },
-        { title: 'Understanding Credits', description: 'How our credit system works', link: '#' },
-        { title: 'First AI Generation', description: 'Create your first AI image', link: '#' },
-        { title: 'Account Setup', description: 'Configure your profile and preferences', link: '#' },
+        { title: 'Quick Start Guide', description: 'Get up and running in 5 minutes', link: '/documentation/getting-started' },
+        { title: 'Understanding Credits', description: 'How our credit system works', link: '/documentation/getting-started' },
+        { title: 'First AI Generation', description: 'Create your first AI image', link: '/documentation/getting-started' },
+        { title: 'Account Setup', description: 'Configure your profile and preferences', link: '/documentation/getting-started' },
       ]
     },
     {
       title: 'Image Tools',
       icon: ImageIcon,
       color: 'from-purple-500 to-pink-500',
+      link: '/documentation/image-tools',
       articles: [
-        { title: 'Text-to-Image Generation', description: 'Create images from text prompts', link: '#' },
-        { title: 'Background Removal', description: 'Remove backgrounds automatically', link: '#' },
-        { title: 'Image Enhancement', description: 'Upscale and enhance images', link: '#' },
-        { title: 'Style Transfer', description: 'Apply artistic styles to images', link: '#' },
-        { title: 'Batch Processing', description: 'Process multiple images simultaneously', link: '#' },
+        { title: 'Text-to-Image Generation', description: 'Create images from text prompts', link: '/documentation/image-tools' },
+        { title: 'Background Removal', description: 'Remove backgrounds automatically', link: '/documentation/image-tools' },
+        { title: 'Image Enhancement', description: 'Upscale and enhance images', link: '/documentation/image-tools' },
+        { title: 'Style Transfer', description: 'Apply artistic styles to images', link: '/documentation/image-tools' },
+        { title: 'Batch Processing', description: 'Process multiple images simultaneously', link: '/documentation/image-tools' },
       ]
     },
     {
       title: 'Video Tools',
       icon: Video,
       color: 'from-green-500 to-emerald-500',
+      link: '/documentation/video-tools',
       articles: [
-        { title: 'Text-to-Video', description: 'Generate videos from descriptions', link: '#' },
-        { title: 'Video Editing', description: 'Edit videos with AI assistance', link: '#' },
-        { title: 'Video Enhancement', description: 'Improve video quality', link: '#' },
-        { title: 'Animation Tools', description: 'Create animations from images', link: '#' },
+        { title: 'Text-to-Video', description: 'Generate videos from descriptions', link: '/documentation/video-tools' },
+        { title: 'Video Editing', description: 'Edit videos with AI assistance', link: '/documentation/video-tools' },
+        { title: 'Video Enhancement', description: 'Improve video quality', link: '/documentation/video-tools' },
+        { title: 'Animation Tools', description: 'Create animations from images', link: '/documentation/video-tools' },
       ]
     },
     {
       title: 'API & Integration',
       icon: Code,
       color: 'from-orange-500 to-red-500',
+      link: '/documentation/api',
       articles: [
-        { title: 'API Documentation', description: 'Complete API reference', link: '#' },
-        { title: 'Authentication', description: 'API key setup and usage', link: '#' },
-        { title: 'Rate Limits', description: 'Understanding API limits', link: '#' },
-        { title: 'Webhook Integration', description: 'Set up webhooks for notifications', link: '#' },
+        { title: 'API Documentation', description: 'Complete API reference', link: '/documentation/api' },
+        { title: 'Authentication', description: 'API key setup and usage', link: '/documentation/api' },
+        { title: 'Rate Limits', description: 'Understanding API limits', link: '/documentation/api' },
+        { title: 'Webhook Integration', description: 'Set up webhooks for notifications', link: '/documentation/api' },
       ]
     },
   ]
@@ -125,10 +130,12 @@ export function DocumentationPage() {
                   </div>
                 </div>
                 <div className="text-center pt-6">
-                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50">
-                    Start Your Journey
-                    <ChevronRight className="ml-2 w-4 h-4" />
-                  </Button>
+                  <Link href="/documentation/getting-started">
+                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50">
+                      Start Your Journey
+                      <ChevronRight className="ml-2 w-4 h-4" />
+                    </Button>
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -166,20 +173,24 @@ export function DocumentationPage() {
                   <CardContent>
                     <div className="space-y-4">
                       {section.articles.map((article, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors group/article">
-                          <div>
-                            <h4 className="text-white font-semibold mb-1 group-hover/article:text-purple-300 transition-colors">
-                              {article.title}
-                            </h4>
-                            <p className="text-gray-400 text-sm">{article.description}</p>
+                        <Link key={idx} href={article.link}>
+                          <div className="flex items-center justify-between p-4 bg-white/5 rounded-lg hover:bg-white/10 transition-colors group/article cursor-pointer">
+                            <div>
+                              <h4 className="text-white font-semibold mb-1 group-hover/article:text-purple-300 transition-colors">
+                                {article.title}
+                              </h4>
+                              <p className="text-gray-400 text-sm">{article.description}</p>
+                            </div>
+                            <ExternalLink className="w-4 h-4 text-gray-400 group-hover/article:text-purple-400 transition-colors" />
                           </div>
-                          <ExternalLink className="w-4 h-4 text-gray-400 group-hover/article:text-purple-400 transition-colors" />
-                        </div>
+                        </Link>
                       ))}
                     </div>
-                    <Button variant="outline" className="w-full mt-6 bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105">
-                      View All {section.title} Docs
-                    </Button>
+                    <Link href={section.link}>
+                      <Button variant="outline" className="w-full mt-6 bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105">
+                        View All {section.title} Docs
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               )
@@ -218,10 +229,12 @@ export function DocumentationPage() {
                     <p className="text-gray-400 text-sm">Command line access</p>
                   </div>
                 </div>
-                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50">
-                  View API Documentation
-                  <ExternalLink className="ml-2 w-4 h-4" />
-                </Button>
+                <Link href="/documentation/api">
+                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50">
+                    View API Documentation
+                    <ExternalLink className="ml-2 w-4 h-4" />
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </div>

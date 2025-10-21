@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link"
 import {
   Mail,
   MessageSquare,
@@ -259,14 +260,18 @@ export function ContactPage() {
                 Check out our comprehensive FAQ section for instant answers to common questions.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50">
-                  <MessageSquare className="mr-2 w-4 h-4" />
-                  Visit FAQ
-                </Button>
-                <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/40">
-                  <Zap className="mr-2 w-4 h-4" />
-                  Live Chat
-                </Button>
+                <Link href="/#faq">
+                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50">
+                    <MessageSquare className="mr-2 w-4 h-4" />
+                    Visit FAQ
+                  </Button>
+                </Link>
+                <Link href="/support">
+                  <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/40">
+                    <Zap className="mr-2 w-4 h-4" />
+                    Get Support
+                  </Button>
+                </Link>
               </div>
             </CardContent>
           </Card>
