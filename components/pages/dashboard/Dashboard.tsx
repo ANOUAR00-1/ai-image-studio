@@ -14,13 +14,22 @@ import {
   Plus
 } from "lucide-react"
 import SpotlightCard from "@/components/ui/SpotlightCard"
+import { useAuthStore } from "@/store/auth"
+import { hasUnlimitedCredits } from "@/lib/utils/credits"
 
 export function Dashboard() {
   const router = useRouter()
+  const { user } = useAuthStore()
   
-  const totalCredits = 10
+  // Check if user is admin with unlimited credits
+  const isUnlimited = hasUnlimitedCredits(user)
+  const userCredits = user?.credits ?? 0
+  
+  // Display values
+  const displayCredits = isUnlimited ? 999999 : userCredits
+  const totalCredits = isUnlimited ? 999999 : 10
   const usedCredits = 0
-  const remainingCredits = totalCredits - usedCredits
+  const remainingCredits = displayCredits - usedCredits
   
   const stats = [
     {
@@ -34,7 +43,7 @@ export function Dashboard() {
     {
       title: "Credits Used",
       value: usedCredits.toString(),
-      subtitle: "10 remaining",
+      subtitle: isUnlimited ? "∞ Unlimited" : `${remainingCredits} remaining`,
       icon: Zap,
       iconBg: "bg-blue-500/10",
       iconColor: "text-blue-400"
@@ -117,27 +126,43 @@ export function Dashboard() {
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-lg font-semibold text-white mb-1">Credits Balance</h3>
-                <p className="text-sm text-gray-400">{remainingCredits} / {totalCredits} credits remaining</p>
+                <p className="text-sm text-gray-400">
+                  {isUnlimited ? (
+                    <span className="text-yellow-400 font-semibold">∞ Unlimited Credits</span>
+                  ) : (
+                    `${remainingCredits} / ${totalCredits} credits remaining`
+                  )}
+                </p>
               </div>
-              <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
-                Free Plan
+              <Badge className={isUnlimited 
+                ? "bg-yellow-500/20 text-yellow-300 border-yellow-500/30" 
+                : "bg-purple-500/20 text-purple-300 border-purple-500/30"
+              }>
+                {user?.is_admin ? "👑 Admin" : (user?.plan?.toUpperCase() || "Free Plan")}
               </Badge>
             </div>
             <div className="w-full bg-white/5 rounded-full h-2 mb-4">
               <div 
-                className="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all" 
-                style={{ width: `${(remainingCredits / totalCredits) * 100}%` }}
+                className={isUnlimited 
+                  ? "bg-gradient-to-r from-yellow-500 to-orange-500 h-full rounded-full transition-all animate-pulse" 
+                  : "bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all"
+                }
+                style={{ width: isUnlimited ? '100%' : `${(remainingCredits / totalCredits) * 100}%` }}
               ></div>
             </div>
             <div className="flex items-center justify-between">
-              <p className="text-xs text-gray-500">Credits reset monthly</p>
-              <Button 
-                onClick={() => router.push('/pricing')}
-                size="sm"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
-              >
-                Upgrade Plan
-              </Button>
+              <p className="text-xs text-gray-500">
+                {isUnlimited ? "Unlimited generations" : "Credits reset monthly"}
+              </p>
+              {!isUnlimited && (
+                <Button 
+                  onClick={() => router.push('/pricing')}
+                  size="sm"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
+                >
+                  Upgrade Plan
+                </Button>
+              )}
             </div>
           </SpotlightCard>
         </motion.div>

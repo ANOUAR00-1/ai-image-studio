@@ -20,6 +20,16 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
       return ApiResponse.validationError('Prompt must be less than 1000 characters')
     }
 
+    // Map frontend model names to actual HuggingFace models
+    const modelMap: Record<string, string> = {
+      'generate': 'stabilityai/stable-diffusion-xl-base-1.0',
+      'sdxl': 'stabilityai/stable-diffusion-xl-base-1.0',
+      'sd2': 'stabilityai/stable-diffusion-2-1',
+      'sd15': 'runwayml/stable-diffusion-v1-5',
+    }
+    
+    const actualModel = modelMap[model] || model
+
     // Get credit cost for the model
     const creditCost = (CREDIT_COSTS.IMAGE_GENERATION as Record<string, number>)[model] || 2
 
@@ -52,15 +62,28 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
 
     // Generate image with AI
     try {
-      console.log(`Generating image for user ${userId} with model ${model}`)
+      console.log(`Generating image for user ${userId} with model ${model} (mapped to ${actualModel})`)
       
-      const imageUrl = await AIService.generateImage(prompt, model, 'auto')
+      const imageResult = await AIService.generateImage(prompt, actualModel, 'auto')
+      
+      // Handle both Blob and string responses
+      let imageUrl: string
+      
+      if (imageResult instanceof Blob) {
+        console.log('Converting Blob to base64...')
+        // Convert Blob to base64
+        const buffer = await imageResult.arrayBuffer()
+        const base64 = Buffer.from(buffer).toString('base64')
+        imageUrl = `data:image/jpeg;base64,${base64}`
+      } else {
+        imageUrl = imageResult
+      }
       
       // Update generation record with result
       await GenerationService.updateGenerationStatus(
         generation.id,
         'completed',
-        typeof imageUrl === 'string' ? imageUrl : imageUrl.toString()
+        imageUrl
       )
 
       console.log(`Image generated successfully: ${generation.id}`)
@@ -68,7 +91,7 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
       return ApiResponse.success({
         generation: {
           id: generation.id,
-          url: typeof imageUrl === 'string' ? imageUrl : imageUrl.toString(),
+          url: imageUrl,
           prompt,
           model,
           creditsUsed: creditCost,

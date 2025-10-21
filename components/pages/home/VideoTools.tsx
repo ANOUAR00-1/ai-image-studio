@@ -84,7 +84,7 @@ export function VideoTools() {
     }
 
     const currentTool = tools.find(t => t.id === activeTab)
-    if (!user || (user.credits ?? 0) < (currentTool?.credits || 10)) {
+    if (!user || ((user.credits ?? 0) < (currentTool?.credits || 10) && user.credits !== -1 && !user.is_admin)) {
       // Show pricing modal instead of just error
       setShowPricingModal(true)
       return
@@ -311,7 +311,7 @@ export function VideoTools() {
         </div>
 
         {/* Credits Warning */}
-        {user && (user.credits ?? 0) < 15 && (
+        {user && (user.credits ?? 0) < 15 && user.credits !== -1 && !user.is_admin && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -343,7 +343,7 @@ export function VideoTools() {
               <div className="space-y-3">
                 {tools.map((tool, index) => {
                   const Icon = tool.icon
-                  const canAfford = user ? (user.credits ?? 0) >= tool.credits : false
+                  const canAfford = user ? (user.is_admin || user.credits === -1 || (user.credits ?? 0) >= tool.credits) : false
                   const isActive = activeTab === tool.id
                   
                   return (

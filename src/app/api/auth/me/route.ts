@@ -47,6 +47,7 @@ export async function GET(request: Request) {
         name: profile.name,
         plan: profile.plan,
         credits: profile.credits,
+        is_admin: profile.is_admin || false,
         createdAt: user.created_at,
       },
     })

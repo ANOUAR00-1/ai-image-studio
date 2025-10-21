@@ -86,7 +86,7 @@ export function ImageTools() {
       return
     }
 
-    if (!user || (user.credits ?? 0) < 3) {
+    if (!user || ((user.credits ?? 0) < 3 && user.credits !== -1 && !user.is_admin)) {
       // Show pricing modal instead of just error
       setShowPricingModal(true)
       return
@@ -159,7 +159,7 @@ export function ImageTools() {
     }
 
     const currentTool = tools.find(t => t.id === activeTab)
-    if (!user || (user.credits ?? 0) < (currentTool?.credits || 2)) {
+    if (!user || ((user.credits ?? 0) < (currentTool?.credits || 2) && user.credits !== -1 && !user.is_admin)) {
       // Show pricing modal instead of just error
       setShowPricingModal(true)
       return
@@ -386,7 +386,7 @@ export function ImageTools() {
         </div>
 
         {/* Credits Warning */}
-        {user && (user.credits ?? 0) < 10 && (
+        {user && (user.credits ?? 0) < 10 && user.credits !== -1 && !user.is_admin && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -395,7 +395,7 @@ export function ImageTools() {
             <Alert className="bg-yellow-500/10 border-yellow-500/20 backdrop-blur-xl">
               <AlertCircle className="h-4 w-4 text-yellow-400" />
               <AlertDescription className="text-yellow-200">
-                You have {user.credits} credits remaining. Image generation requires more credits than image generation.
+                You have {user.credits} credits remaining. Image generation costs credits.
               </AlertDescription>
             </Alert>
           </motion.div>
@@ -418,7 +418,7 @@ export function ImageTools() {
               <div className="space-y-3">
                 {tools.map((tool, index) => {
                   const Icon = tool.icon
-                  const canAfford = user ? (user.credits ?? 0) >= tool.credits : false
+                  const canAfford = user ? (user.is_admin || user.credits === -1 || (user.credits ?? 0) >= tool.credits) : false
                   const isActive = activeTab === tool.id
                   
                   return (

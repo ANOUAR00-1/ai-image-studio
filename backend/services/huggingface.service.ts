@@ -1,4 +1,5 @@
 import { HfInference } from '@huggingface/inference'
+import { smartEnhance } from '@/lib/utils/prompt-enhancer'
 
 // FREE Hugging Face Inference API
 // Get your free token: https://huggingface.co/settings/tokens
@@ -11,15 +12,22 @@ export class HuggingFaceService {
       const selectedModel = model || 'stabilityai/stable-diffusion-xl-base-1.0'
       
       console.log(`[HF] Generating with model: ${selectedModel}`)
-      console.log(`[HF] Prompt: ${prompt.substring(0, 50)}...`)
+      console.log(`[HF] Original prompt: ${prompt}`)
+      
+      // Smart prompt enhancement for better accuracy
+      const { enhanced, negative, parameters } = smartEnhance(prompt)
+      
+      console.log(`[HF] Enhanced prompt: ${enhanced.substring(0, 100)}...`)
       
       const response = await hf.textToImage({
         model: selectedModel,
-        inputs: prompt,
+        inputs: enhanced,
         parameters: {
-          negative_prompt: 'blurry, bad quality, distorted',
-          num_inference_steps: 30,
-          guidance_scale: 7.5,
+          negative_prompt: negative,
+          num_inference_steps: parameters.num_inference_steps,
+          guidance_scale: parameters.guidance_scale,
+          width: parameters.width,
+          height: parameters.height,
         }
       })
 
