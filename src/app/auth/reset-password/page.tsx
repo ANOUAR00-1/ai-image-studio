@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Lock, Eye, EyeOff, CheckCircle, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
-import { useAuthStore } from '@/store/auth'
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('')
@@ -18,7 +17,6 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false)
   const [isValid, setIsValid] = useState(false)
   const router = useRouter()
-  const { login } = useAuthStore()
 
   useEffect(() => {
     const checkToken = async () => {

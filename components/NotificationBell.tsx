@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Bell, Check, X, Trash2 } from 'lucide-react'
+import { Bell, Check, Trash2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/store/auth'

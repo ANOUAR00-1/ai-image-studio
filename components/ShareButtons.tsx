@@ -11,7 +11,7 @@ interface ShareButtonsProps {
   description?: string
 }
 
-export function ShareButtons({ title, url, description = '' }: ShareButtonsProps) {
+export function ShareButtons({ title, url }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false)
 
   const shareLinks = {
@@ -26,7 +26,7 @@ export function ShareButtons({ title, url, description = '' }: ShareButtonsProps
       setCopied(true)
       toast.success('Link copied to clipboard!')
       setTimeout(() => setCopied(false), 2000)
-    } catch (error) {
+    } catch {
       toast.error('Failed to copy link')
     }
   }

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { Settings as SettingsIcon, Bell, Shield, CreditCard, User, Download, Trash2, Eye, EyeOff } from 'lucide-react'
+import { Settings as SettingsIcon, Bell, Shield, User, Download, Trash2 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
@@ -15,7 +15,6 @@ import { motion } from 'framer-motion'
 export function Settings() {
   const { user } = useAuthStore()
   const [loading, setLoading] = useState(false)
-  const [show2FA, setShow2FA] = useState(false)
   
   // Notification preferences
   const [emailNotifications, setEmailNotifications] = useState(true)
@@ -30,7 +29,7 @@ export function Settings() {
       // TODO: Save to backend
       await new Promise(resolve => setTimeout(resolve, 1000))
       toast.success('Notification preferences saved!')
-    } catch (error) {
+    } catch {
       toast.error('Failed to save preferences')
     } finally {
       setLoading(false)
@@ -43,7 +42,7 @@ export function Settings() {
       // TODO: Export user data
       await new Promise(resolve => setTimeout(resolve, 1500))
       toast.success('Your data has been exported!')
-    } catch (error) {
+    } catch {
       toast.error('Failed to export data')
     } finally {
       setLoading(false)
@@ -58,7 +57,7 @@ export function Settings() {
       // TODO: Delete account
       await new Promise(resolve => setTimeout(resolve, 1500))
       toast.success('Account deleted')
-    } catch (error) {
+    } catch {
       toast.error('Failed to delete account')
     } finally {
       setLoading(false)

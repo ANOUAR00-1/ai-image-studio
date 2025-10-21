@@ -39,13 +39,13 @@ export function BillingPage() {
     }
   }
 
-  const downloadInvoice = async (invoiceId: string) => {
+  const downloadInvoice = async () => {
     try {
       toast.info('Generating invoice PDF...')
       // TODO: Implement PDF generation
       await new Promise(resolve => setTimeout(resolve, 1000))
       toast.success('Invoice downloaded!')
-    } catch (error) {
+    } catch {
       toast.error('Failed to download invoice')
     }
   }
@@ -134,7 +134,7 @@ export function BillingPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => downloadInvoice(invoice.id)}
+                        onClick={downloadInvoice}
                         className="bg-white/5 border-white/10 text-white hover:bg-white/10"
                       >
                         <Download className="h-4 w-4" />
