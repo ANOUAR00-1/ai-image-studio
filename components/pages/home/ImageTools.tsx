@@ -23,6 +23,7 @@ import { useAuthStore } from '@/store/auth'
 import { api } from '@/utils/api'
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback'
 import AIGenerationLoader from '@/components/pages/shared/AIGenerationLoader'
+import StarBorder from '@/components/ui/StarBorder'
 
 export function ImageTools() {
   const { user, refreshUser } = useAuthStore()
@@ -540,23 +541,26 @@ export function ImageTools() {
                       </div>
                     </div>
                     
-                    <Button 
+                    <StarBorder
+                      as="button"
                       onClick={handleGenerate}
                       disabled={loading || !prompt.trim() || !user}
-                      className="w-full h-14 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white border-0 shadow-lg shadow-purple-500/30 text-lg"
+                      color="#A855F7"
+                      speed="4s"
+                      className="w-full hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
                       {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        <span className="flex items-center justify-center gap-2 text-lg">
+                          <Loader2 className="h-5 w-5 animate-spin" />
                           Generating Image...
-                        </>
+                        </span>
                       ) : (
-                        <>
-                          <Sparkles className="mr-2 h-5 w-5" />
+                        <span className="flex items-center justify-center gap-2 text-lg">
+                          <Sparkles className="h-5 w-5" />
                           Generate Image (3 credits)
-                        </>
+                        </span>
                       )}
-                    </Button>
+                    </StarBorder>
                   </div>
                 ) : (
                   <div className="space-y-6">
@@ -620,23 +624,26 @@ export function ImageTools() {
                     </div>
 
                     {/* Process Button */}
-                    <Button 
+                    <StarBorder
+                      as="button"
                       onClick={handleProcessImage}
                       disabled={!uploadedImage || loading || !user}
-                      className="w-full h-14 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white border-0 shadow-lg shadow-purple-500/30 text-lg"
+                      color="#A855F7"
+                      speed="4s"
+                      className="w-full hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
                       {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        <span className="flex items-center justify-center gap-2 text-lg">
+                          <Loader2 className="h-5 w-5 animate-spin" />
                           Processing Image...
-                        </>
+                        </span>
                       ) : (
-                        <>
-                          {currentTool?.icon && <currentTool.icon className="mr-2 h-5 w-5" />}
+                        <span className="flex items-center justify-center gap-2 text-lg">
+                          {currentTool?.icon && <currentTool.icon className="h-5 w-5" />}
                           {currentTool?.title} ({currentTool?.credits} credits)
-                        </>
+                        </span>
                       )}
-                    </Button>
+                    </StarBorder>
                   </div>
                 )}
 

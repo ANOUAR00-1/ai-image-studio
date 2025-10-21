@@ -33,10 +33,18 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       
       login: (userData: User) => {
+        const token = userData.accessToken || null;
+        
+        // Save to localStorage
+        if (token && typeof window !== 'undefined') {
+          localStorage.setItem('access_token', token);
+          console.log('✅ Token saved to localStorage on login');
+        }
+        
         set({ 
           user: userData, 
           isLoggedIn: true, 
-          accessToken: userData.accessToken || null 
+          accessToken: token 
         });
       },
       
@@ -62,15 +70,21 @@ export const useAuthStore = create<AuthState>()(
       
       initialize: async () => {
         try {
+          console.log('🔄 Initializing auth...');
+          
           // Check if we have a stored token
-          const token = localStorage.getItem('access_token');
+          const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+          
+          console.log('🔍 Token found:', token ? `${token.substring(0, 20)}...` : 'NULL');
           
           if (!token) {
-            set({ loading: false });
+            console.log('❌ No token found, user not logged in');
+            set({ loading: false, isLoggedIn: false, user: null, accessToken: null });
             return;
           }
           
           // Verify token and get user data
+          console.log('🔐 Verifying token...');
           const response = await fetch('/api/auth/me', {
             headers: {
               'Authorization': `Bearer ${token}`
@@ -79,6 +93,7 @@ export const useAuthStore = create<AuthState>()(
           
           if (response.ok) {
             const data = await response.json();
+            console.log('✅ Token valid, user logged in:', data.user.email);
             set({ 
               user: { ...data.user, accessToken: token }, 
               isLoggedIn: true,
@@ -86,14 +101,17 @@ export const useAuthStore = create<AuthState>()(
               loading: false 
             });
           } else {
+            console.log('❌ Token invalid, clearing session');
             // Token invalid, clear it
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('supabase_session');
-            set({ loading: false });
+            if (typeof window !== 'undefined') {
+              localStorage.removeItem('access_token');
+              localStorage.removeItem('supabase_session');
+            }
+            set({ loading: false, isLoggedIn: false, user: null, accessToken: null });
           }
         } catch (error) {
-          console.error('Initialize error:', error);
-          set({ loading: false });
+          console.error('❌ Initialize error:', error);
+          set({ loading: false, isLoggedIn: false, user: null, accessToken: null });
         }
       },
       

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase/client'
+import { supabaseAdmin } from '@/lib/supabase/server'
 
 export async function POST(request: Request) {
   try {
@@ -33,8 +34,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // Get user profile
-    const { data: profile, error: profileError } = await supabase
+    // Get user profile using ADMIN client to bypass RLS
+    const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
       .select('*')
       .eq('id', data.user.id)
@@ -42,6 +43,44 @@ export async function POST(request: Request) {
 
     if (profileError) {
       console.error('Profile fetch error:', profileError)
+      
+      // If profile doesn't exist, create it
+      if (profileError.code === 'PGRST116') {
+        const { data: newProfile, error: createError } = await supabaseAdmin
+          .from('profiles')
+          .insert({
+            id: data.user.id,
+            email: data.user.email!,
+            name: data.user.user_metadata?.name || 'User',
+            credits: 10,
+            plan: 'free'
+          })
+          .select()
+          .single()
+        
+        if (createError) {
+          console.error('Profile creation error:', createError)
+          return NextResponse.json(
+            { error: 'Failed to create user profile' },
+            { status: 500 }
+          )
+        }
+        
+        // Use the newly created profile
+        return NextResponse.json({
+          user: {
+            id: data.user.id,
+            email: data.user.email,
+            name: newProfile.name,
+            plan: newProfile.plan,
+            credits: newProfile.credits,
+            createdAt: data.user.created_at,
+          },
+          session: data.session,
+          accessToken: data.session.access_token,
+        })
+      }
+      
       return NextResponse.json(
         { error: 'Failed to fetch user profile' },
         { status: 500 }

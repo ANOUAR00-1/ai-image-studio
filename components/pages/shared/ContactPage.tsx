@@ -15,6 +15,7 @@ import {
   Headphones,
   Zap
 } from "lucide-react"
+import StarBorder from "@/components/ui/StarBorder"
 
 export function ContactPage() {
   const contactInfo = [
@@ -184,10 +185,17 @@ export function ContactPage() {
                   />
                 </div>
                 <div className="text-center pt-4">
-                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50 px-8 py-3">
-                    <Send className="mr-2 w-4 h-4" />
-                    Send Message
-                  </Button>
+                  <StarBorder
+                    as="button"
+                    color="#A855F7"
+                    speed="5s"
+                    className="hover:scale-105 transition-transform"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Send className="w-4 h-4" />
+                      Send Message
+                    </span>
+                  </StarBorder>
                 </div>
               </CardContent>
             </Card>
@@ -261,10 +269,17 @@ export function ContactPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/#faq">
-                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50">
-                    <MessageSquare className="mr-2 w-4 h-4" />
-                    Visit FAQ
-                  </Button>
+                  <StarBorder
+                    as="button"
+                    color="#A855F7"
+                    speed="5s"
+                    className="hover:scale-105 transition-transform"
+                  >
+                    <span className="flex items-center gap-2">
+                      <MessageSquare className="w-4 h-4" />
+                      Visit FAQ
+                    </span>
+                  </StarBorder>
                 </Link>
                 <Link href="/support">
                   <Button variant="outline" className="bg-white/10 border-white/30 text-white hover:bg-white/20 hover:border-white/40">

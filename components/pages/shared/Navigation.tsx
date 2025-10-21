@@ -26,6 +26,7 @@ import {
 import { AuthModal } from "@/components/pages/auth/AuthModal"
 import { useAuthStore } from "@/store/auth"
 import { NotificationBell } from "@/components/NotificationBell"
+import StarBorder from "@/components/ui/StarBorder"
 
 interface NavigationProps {
   currentPage?: string;
@@ -141,20 +142,27 @@ export function Navigation({}: NavigationProps = {}) {
                 </>
               ) : (
                 <>
-                  <Button 
-                    variant="ghost" 
-                    className="text-white hover:bg-white/10"
+                  <StarBorder
+                    as="button"
                     onClick={() => setShowAuthModal(true)}
+                    color="#6366F1"
+                    speed="6s"
+                    className="hover:scale-105 transition-transform"
                   >
-                    <LogIn className="h-4 w-4 mr-2" />
-                    Login
-                  </Button>
-                  <Button 
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50"
+                    <span className="flex items-center gap-2">
+                      <LogIn className="h-4 w-4" />
+                      Login
+                    </span>
+                  </StarBorder>
+                  <StarBorder
+                    as="button"
                     onClick={() => setShowAuthModal(true)}
+                    color="#A855F7"
+                    speed="5s"
+                    className="hover:scale-105 transition-transform"
                   >
                     Get Started
-                  </Button>
+                  </StarBorder>
                 </>
               )}
             </div>

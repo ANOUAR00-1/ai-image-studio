@@ -147,9 +147,11 @@ export function Footer() {
                 placeholder="Enter your email" 
                 className="bg-white/5 border-white/20 text-white placeholder:text-gray-500 focus:border-purple-500/50"
               />
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 whitespace-nowrap">
+              <button
+                className="bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] backdrop-blur-xl border-2 border-purple-500/50 text-white hover:border-purple-400 transition-all duration-300 px-8 py-3 rounded-full hover:scale-105 cursor-pointer whitespace-nowrap font-semibold"
+              >
                 Subscribe
-              </Button>
+              </button>
             </div>
           </div>
         </div>

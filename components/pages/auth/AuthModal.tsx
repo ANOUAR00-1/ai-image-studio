@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { motion, AnimatePresence } from "framer-motion"
 import { staggerContainer, staggerItem } from "@/lib/animations"
+import StarBorder from "@/components/ui/StarBorder"
 
 export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [isLogin, setIsLogin] = useState(true)
@@ -440,21 +441,26 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
             </div>
           )}
           
-          <Button 
-            type={showOtpInput ? "button" : "submit"}
-            onClick={showOtpInput ? handleOtpVerify : undefined}
-            disabled={loading}
-            className="w-full h-10 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 hover:from-purple-700 hover:via-purple-600 hover:to-pink-700 text-white font-semibold border-0 shadow-lg shadow-purple-500/50 mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              <>Loading...</>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 mr-2" />
-                {showOtpInput ? "Verify Code" : (isForgotPassword ? "Send Reset Link" : (isLogin ? "Sign In" : "Create Account"))}
-              </>
-            )}
-          </Button>
+          <div className="mt-2">
+            <StarBorder
+              as="button"
+              type={showOtpInput ? "button" : "submit"}
+              onClick={showOtpInput ? handleOtpVerify : undefined}
+              disabled={loading}
+              color="#A855F7"
+              speed="5s"
+              className="w-full hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            >
+              {loading ? (
+                <span>Loading...</span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  {showOtpInput ? "Verify Code" : (isForgotPassword ? "Send Reset Link" : (isLogin ? "Sign In" : "Create Account"))}
+                </span>
+              )}
+            </StarBorder>
+          </div>
           
           {!isForgotPassword && (
             <>

@@ -1,15 +1,33 @@
 import { supabaseAdmin } from '@/lib/supabase/server'
 
 export class CreditsService {
-  // Get user credits
+  // Check if user is admin
+  static async isAdmin(userId: string): Promise<boolean> {
+    const { data, error } = await supabaseAdmin
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', userId)
+      .single()
+
+    if (error) return false
+    return data.is_admin || false
+  }
+
+  // Get user credits (returns 999999 for admins for display purposes)
   static async getUserCredits(userId: string): Promise<number> {
     const { data, error } = await supabaseAdmin
       .from('profiles')
-      .select('credits')
+      .select('credits, is_admin')
       .eq('id', userId)
       .single()
 
     if (error) throw error
+    
+    // If admin or unlimited credits (-1), return a large number for display
+    if (data.is_admin || data.credits === -1) {
+      return 999999
+    }
+    
     return data.credits
   }
 
@@ -61,6 +79,10 @@ export class CreditsService {
 
   // Check if user has enough credits
   static async hasEnoughCredits(userId: string, required: number): Promise<boolean> {
+    // Check if admin first (admins have unlimited credits)
+    const isAdmin = await this.isAdmin(userId)
+    if (isAdmin) return true
+    
     const credits = await this.getUserCredits(userId)
     return credits >= required
   }

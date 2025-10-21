@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
 import { Button } from '@/components/ui/button'
+import StarBorder from '@/components/ui/StarBorder'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -464,23 +465,26 @@ export function VideoTools() {
                       </div>
                     </div>
                     
-                    <Button 
+                    <StarBorder
+                      as="button"
                       onClick={handleGenerate}
                       disabled={loading || !prompt.trim() || !user}
-                      className="w-full h-14 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 hover:from-purple-600 hover:via-pink-600 hover:to-rose-600 text-white border-0 shadow-lg shadow-purple-500/30 text-lg"
+                      color="#EC4899"
+                      speed="4s"
+                      className="w-full hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                     >
                       {loading ? (
-                        <>
-                          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        <span className="flex items-center justify-center gap-2 text-lg">
+                          <Loader2 className="h-5 w-5 animate-spin" />
                           Generating Video... (2-3 minutes)
-                        </>
+                        </span>
                       ) : (
-                        <>
-                          <Video className="mr-2 h-5 w-5" />
+                        <span className="flex items-center justify-center gap-2 text-lg">
+                          <Video className="h-5 w-5" />
                           Generate Video (10 credits)
-                        </>
+                        </span>
                       )}
-                    </Button>
+                    </StarBorder>
                   </div>
                 ) : !showLoader && activeTab === 'image-to-video' ? (
                   <div className="space-y-6">

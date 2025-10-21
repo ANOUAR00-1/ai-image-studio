@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Check, Zap, Crown, Rocket } from 'lucide-react'
 import { motion } from 'framer-motion'
+import StarBorder from '@/components/ui/StarBorder'
 
 interface Plan {
   name: string
@@ -246,19 +247,26 @@ export default function PricingPage() {
                   </p>
                 </div>
 
-                <button
-                  onClick={() => handleSubscribe(plan.name.toLowerCase())}
-                  disabled={plan.name === 'Free'}
-                  className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 mb-8 ${
-                    plan.popular
-                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70'
-                      : plan.name === 'Free'
-                      ? 'bg-white/5 text-gray-500 cursor-not-allowed border border-white/10'
-                      : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
-                  }`}
-                >
-                  {plan.name === 'Free' ? 'Current Plan' : `Get ${plan.name}`}
-                </button>
+                {plan.name === 'Free' ? (
+                  <button
+                    disabled
+                    className="w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 mb-8 bg-white/5 text-gray-500 cursor-not-allowed border border-white/10"
+                  >
+                    Current Plan
+                  </button>
+                ) : (
+                  <div className="mb-8">
+                    <StarBorder
+                      as="button"
+                      onClick={() => handleSubscribe(plan.name.toLowerCase())}
+                      color={plan.popular ? "#A855F7" : "#EC4899"}
+                      speed={plan.popular ? "4s" : "5s"}
+                      className="w-full hover:scale-105 transition-transform"
+                    >
+                      Get {plan.name}
+                    </StarBorder>
+                  </div>
+                )}
 
                 <ul className="space-y-4">
                   {plan.features.map((feature, idx) => (
@@ -320,12 +328,17 @@ export default function PricingPage() {
                   </span>
                 </div>
 
-                <button
-                  onClick={() => handleBuyCredits(pack.credits, pack.price)}
-                  className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-bold text-lg transition-all duration-300 shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 mb-4"
-                >
-                  Buy Now
-                </button>
+                <div className="mb-4">
+                  <StarBorder
+                    as="button"
+                    onClick={() => handleBuyCredits(pack.credits, pack.price)}
+                    color={pack.popular ? "#10B981" : "#A855F7"}
+                    speed="5s"
+                    className="w-full hover:scale-105 transition-transform"
+                  >
+                    Buy Now
+                  </StarBorder>
+                </div>
 
                 <p className="text-center text-sm text-gray-400">
                   ${(pack.price / pack.credits).toFixed(2)} per credit

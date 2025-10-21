@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase/client'
+import { supabaseAdmin } from '@/lib/supabase/server'
 
 export async function POST(request: Request) {
   try {
@@ -58,8 +59,8 @@ export async function POST(request: Request) {
       )
     }
 
-    // Get the user profile (created automatically by trigger)
-    const { data: profile, error: profileError } = await supabase
+    // Get the user profile (created automatically by trigger) using ADMIN client
+    const { data: profile, error: profileError } = await supabaseAdmin
       .from('profiles')
       .select('*')
       .eq('id', data.user.id)
@@ -67,6 +68,7 @@ export async function POST(request: Request) {
 
     if (profileError) {
       console.error('Profile fetch error:', profileError)
+      // Profile will be null, we'll use defaults
     }
 
     // Check if email confirmation is required (session will be null if confirmation needed)

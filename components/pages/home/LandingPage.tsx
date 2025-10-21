@@ -1,7 +1,6 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { SimpleCard } from "@/components/ui/cards"
 import { Sparkles, ImageIcon, Wand2, Zap, Shield, ArrowRight, Check, Lock, Award, Download, Video, Palette, Star } from "lucide-react"
@@ -13,6 +12,9 @@ import { AuthModal } from "@/components/pages/auth/AuthModal"
 import { toast } from "sonner"
 import Lightning from "@/components/ui/Lightning"
 import BlurText from "@/components/ui/BlurText"
+import CountUp from "@/components/ui/CountUp"
+import StarBorder from "@/components/ui/StarBorder"
+import SpotlightCard from "@/components/ui/SpotlightCard"
 
 export default function LandingPage() {
   const [authModalOpen, setAuthModalOpen] = useState(false)
@@ -58,8 +60,8 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] relative overflow-hidden">
-      {/* Lightning Background Animation - Optimized */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-20" style={{ willChange: 'opacity' }}>
+      {/* Lightning Background Animation - Only for Hero + Features sections */}
+      <div className="absolute top-0 left-0 right-0 pointer-events-none z-0 opacity-20" style={{ height: '200vh', maxHeight: '2000px', willChange: 'opacity' }}>
         <Lightning
           hue={280}
           xOffset={0}
@@ -69,8 +71,8 @@ export default function LandingPage() {
         />
       </div>
       
-      {/* Animated Background Elements - Optimized */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" style={{ contain: 'layout style paint' }}>
+      {/* Animated Background Elements - Only top sections */}
+      <div className="absolute top-0 left-0 right-0 overflow-hidden pointer-events-none z-0" style={{ height: '200vh', maxHeight: '2000px', contain: 'layout style paint' }}>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{ willChange: 'opacity' }}></div>
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '700ms', willChange: 'opacity' }}></div>
       </div>
@@ -93,20 +95,55 @@ export default function LandingPage() {
             </Badge>
           </motion.div>
           
-          <motion.h1 
-            className="text-6xl sm:text-7xl lg:text-8xl font-extrabold mb-8 leading-[1.1] tracking-tight"
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
-            transition={{ delay: 0.2, duration: 0.5 }}
-          >
-            <span className="bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">
-              Transform Ideas into
-            </span>
-            <br />
-            <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-purple-400 bg-clip-text text-transparent animate-gradient">
-              Stunning Visuals
-            </span>
-          </motion.h1>
+          <div className="mb-8 text-center">
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold leading-[1.1] tracking-tight">
+              <motion.span 
+                className="inline-block bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+              >
+                {"Transform Ideas into".split("").map((char, i) => (
+                  <motion.span
+                    key={i}
+                    className="inline-block"
+                    initial={{ opacity: 0, y: 50, rotateX: -90 }}
+                    animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                    transition={{ 
+                      delay: 0.3 + i * 0.03,
+                      duration: 0.5,
+                      ease: [0.22, 1, 0.36, 1]
+                    }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+              </motion.span>
+              <br />
+              <motion.span 
+                className="inline-block bg-gradient-to-r from-purple-300 via-pink-300 to-purple-400 bg-clip-text text-transparent animate-gradient"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.3 }}
+              >
+                {"Stunning Visuals".split("").map((char, i) => (
+                  <motion.span
+                    key={i}
+                    className="inline-block"
+                    initial={{ opacity: 0, y: 50, scale: 0.5 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ 
+                      delay: 0.9 + i * 0.03,
+                      duration: 0.6,
+                      ease: [0.22, 1, 0.36, 1]
+                    }}
+                  >
+                    {char === " " ? "\u00A0" : char}
+                  </motion.span>
+                ))}
+              </motion.span>
+            </h1>
+          </div>
           
           <motion.p 
             className="text-xl sm:text-2xl text-gray-200 mb-12 max-w-4xl mx-auto leading-relaxed font-light"
@@ -123,41 +160,46 @@ export default function LandingPage() {
             animate={{ opacity: 1, y: 0 }} 
             transition={{ delay: 0.4, duration: 0.5 }}
           >
-            <Button 
-              size="lg" 
+            <StarBorder
+              as="button"
               onClick={handleGetStarted}
-              className="group bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 hover:from-purple-700 hover:via-purple-600 hover:to-pink-700 text-white border-0 shadow-2xl shadow-purple-500/50 hover:shadow-purple-500/70 transition-all duration-300 text-lg px-8 py-6 h-auto hover:scale-105"
+              color="#A855F7"
+              speed="5s"
+              className="group hover:scale-105 transition-transform duration-300"
             >
-              {isLoggedIn ? 'Go to Dashboard' : 'Start Creating Free'}
-              <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button 
-              size="lg" 
+              <span className="flex items-center gap-2 text-lg font-semibold">
+                {isLoggedIn ? 'Go to Dashboard' : 'Start Creating Free'}
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </span>
+            </StarBorder>
+            <StarBorder
+              as="button"
               onClick={handleViewExamples}
-              variant="outline"
-              className="bg-white/5 backdrop-blur-xl border-white/20 text-white hover:bg-white/10 hover:border-white/30 transition-all duration-300 text-lg px-8 py-6 h-auto hover:scale-105"
+              color="#EC4899"
+              speed="6s"
+              className="hover:scale-105 transition-transform"
             >
-              View Examples
-            </Button>
+              <span className="text-lg font-semibold">View Examples</span>
+            </StarBorder>
           </motion.div>
 
           {/* Stats Section */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105" style={{ willChange: 'transform' }}>
               <div className="text-5xl sm:text-6xl font-black bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300 bg-clip-text text-transparent mb-3">
-                10K+
+                <CountUp from={0} to={10} duration={2} separator="," className="inline-block" />K+
               </div>
               <div className="text-gray-200 font-medium text-lg">Images Created</div>
             </div>
             <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 hover:border-pink-500/50 transition-all duration-300 hover:scale-105" style={{ willChange: 'transform' }}>
               <div className="text-5xl sm:text-6xl font-black bg-gradient-to-r from-purple-300 via-pink-300 to-purple-300 bg-clip-text text-transparent mb-3">
-                5K+
+                <CountUp from={0} to={5} duration={2} separator="," className="inline-block" />K+
               </div>
               <div className="text-gray-200 font-medium text-lg">Active Users</div>
             </div>
             <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105" style={{ willChange: 'transform' }}>
               <div className="text-5xl sm:text-6xl font-black bg-gradient-to-r from-pink-300 via-purple-300 to-cyan-300 bg-clip-text text-transparent mb-3">
-                99.9%
+                <CountUp from={0} to={99.9} duration={2.5} className="inline-block" />%
               </div>
               <div className="text-gray-200 font-medium text-lg">Uptime</div>
             </div>
@@ -200,7 +242,7 @@ export default function LandingPage() {
               animateBy="words"
               direction="top"
               stepDuration={0.2}
-              className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent justify-center"
+              className="text-4xl sm:text-5xl font-bold mb-4 text-white justify-center"
             />
             <p className="text-lg text-gray-200 max-w-2xl mx-auto">
               Everything you need to create, edit, and transform visual content with AI
@@ -302,20 +344,21 @@ export default function LandingPage() {
               { name: "Pro", price: "$19", period: "/month", credits: "300 credits", features: ["All AI tools", "HD quality exports", "Priority processing", "Email support", "No watermarks"], popular: true },
               { name: "Business", price: "$59", period: "/month", credits: "1000 credits", features: ["Everything in Pro", "Team workspace", "API access", "Custom integrations", "Priority support"], popular: false }
             ].map((plan) => (
-              <Card 
-                key={plan.name} 
-                className={`group bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl border transition-all duration-500 hover:scale-[1.02] relative ${
+              <SpotlightCard
+                key={plan.name}
+                className={`group transition-all duration-500 hover:scale-[1.02] relative ${
                   plan.popular 
                     ? 'border-2 border-purple-500 shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50' 
                     : 'border-white/10 hover:border-purple-500/30 hover:shadow-xl hover:shadow-purple-500/10'
                 }`}
+                spotlightColor="rgba(168, 85, 247, 0.15)"
               >
                 {plan.popular && (
                   <Badge className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 border-0 px-6 py-2 text-sm font-bold shadow-lg">
                     Most Popular
                   </Badge>
                 )}
-                <CardContent className="p-10 text-center">
+                <div className="p-10 text-center">
                   <h3 className="text-3xl font-black text-white mb-6 group-hover:text-purple-300 transition-colors">{plan.name}</h3>
                   <div className="mb-3">
                     <span className="text-6xl font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{plan.price}</span>
@@ -340,8 +383,8 @@ export default function LandingPage() {
                   >
                     {plan.name === "Free" ? (isLoggedIn ? "Current Plan" : "Start Free") : "Get Started"}
                   </Button>
-                </CardContent>
-              </Card>
+                </div>
+              </SpotlightCard>
             ))}
           </div>
         </div>
@@ -350,11 +393,14 @@ export default function LandingPage() {
       {/* FAQ Section */}
       <section id="faq" className="py-24 relative">
         <div className="container mx-auto px-4">
-          <Card className="relative overflow-hidden bg-gradient-to-br from-purple-600/30 via-pink-600/20 to-purple-600/30 border-2 border-purple-500/40 backdrop-blur-2xl max-w-5xl mx-auto shadow-2xl shadow-purple-500/30">
+          <SpotlightCard 
+            className="relative overflow-hidden bg-gradient-to-br from-purple-600/30 via-pink-600/20 to-purple-600/30 border-2 border-purple-500/40 backdrop-blur-2xl max-w-5xl mx-auto shadow-2xl shadow-purple-500/30"
+            spotlightColor="rgba(236, 72, 153, 0.2)"
+          >
             {/* Decorative Elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
-            <CardContent className="relative p-16 text-center">
+            <div className="relative p-16 text-center">
               <BlurText
                 text="Ready to Transform Your Ideas?"
                 delay={30}
@@ -367,25 +413,24 @@ export default function LandingPage() {
                 Join thousands of creators using <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text font-medium">PixFusion AI</span> to bring their imagination to life.
               </p>
               <div className="flex flex-col sm:flex-row gap-5 justify-center">
-                <Button 
-                  size="lg" 
+                <button
                   onClick={handleGetStarted}
-                  className="group bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 hover:from-purple-700 hover:via-purple-600 hover:to-pink-700 text-white border-0 shadow-2xl shadow-purple-500/60 hover:shadow-purple-500/80 transition-all duration-300 text-lg px-10 py-7 h-auto hover:scale-110"
+                  className="group bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] backdrop-blur-xl border-2 border-purple-500/50 text-white hover:border-purple-400 transition-all duration-300 text-lg px-10 py-4 rounded-full hover:scale-105 cursor-pointer"
                 >
-                  {isLoggedIn ? 'Go to Dashboard' : "Start Creating Now - It's Free"}
-                  <Sparkles className="ml-2 w-5 h-5 group-hover:rotate-12 transition-transform" />
-                </Button>
-                <Button 
-                  size="lg" 
+                  <span className="flex items-center gap-2 font-semibold">
+                    {isLoggedIn ? 'Go to Dashboard' : "Start Creating Now - It's Free"}
+                    <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                  </span>
+                </button>
+                <button
                   onClick={handleLearnMore}
-                  variant="outline"
-                  className="bg-white/10 backdrop-blur-xl border-white/30 text-white hover:bg-white/20 hover:border-white/40 transition-all duration-300 text-lg px-10 py-7 h-auto hover:scale-110"
+                  className="bg-transparent backdrop-blur-xl border-2 border-purple-500/50 text-white hover:bg-white/10 hover:border-purple-400 transition-all duration-300 text-lg px-10 py-4 rounded-full hover:scale-105 cursor-pointer"
                 >
-                  Learn More
-                </Button>
+                  <span className="font-semibold">Learn More</span>
+                </button>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </SpotlightCard>
         </div>
       </section>
 

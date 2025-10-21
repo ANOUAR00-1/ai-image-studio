@@ -1,6 +1,5 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "motion/react"
@@ -14,6 +13,7 @@ import {
   ArrowRight,
   Plus
 } from "lucide-react"
+import SpotlightCard from "@/components/ui/SpotlightCard"
 
 export function Dashboard() {
   const router = useRouter()
@@ -90,20 +90,18 @@ export function Dashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="bg-gradient-to-br from-white/[0.05] to-white/[0.02] backdrop-blur-xl border border-white/10">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="text-sm text-gray-400 mb-1">{stat.title}</p>
-                        <h3 className="text-4xl font-black text-white mb-1">{stat.value}</h3>
-                        <p className="text-xs text-gray-500">{stat.subtitle}</p>
-                      </div>
-                      <div className={`p-3 rounded-lg ${stat.iconBg}`}>
-                        <Icon className={`h-5 w-5 ${stat.iconColor}`} />
-                      </div>
+                <SpotlightCard className="p-6" spotlightColor="rgba(168, 85, 247, 0.1)">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-sm text-gray-400 mb-1">{stat.title}</p>
+                      <h3 className="text-4xl font-black text-white mb-1">{stat.value}</h3>
+                      <p className="text-xs text-gray-500">{stat.subtitle}</p>
                     </div>
-                  </CardContent>
-                </Card>
+                    <div className={`p-3 rounded-lg ${stat.iconBg}`}>
+                      <Icon className={`h-5 w-5 ${stat.iconColor}`} />
+                    </div>
+                  </div>
+                </SpotlightCard>
               </motion.div>
             )
           })}
@@ -115,35 +113,33 @@ export function Dashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <Card className="bg-gradient-to-br from-white/[0.05] to-white/[0.02] backdrop-blur-xl border border-white/10">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-semibold text-white mb-1">Credits Balance</h3>
-                  <p className="text-sm text-gray-400">{remainingCredits} / {totalCredits} credits remaining</p>
-                </div>
-                <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
-                  Free Plan
-                </Badge>
+          <SpotlightCard className="p-6" spotlightColor="rgba(168, 85, 247, 0.12)">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-1">Credits Balance</h3>
+                <p className="text-sm text-gray-400">{remainingCredits} / {totalCredits} credits remaining</p>
               </div>
-              <div className="w-full bg-white/5 rounded-full h-2 mb-4">
-                <div 
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all" 
-                  style={{ width: `${(remainingCredits / totalCredits) * 100}%` }}
-                ></div>
-              </div>
-              <div className="flex items-center justify-between">
-                <p className="text-xs text-gray-500">Credits reset monthly</p>
-                <Button 
-                  onClick={() => router.push('/pricing')}
-                  size="sm"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
-                >
-                  Upgrade Plan
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+              <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30">
+                Free Plan
+              </Badge>
+            </div>
+            <div className="w-full bg-white/5 rounded-full h-2 mb-4">
+              <div 
+                className="bg-gradient-to-r from-purple-500 to-pink-500 h-full rounded-full transition-all" 
+                style={{ width: `${(remainingCredits / totalCredits) * 100}%` }}
+              ></div>
+            </div>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-gray-500">Credits reset monthly</p>
+              <Button 
+                onClick={() => router.push('/pricing')}
+                size="sm"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
+              >
+                Upgrade Plan
+              </Button>
+            </div>
+          </SpotlightCard>
         </motion.div>
 
         {/* Quick Actions */}
@@ -157,12 +153,11 @@ export function Dashboard() {
             {quickActions.map((action, index) => {
               const Icon = action.icon
               return (
-                <Card 
-                  key={index}
-                  className="bg-gradient-to-br from-white/[0.05] to-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-white/20 transition-all cursor-pointer group"
-                  onClick={() => router.push(action.route)}
-                >
-                  <CardContent className="p-6">
+                <div key={index} onClick={() => router.push(action.route)}>
+                  <SpotlightCard
+                    className="p-6 hover:border-white/20 transition-all cursor-pointer group"
+                    spotlightColor="rgba(168, 85, 247, 0.1)"
+                  >
                     <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${action.gradient} flex items-center justify-center mb-4`}>
                       <Icon className="h-6 w-6 text-white" />
                     </div>
@@ -172,8 +167,8 @@ export function Dashboard() {
                       <span className="text-xs text-gray-500">{action.credits}</span>
                       <ArrowRight className="h-4 w-4 text-gray-500 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
                     </div>
-                  </CardContent>
-                </Card>
+                  </SpotlightCard>
+                </div>
               )
             })}
           </div>
@@ -191,21 +186,19 @@ export function Dashboard() {
               View All →
             </Button>
           </div>
-          <Card className="bg-gradient-to-br from-white/[0.05] to-white/[0.02] backdrop-blur-xl border border-white/10">
-            <CardContent className="p-12 text-center">
-              <div className="w-16 h-16 rounded-full bg-white/5 border-2 border-dashed border-white/20 flex items-center justify-center mx-auto mb-4">
-                <Plus className="h-8 w-8 text-gray-500" />
-              </div>
-              <h4 className="text-white font-semibold mb-2">No generations yet</h4>
-              <p className="text-sm text-gray-400 mb-6">Start creating your first AI-generated content</p>
-              <Button 
-                onClick={() => router.push('/image-tools')}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
-              >
-                Create Your First Image
-              </Button>
-            </CardContent>
-          </Card>
+          <SpotlightCard className="p-12 text-center" spotlightColor="rgba(168, 85, 247, 0.1)">
+            <div className="w-16 h-16 rounded-full bg-white/5 border-2 border-dashed border-white/20 flex items-center justify-center mx-auto mb-4">
+              <Plus className="h-8 w-8 text-gray-500" />
+            </div>
+            <h4 className="text-white font-semibold mb-2">No generations yet</h4>
+            <p className="text-sm text-gray-400 mb-6">Start creating your first AI-generated content</p>
+            <Button 
+              onClick={() => router.push('/image-tools')}
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
+            >
+              Create Your First Image
+            </Button>
+          </SpotlightCard>
         </motion.div>
       </div>
     </div>
