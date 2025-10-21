@@ -13,9 +13,9 @@ export function Footer() {
   const navigation = {
     product: [
       { name: "Features", href: "/#features" },
-      { name: "Pricing", href: "/#pricing" },
+      { name: "Pricing", href: "/pricing" },
       { name: "Image Tools", href: "/image-tools" },
-      { name: "Video Tools", href: "/video-tools" },
+      { name: "Examples", href: "/examples" },
     ],
     resources: [
       { name: "Documentation", href: "/documentation" },

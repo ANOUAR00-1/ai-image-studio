@@ -6,12 +6,13 @@ import { Badge } from "@/components/ui/badge"
 import { SimpleCard } from "@/components/ui/cards"
 import { Sparkles, ImageIcon, Wand2, Zap, Shield, ArrowRight, Check, Lock, Award, Download, Video, Palette, Star } from "lucide-react"
 import { motion } from "framer-motion"
-import { staggerContainer, staggerItem } from "@/lib/animations"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuthStore } from "@/store/auth"
 import { AuthModal } from "@/components/pages/auth/AuthModal"
 import { toast } from "sonner"
+import Lightning from "@/components/ui/Lightning"
+import BlurText from "@/components/ui/BlurText"
 
 export default function LandingPage() {
   const [authModalOpen, setAuthModalOpen] = useState(false)
@@ -57,21 +58,33 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse delay-700"></div>
+      {/* Lightning Background Animation - Optimized */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-20" style={{ willChange: 'opacity' }}>
+        <Lightning
+          hue={280}
+          xOffset={0}
+          speed={0.2}
+          intensity={0.5}
+          size={0.4}
+        />
+      </div>
+      
+      {/* Animated Background Elements - Optimized */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0" style={{ contain: 'layout style paint' }}>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{ willChange: 'opacity' }}></div>
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '700ms', willChange: 'opacity' }}></div>
       </div>
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-24 relative z-10">
         <motion.div 
           className="text-center max-w-6xl mx-auto"
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          style={{ willChange: 'transform, opacity' }}
         >
-          <motion.div variants={staggerItem}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
             <Badge 
               className="mb-8 inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-200 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 px-4 py-2 backdrop-blur-xl"
             >
@@ -81,26 +94,34 @@ export default function LandingPage() {
           </motion.div>
           
           <motion.h1 
-            className="text-6xl sm:text-7xl lg:text-8xl font-extrabold text-white mb-8 leading-[1.1] tracking-tight"
-            variants={staggerItem}
+            className="text-6xl sm:text-7xl lg:text-8xl font-extrabold mb-8 leading-[1.1] tracking-tight"
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.2, duration: 0.5 }}
           >
-            Transform Ideas into
+            <span className="bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">
+              Transform Ideas into
+            </span>
             <br />
-            <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent animate-gradient">
+            <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-purple-400 bg-clip-text text-transparent animate-gradient">
               Stunning Visuals
             </span>
           </motion.h1>
           
           <motion.p 
-            className="text-xl sm:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed font-light"
-            variants={staggerItem}
+            className="text-xl sm:text-2xl text-gray-200 mb-12 max-w-4xl mx-auto leading-relaxed font-light"
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.3, duration: 0.5 }}
           >
-            Create, edit, and enhance images with cutting-edge AI. From text-to-image generation to background removal and beyond.
+            Create, edit, and enhance images with <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text font-medium">cutting-edge AI</span>. From text-to-image generation to background removal and beyond.
           </motion.p>
           
           <motion.div 
             className="flex flex-col sm:flex-row gap-5 justify-center mb-24"
-            variants={staggerItem}
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ delay: 0.4, duration: 0.5 }}
           >
             <Button 
               size="lg" 
@@ -122,23 +143,23 @@ export default function LandingPage() {
 
           {/* Stats Section */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105">
-              <div className="text-5xl sm:text-6xl font-black bg-gradient-to-r from-blue-400 via-cyan-400 to-purple-400 bg-clip-text text-transparent mb-3">
+            <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105" style={{ willChange: 'transform' }}>
+              <div className="text-5xl sm:text-6xl font-black bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300 bg-clip-text text-transparent mb-3">
                 10K+
               </div>
-              <div className="text-gray-300 font-medium text-lg">Images Created</div>
+              <div className="text-gray-200 font-medium text-lg">Images Created</div>
             </div>
-            <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-pink-500/50 transition-all duration-300 hover:scale-105">
-              <div className="text-5xl sm:text-6xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent mb-3">
+            <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 hover:border-pink-500/50 transition-all duration-300 hover:scale-105" style={{ willChange: 'transform' }}>
+              <div className="text-5xl sm:text-6xl font-black bg-gradient-to-r from-purple-300 via-pink-300 to-purple-300 bg-clip-text text-transparent mb-3">
                 5K+
               </div>
-              <div className="text-gray-300 font-medium text-lg">Active Users</div>
+              <div className="text-gray-200 font-medium text-lg">Active Users</div>
             </div>
-            <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105">
-              <div className="text-5xl sm:text-6xl font-black bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-3">
+            <div className="group text-center p-8 rounded-2xl bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm border border-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105" style={{ willChange: 'transform' }}>
+              <div className="text-5xl sm:text-6xl font-black bg-gradient-to-r from-pink-300 via-purple-300 to-cyan-300 bg-clip-text text-transparent mb-3">
                 99.9%
               </div>
-              <div className="text-gray-300 font-medium text-lg">Uptime</div>
+              <div className="text-gray-200 font-medium text-lg">Uptime</div>
             </div>
           </div>
         </motion.div>
@@ -173,20 +194,24 @@ export default function LandingPage() {
       <section id="features" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-              Powerful AI Features at Your Fingertips
-            </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            <BlurText
+              text="Powerful AI Features at Your Fingertips"
+              delay={30}
+              animateBy="words"
+              direction="top"
+              stepDuration={0.2}
+              className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-white bg-clip-text text-transparent justify-center"
+            />
+            <p className="text-lg text-gray-200 max-w-2xl mx-auto">
               Everything you need to create, edit, and transform visual content with AI
             </p>
           </div>
 
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
-            variants={staggerContainer}
             initial="initial"
             whileInView="animate"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, amount: 0.1 }}
           >
             {[
               { icon: ImageIcon, title: "Text-to-Image", description: "Transform words into breathtaking visuals", color: "from-pink-500 to-purple-500", href: "/image-tools" },
@@ -196,7 +221,7 @@ export default function LandingPage() {
               { icon: Zap, title: "Batch Processing", description: "Process multiple images simultaneously", color: "from-yellow-500 to-orange-500", href: "/image-tools" },
               { icon: Download, title: "HD Exports", description: "Download in multiple high-quality formats", color: "from-purple-500 to-pink-500", href: "/gallery" }
             ].map((feature, idx) => (
-              <motion.div key={idx} variants={staggerItem}>
+              <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1, duration: 0.5 }}>
                 <SimpleCard
                   icon={feature.icon}
                   title={feature.title}
@@ -214,20 +239,24 @@ export default function LandingPage() {
       <section className="py-20 bg-black/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-              Everything You Need to Create
-            </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            <BlurText
+              text="Everything You Need to Create"
+              delay={30}
+              animateBy="words"
+              direction="top"
+              stepDuration={0.2}
+              className="text-4xl sm:text-5xl font-bold mb-4 text-white justify-center"
+            />
+            <p className="text-lg text-gray-200 max-w-2xl mx-auto">
               Professional-grade AI tools that make content creation accessible to everyone
             </p>
           </div>
 
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
-            variants={staggerContainer}
             initial="initial"
             whileInView="animate"
-            viewport={{ once: true, margin: "-100px" }}
+            viewport={{ once: true, amount: 0.1 }}
           >
             {[
               { icon: ImageIcon, title: "AI Image Generation", description: "Create stunning images from text prompts with state-of-the-art AI models", href: "/image-tools" },
@@ -237,7 +266,7 @@ export default function LandingPage() {
               { icon: Shield, title: "Enterprise Ready", description: "Secure, scalable, and reliable platform trusted by creative professionals", href: "/about" },
               { icon: Star, title: "Premium Quality", description: "Hollywood-grade output quality with watermark-free downloads", href: "/pricing" }
             ].map((item, idx) => (
-              <motion.div key={idx} variants={staggerItem}>
+              <motion.div key={idx} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.1, duration: 0.5 }}>
                 <SimpleCard
                   icon={item.icon}
                   title={item.title}
@@ -254,10 +283,15 @@ export default function LandingPage() {
       <section id="pricing" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-              Simple, Transparent Pricing
-            </h2>
-            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+            <BlurText
+              text="Simple, Transparent Pricing"
+              delay={30}
+              animateBy="words"
+              direction="top"
+              stepDuration={0.2}
+              className="text-4xl sm:text-5xl font-bold mb-4 text-white justify-center"
+            />
+            <p className="text-lg text-gray-200 max-w-2xl mx-auto">
               Choose the plan that fits your creative needs. Start free, upgrade anytime.
             </p>
           </div>
@@ -321,11 +355,16 @@ export default function LandingPage() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
             <CardContent className="relative p-16 text-center">
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
-                Ready to Transform Your Ideas?
-              </h2>
-              <p className="text-xl sm:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
-                Join thousands of creators using PixFusion AI to bring their imagination to life.
+              <BlurText
+                text="Ready to Transform Your Ideas?"
+                delay={30}
+                animateBy="words"
+                direction="top"
+                stepDuration={0.2}
+                className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-tight text-white justify-center"
+              />
+              <p className="text-xl sm:text-2xl text-gray-100 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
+                Join thousands of creators using <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text font-medium">PixFusion AI</span> to bring their imagination to life.
               </p>
               <div className="flex flex-col sm:flex-row gap-5 justify-center">
                 <Button 

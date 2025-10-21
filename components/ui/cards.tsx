@@ -60,6 +60,7 @@ interface SimpleCardProps {
   showButton?: boolean
   buttonText?: string
   onButtonClick?: () => void
+  href?: string
 }
 
 export function SimpleCard({
@@ -69,8 +70,39 @@ export function SimpleCard({
   color = "from-purple-500/20",
   showButton = false,
   buttonText = "Learn More",
-  onButtonClick
+  onButtonClick,
+  href
 }: SimpleCardProps) {
+  const content = (
+    <Card className="h-full bg-white/5 backdrop-blur-sm border-white/10 hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300 group hover:shadow-2xl hover:shadow-purple-500/20 cursor-pointer">
+      <CardContent className="p-6">
+        <motion.div 
+          className={`w-12 h-12 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center mb-4 border border-purple-500/30`}
+          whileHover={{ scale: 1.1, rotate: 5 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Icon className="w-6 h-6 text-white" />
+        </motion.div>
+        <h3 className="text-xl font-semibold bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent mb-2 group-hover:from-purple-300 group-hover:to-pink-300 transition-all duration-300">
+          {title}
+        </h3>
+        <p className="text-gray-300 leading-relaxed">{description}</p>
+        {showButton && (
+          <Button
+            variant="outline"
+            className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation()
+              if (onButtonClick) onButtonClick()
+            }}
+          >
+            {buttonText}
+          </Button>
+        )}
+      </CardContent>
+    </Card>
+  );
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -79,33 +111,13 @@ export function SimpleCard({
       transition={{ duration: 0.5, ease: [0.6, 0.05, 0.01, 0.9] }}
       whileHover={{ y: -8, transition: { duration: 0.3 } }}
     >
-      <Card className="h-full bg-white/5 backdrop-blur-sm border-white/10 hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300 group hover:shadow-2xl hover:shadow-purple-500/20">
-        <CardContent className="p-6">
-          <motion.div 
-            className={`w-12 h-12 bg-gradient-to-br ${color} rounded-xl flex items-center justify-center mb-4 border border-purple-500/30`}
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Icon className="w-6 h-6 text-white" />
-          </motion.div>
-          <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-purple-300 transition-colors">
-            {title}
-          </h3>
-          <p className="text-gray-400 leading-relaxed">{description}</p>
-          {showButton && (
-            <Button
-              variant="outline"
-              className="w-full bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer"
-              onClick={(e) => {
-                e.stopPropagation()
-                if (onButtonClick) onButtonClick()
-              }}
-            >
-              {buttonText}
-            </Button>
-          )}
-        </CardContent>
-      </Card>
+      {href ? (
+        <a href={href} className="block">
+          {content}
+        </a>
+      ) : (
+        content
+      )}
     </motion.div>
   )
 }

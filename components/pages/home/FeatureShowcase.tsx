@@ -1,5 +1,6 @@
 import { FeatureCard } from "@/components/ui/cards"
 import { ImageIcon, Video, Wand2 } from "lucide-react"
+import BlurText from "@/components/ui/BlurText"
 
 export function FeatureShowcase() {
   const features = [
@@ -45,9 +46,14 @@ export function FeatureShowcase() {
     <section className="py-24 bg-gradient-to-b from-[#0a0a1f] to-[#0f0520]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6">
-            Powerful Features for Creators
-          </h2>
+          <BlurText
+            text="Powerful Features for Creators"
+            delay={30}
+            animateBy="words"
+            direction="top"
+            stepDuration={0.2}
+            className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 justify-center"
+          />
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Everything you need to bring your creative vision to life
           </p>

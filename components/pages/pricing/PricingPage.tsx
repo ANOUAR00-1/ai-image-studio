@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Check, Zap, Crown, Rocket } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 interface Plan {
   name: string
@@ -107,80 +108,140 @@ export default function PricingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white dark:from-gray-900 dark:to-gray-800 py-12 px-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] py-20 px-4 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <motion.div 
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+        />
+        <motion.div 
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl"
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.3, 0.5, 0.3],
+          }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: 1
+          }}
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.h1 
+            className="text-5xl md:text-6xl font-black text-white mb-6"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             Choose Your Plan
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
+          </motion.h1>
+          <motion.p 
+            className="text-xl text-gray-300 max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             Start creating amazing AI images and videos today
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Billing Toggle */}
-        <div className="flex justify-center mb-12">
-          <div className="bg-gray-200 dark:bg-gray-700 rounded-full p-1 flex">
+        <motion.div 
+          className="flex justify-center mb-16"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
+          <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full p-1 flex">
             <button
               onClick={() => setBillingCycle('monthly')}
-              className={`px-6 py-2 rounded-full font-medium transition ${
+              className={`px-8 py-3 rounded-full font-medium transition-all duration-300 ${
                 billingCycle === 'monthly'
-                  ? 'bg-purple-600 text-white'
-                  : 'text-gray-600 dark:text-gray-400'
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50'
+                  : 'text-gray-300 hover:text-white'
               }`}
             >
               Monthly Plans
             </button>
             <button
               onClick={() => setBillingCycle('credits')}
-              className={`px-6 py-2 rounded-full font-medium transition ${
+              className={`px-8 py-3 rounded-full font-medium transition-all duration-300 ${
                 billingCycle === 'credits'
-                  ? 'bg-purple-600 text-white'
-                  : 'text-gray-600 dark:text-gray-400'
+                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50'
+                  : 'text-gray-300 hover:text-white'
               }`}
             >
               Buy Credits
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* Plans Grid */}
         {billingCycle === 'monthly' ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {plans.map((plan) => (
-              <div
+            {plans.map((plan, index) => (
+              <motion.div
                 key={plan.name}
-                className={`bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 relative ${
-                  plan.popular ? 'ring-2 ring-purple-500 transform scale-105' : ''
+                className={`bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl border rounded-2xl shadow-2xl p-8 relative transition-all duration-500 hover:scale-[1.05] hover:shadow-3xl ${
+                  plan.popular ? 'border-purple-500/50 shadow-purple-500/20 scale-105' : 'border-white/10'
                 }`}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: 0.4 + (index * 0.1),
+                  ease: "easeOut"
+                }}
+                whileHover={{ 
+                  y: -8,
+                  transition: { duration: 0.3, ease: "easeOut" }
+                }}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-purple-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                    <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-purple-500/50">
                       Most Popular
                     </span>
                   </div>
                 )}
 
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="p-2 bg-purple-100 dark:bg-purple-900 rounded-lg text-purple-600 dark:text-purple-300">
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="p-3 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl border border-purple-500/30">
                     {plan.icon}
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">
+                  <h3 className="text-3xl font-black text-white">
                     {plan.name}
                   </h3>
                 </div>
 
                 <div className="mb-6">
-                  <span className="text-5xl font-bold text-gray-900 dark:text-white">
+                  <span className="text-6xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent">
                     ${plan.price}
                   </span>
-                  <span className="text-gray-500 dark:text-gray-400">/month</span>
+                  <span className="text-gray-400 text-xl">/month</span>
                 </div>
 
-                <div className="mb-6">
-                  <p className="text-lg text-gray-600 dark:text-gray-300">
+                <div className="mb-8">
+                  <p className="text-lg font-semibold text-purple-300">
                     {plan.credits} credits/month
                   </p>
                 </div>
@@ -188,40 +249,51 @@ export default function PricingPage() {
                 <button
                   onClick={() => handleSubscribe(plan.name.toLowerCase())}
                   disabled={plan.name === 'Free'}
-                  className={`w-full py-3 rounded-lg font-medium transition mb-6 ${
+                  className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 mb-8 ${
                     plan.popular
-                      ? 'bg-purple-600 text-white hover:bg-purple-700'
+                      ? 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70'
                       : plan.name === 'Free'
-                      ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600'
+                      ? 'bg-white/5 text-gray-500 cursor-not-allowed border border-white/10'
+                      : 'bg-white/10 text-white hover:bg-white/20 border border-white/20'
                   }`}
                 >
                   {plan.name === 'Free' ? 'Current Plan' : `Get ${plan.name}`}
                 </button>
 
-                <ul className="space-y-3">
+                <ul className="space-y-4">
                   {plan.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start">
-                      <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-600 dark:text-gray-300">{feature}</span>
+                      <Check className="h-5 w-5 text-green-400 mr-3 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-300">{feature}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {creditPacks.map((pack) => (
-              <div
+            {creditPacks.map((pack, index) => (
+              <motion.div
                 key={pack.credits}
-                className={`bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 relative ${
-                  pack.popular ? 'ring-2 ring-purple-500 transform scale-105' : ''
+                className={`bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl border rounded-2xl shadow-2xl p-8 relative transition-all duration-500 hover:scale-[1.05] hover:shadow-3xl ${
+                  pack.popular ? 'border-green-500/50 shadow-green-500/20 scale-105' : 'border-white/10'
                 }`}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: 0.4 + (index * 0.1),
+                  ease: "easeOut"
+                }}
+                whileHover={{ 
+                  y: -8,
+                  transition: { duration: 0.3, ease: "easeOut" }
+                }}
               >
                 {pack.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-green-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                    <span className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-green-500/50">
                       Best Value
                     </span>
                   </div>
@@ -229,43 +301,48 @@ export default function PricingPage() {
 
                 {pack.savings && (
                   <div className="absolute top-4 right-4">
-                    <span className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium">
+                    <span className="bg-green-500/20 text-green-300 border border-green-500/30 px-3 py-1 rounded-full text-sm font-bold">
                       Save {pack.savings}
                     </span>
                   </div>
                 )}
 
                 <div className="text-center mb-6">
-                  <p className="text-5xl font-bold text-gray-900 dark:text-white mb-2">
+                  <p className="text-6xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent mb-2">
                     {pack.credits}
                   </p>
-                  <p className="text-gray-500 dark:text-gray-400">Credits</p>
+                  <p className="text-gray-400">Credits</p>
                 </div>
 
-                <div className="text-center mb-6">
-                  <span className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                <div className="text-center mb-8">
+                  <span className="text-4xl font-black text-white">
                     ${pack.price}
                   </span>
                 </div>
 
                 <button
                   onClick={() => handleBuyCredits(pack.credits, pack.price)}
-                  className="w-full py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition"
+                  className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-xl font-bold text-lg transition-all duration-300 shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 mb-4"
                 >
                   Buy Now
                 </button>
 
-                <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
+                <p className="text-center text-sm text-gray-400">
                   ${(pack.price / pack.credits).toFixed(2)} per credit
                 </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         )}
 
         {/* FAQ */}
-        <div className="mt-20 max-w-3xl mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8">
+        <motion.div 
+          className="mt-20 max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <h2 className="text-4xl font-black text-center text-white mb-12">
             Frequently Asked Questions
           </h2>
           <div className="space-y-6">
@@ -286,7 +363,7 @@ export default function PricingPage() {
               answer="Absolutely! You can upgrade your plan at any time and only pay the difference."
             />
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   )
@@ -296,19 +373,37 @@ function FAQItem({ question, answer }: { question: string; answer: string }) {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+    <motion.div 
+      className="bg-gradient-to-br from-white/[0.07] to-white/[0.02] backdrop-blur-xl border border-white/10 hover:border-white/20 rounded-xl shadow-lg p-6 transition-all duration-300"
+      whileHover={{ scale: 1.02 }}
+      transition={{ duration: 0.2 }}
+    >
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full text-left flex items-center justify-between"
       >
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <h3 className="text-lg font-bold text-white">
           {question}
         </h3>
-        <span className="text-2xl text-gray-500">{isOpen ? '−' : '+'}</span>
+        <motion.span 
+          className="text-2xl text-purple-400 font-bold"
+          animate={{ rotate: isOpen ? 45 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {isOpen ? '−' : '+'}
+        </motion.span>
       </button>
-      {isOpen && (
-        <p className="mt-4 text-gray-600 dark:text-gray-300">{answer}</p>
-      )}
-    </div>
+      <motion.div
+        initial={false}
+        animate={{ 
+          height: isOpen ? 'auto' : 0,
+          opacity: isOpen ? 1 : 0 
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        style={{ overflow: 'hidden' }}
+      >
+        <p className="mt-4 text-gray-300">{answer}</p>
+      </motion.div>
+    </motion.div>
   )
 }
