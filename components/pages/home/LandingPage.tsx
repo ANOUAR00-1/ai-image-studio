@@ -46,7 +46,7 @@ export default function LandingPage() {
   }
 
   const handleViewExamples = () => {
-    router.push('/gallery')
+    router.push('/examples')
   }
 
   const handleLearnMore = () => {

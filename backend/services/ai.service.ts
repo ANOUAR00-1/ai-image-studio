@@ -11,8 +11,9 @@ export class AIService {
     const hasHuggingFace = !!process.env.HUGGINGFACE_API_KEY
     const hasReplicate = !!process.env.REPLICATE_API_TOKEN
 
-    if (hasReplicate) return 'replicate' // Replicate is faster
+    // Use HuggingFace first (more reliable free tier)
     if (hasHuggingFace) return 'huggingface'
+    if (hasReplicate) return 'replicate'
     
     throw new Error('No AI provider configured. Add HUGGINGFACE_API_KEY or REPLICATE_API_TOKEN to .env.local')
   }
@@ -37,8 +38,14 @@ export class AIService {
           prompt,
           model || 'stabilityai/stable-diffusion-xl-base-1.0'
         )
-        // Convert to base64 for easy storage
-        return await HuggingFaceService.blobToBase64(blob)
+        
+        // If storage is not available, convert to base64
+        // Otherwise return blob for upload
+        if (process.env.USE_BASE64_IMAGES === 'true') {
+          return await HuggingFaceService.blobToBase64(blob)
+        }
+        
+        return blob
       }
     } catch (error) {
       console.error('AI image generation failed:', error)

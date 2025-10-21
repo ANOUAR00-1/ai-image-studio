@@ -10,6 +10,9 @@ export class HuggingFaceService {
     try {
       const selectedModel = model || 'stabilityai/stable-diffusion-xl-base-1.0'
       
+      console.log(`[HF] Generating with model: ${selectedModel}`)
+      console.log(`[HF] Prompt: ${prompt.substring(0, 50)}...`)
+      
       const response = await hf.textToImage({
         model: selectedModel,
         inputs: prompt,
@@ -21,10 +24,16 @@ export class HuggingFaceService {
       })
 
       // HuggingFace returns a Blob
-      return response as unknown as Blob
+      const blob = response as unknown as Blob
+      console.log(`[HF] ✓ Generated blob: ${blob.size} bytes, type: ${blob.type}`)
+      return blob
     } catch (error) {
-      console.error('HuggingFace image generation error:', error)
-      throw new Error('Failed to generate image with Hugging Face')
+      console.error('[HF] ❌ HuggingFace image generation error:', error)
+      if (error instanceof Error) {
+        console.error('[HF] Error message:', error.message)
+        console.error('[HF] Error stack:', error.stack)
+      }
+      throw new Error(`Failed to generate image with Hugging Face: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 

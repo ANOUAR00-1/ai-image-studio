@@ -13,6 +13,8 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  // Completely disable all development indicators forever
+  devIndicators: false,
 }
 
 export default nextConfig
