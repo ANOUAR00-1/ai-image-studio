@@ -74,8 +74,8 @@ export default function PricingPage() {
 
   const handleSubscribe = async (plan: string) => {
     try {
-      // Get token from localStorage
-      const token = localStorage.getItem('accessToken')
+      // Get token from localStorage (stored as 'access_token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         alert('Please login first')
         window.location.href = '/'
@@ -103,8 +103,8 @@ export default function PricingPage() {
 
   const handleBuyCredits = async (credits: number, price: number) => {
     try {
-      // Get token from localStorage
-      const token = localStorage.getItem('accessToken')
+      // Get token from localStorage (stored as 'access_token')
+      const token = localStorage.getItem('access_token')
       if (!token) {
         alert('Please login first')
         window.location.href = '/'
