@@ -74,9 +74,20 @@ export default function PricingPage() {
 
   const handleSubscribe = async (plan: string) => {
     try {
+      // Get token from localStorage
+      const token = localStorage.getItem('accessToken')
+      if (!token) {
+        alert('Please login first')
+        window.location.href = '/'
+        return
+      }
+
       const response = await fetch('/api/stripe/create-checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ type: 'subscription', plan }),
       })
 
@@ -92,9 +103,20 @@ export default function PricingPage() {
 
   const handleBuyCredits = async (credits: number, price: number) => {
     try {
+      // Get token from localStorage
+      const token = localStorage.getItem('accessToken')
+      if (!token) {
+        alert('Please login first')
+        window.location.href = '/'
+        return
+      }
+
       const response = await fetch('/api/stripe/create-checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ type: 'credits', credits, price }),
       })
 
