@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase/client'
+import { supabaseAdmin } from '@/lib/supabase/server'
 
 // Middleware to verify JWT token
 export async function verifyAuth(request: NextRequest): Promise<{
@@ -43,6 +44,41 @@ export function withAuth(
       return NextResponse.json(
         { error: authResult.error || 'Unauthorized' },
         { status: 401 }
+      )
+    }
+
+    return handler(request, {
+      userId: authResult.userId!,
+      user: authResult.user!,
+    })
+  }
+}
+
+// Wrapper for admin-only API routes
+export function withAdmin(
+  handler: (request: NextRequest, context: { userId: string; user: { id: string; email: string } }) => Promise<NextResponse>
+) {
+  return async (request: NextRequest) => {
+    const authResult = await verifyAuth(request)
+
+    if (!authResult.success) {
+      return NextResponse.json(
+        { error: authResult.error || 'Unauthorized' },
+        { status: 401 }
+      )
+    }
+
+    // Check if user is admin
+    const { data: profile, error } = await supabaseAdmin
+      .from('profiles')
+      .select('is_admin')
+      .eq('id', authResult.userId!)
+      .single()
+
+    if (error || !profile?.is_admin) {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
       )
     }
 
