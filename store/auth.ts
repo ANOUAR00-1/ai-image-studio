@@ -7,6 +7,7 @@ interface User {
   name?: string;
   plan?: string;
   credits?: number;
+  is_admin?: boolean;
   accessToken?: string;
   createdAt?: string;
   [key: string]: unknown;

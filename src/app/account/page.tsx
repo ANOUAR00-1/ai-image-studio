@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "motion/react"
-import { AccountPage } from "@/components/pages/shared/AccountPage"
+import { ModernAccountPage } from "@/components/pages/shared/ModernAccountPage"
 import { ProtectedRoute } from "@/components/pages/shared/ProtectedRoute"
 
 export default function Account() {
@@ -13,7 +13,7 @@ export default function Account() {
       className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f]"
     >
       <ProtectedRoute feature="Account Settings">
-        <AccountPage />
+        <ModernAccountPage />
       </ProtectedRoute>
     </motion.div>
   )

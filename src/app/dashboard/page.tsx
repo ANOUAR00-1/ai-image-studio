@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "motion/react"
-import { Dashboard } from "@/components/pages/dashboard/Dashboard"
+import { ModernDashboard } from "@/components/pages/dashboard/ModernDashboard"
 import { ProtectedRoute } from "@/components/pages/shared/ProtectedRoute"
 
 export default function DashboardPage() {
@@ -13,7 +13,7 @@ export default function DashboardPage() {
       className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f]"
     >
       <ProtectedRoute feature="Dashboard">
-        <Dashboard />
+        <ModernDashboard />
       </ProtectedRoute>
     </motion.div>
   )
