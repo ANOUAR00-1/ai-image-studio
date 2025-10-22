@@ -26,7 +26,7 @@ export function Testimonials() {
   ]
 
   return (
-    <section className="py-24 bg-gradient-to-b from-[#0f0520] to-[#0a0a1f]">
+    <section className="py-24 bg-gradient-to-b from-[#0f0a1f] via-[#0a0118] to-black">
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6">

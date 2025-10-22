@@ -18,6 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "PixFusion AI Studio",
   description: "AI-powered image fusion and editing studio",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=5",
   icons: {
     icon: [
       {
@@ -39,13 +40,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
         <AuthProvider>
           <Navigation />
-          <main className="flex-grow">
+          <main className="flex-grow page-enter">
             {children}
           </main>
           <Toaster 

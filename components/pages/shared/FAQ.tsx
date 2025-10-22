@@ -34,7 +34,7 @@ export function FAQ() {
   ]
 
   return (
-    <section className="py-24 bg-gradient-to-b from-[#0a0a1f] to-[#0f0520]">
+    <section className="py-24 bg-gradient-to-b from-black to-[#0a0118]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6">

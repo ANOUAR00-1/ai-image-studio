@@ -59,22 +59,50 @@ export default function LandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] relative overflow-hidden">
-      {/* Lightning Background Animation - Only for Hero + Features sections */}
-      <div className="absolute top-0 left-0 right-0 pointer-events-none z-0 opacity-20" style={{ height: '200vh', maxHeight: '2000px', willChange: 'opacity' }}>
+    <div className="min-h-screen bg-gradient-to-b from-black via-[#0a0118] to-black relative overflow-hidden">
+      {/* Lightning Background Animation - Optimized for Performance */}
+      <div 
+        className="absolute top-0 left-0 right-0 pointer-events-none z-0 opacity-60" 
+        style={{ 
+          height: '100vh',
+          willChange: 'opacity',
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden'
+        }}
+      >
         <Lightning
           hue={280}
           xOffset={0}
-          speed={0.2}
-          intensity={0.5}
-          size={0.4}
+          speed={0.3}
+          intensity={1.0}
+          size={0.6}
         />
       </div>
       
-      {/* Animated Background Elements - Only top sections */}
-      <div className="absolute top-0 left-0 right-0 overflow-hidden pointer-events-none z-0" style={{ height: '200vh', maxHeight: '2000px', contain: 'layout style paint' }}>
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl animate-pulse" style={{ willChange: 'opacity' }}></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '700ms', willChange: 'opacity' }}></div>
+      {/* Animated Background Elements - GPU Accelerated */}
+      <div 
+        className="absolute top-0 left-0 right-0 overflow-hidden pointer-events-none z-0" 
+        style={{ 
+          height: '100vh',
+          contain: 'layout style paint',
+          transform: 'translateZ(0)'
+        }}
+      >
+        <div 
+          className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-purple-500/15 rounded-full blur-3xl animate-pulse" 
+          style={{ 
+            willChange: 'opacity',
+            transform: 'translateZ(0)'
+          }}
+        ></div>
+        <div 
+          className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-pink-500/15 rounded-full blur-3xl animate-pulse" 
+          style={{ 
+            animationDelay: '1s',
+            willChange: 'opacity',
+            transform: 'translateZ(0)'
+          }}
+        ></div>
       </div>
 
       {/* Hero Section */}

@@ -33,7 +33,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-gradient-to-b from-[#0f0520] to-[#0a0a1f] border-t border-white/10">
+    <footer className="bg-black border-t border-white/10">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12 mb-12">
           {/* Brand Section */}

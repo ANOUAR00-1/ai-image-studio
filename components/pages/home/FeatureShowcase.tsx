@@ -43,7 +43,7 @@ export function FeatureShowcase() {
   ]
 
   return (
-    <section className="py-24 bg-gradient-to-b from-[#0a0a1f] to-[#0f0520]">
+    <section className="py-24 bg-gradient-to-b from-black via-[#0a0118] to-[#0f0a1f]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
           <BlurText

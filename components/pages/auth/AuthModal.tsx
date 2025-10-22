@@ -21,7 +21,6 @@ import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { motion, AnimatePresence } from "framer-motion"
 import { staggerContainer, staggerItem } from "@/lib/animations"
-import StarBorder from "@/components/ui/StarBorder"
 
 export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) {
   const [isLogin, setIsLogin] = useState(true)
@@ -280,55 +279,64 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-gradient-to-br from-[#0f0520]/95 via-[#1a0b2e]/95 to-[#0a0a1f]/95 backdrop-blur-2xl border border-white/20 shadow-2xl shadow-purple-500/20 transition-all duration-300 animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-4">
-        <DialogHeader className="space-y-2">
-          <div className="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mx-auto shadow-lg shadow-purple-500/50">
-            <Sparkles className="w-7 h-7 text-white" />
-          </div>
-          <DialogTitle className="text-2xl font-black text-white text-center">
-            {isForgotPassword ? "Reset Password" : (isLogin ? "Welcome back" : "Join PixFusion AI")}
-          </DialogTitle>
-          <DialogDescription className="text-sm text-gray-300 text-center">
-            {isForgotPassword 
-              ? "Enter your email to receive a password reset link"
-              : (isLogin 
-                ? "Sign in to your account to continue" 
-                : "Get started with powerful AI tools")}
-          </DialogDescription>
-        </DialogHeader>
+      <DialogContent className="sm:max-w-[420px] bg-[#0a0118] border-[#2d1b4e] shadow-2xl shadow-purple-900/50 p-0 overflow-hidden">
+        {/* Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-transparent to-pink-900/20 pointer-events-none" />
         
-        <form onSubmit={handleSubmit} className="space-y-3.5 mt-4">
-          {!isLogin && !isForgotPassword && (
-            <div className="space-y-1.5">
-              <Label htmlFor="name" className="text-white text-sm font-semibold">Full Name</Label>
+        <div className="relative p-8">
+          <DialogHeader className="space-y-4">
+            {/* Logo */}
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto shadow-lg shadow-purple-500/50">
+              <Sparkles className="w-8 h-8 text-white" />
+            </div>
+            
+            {/* Title */}
+            <DialogTitle className="text-3xl font-bold text-white text-center">
+              {isForgotPassword ? "Reset Password" : (isLogin ? "Welcome back" : "Join PixFusion AI")}
+            </DialogTitle>
+            
+            {/* Description */}
+            <DialogDescription className="text-base text-gray-400 text-center">
+              {isForgotPassword 
+                ? "Enter your email to receive a password reset link"
+                : (isLogin 
+                  ? "Sign in to your account to continue" 
+                  : "Get started with powerful AI tools")}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <form onSubmit={handleSubmit} className="space-y-5 mt-6">
+            {!isLogin && !isForgotPassword && (
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-white text-sm font-medium">Full Name</Label>
+                <div className="relative">
+                  <User className="absolute left-3.5 top-3 h-5 w-5 text-purple-400" />
+                  <Input 
+                    id="name" 
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Enter your full name" 
+                    className="pl-11 h-12 bg-[#1a0f2e] border-[#2d1b4e] text-white placeholder:text-gray-500 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-xl transition-all" 
+                  />
+                </div>
+              </div>
+            )}
+            
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-white text-sm font-medium">Email</Label>
               <div className="relative">
-                <User className="absolute left-3 top-2.5 h-4 w-4 text-purple-400" />
+                <Mail className="absolute left-3.5 top-3 h-5 w-5 text-purple-400" />
                 <Input 
-                  id="name" 
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Enter your full name" 
-                  className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-gray-500 focus:border-purple-500/50 h-10" 
+                  id="email" 
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  placeholder="Enter your email" 
+                  className="pl-11 h-12 bg-[#1a0f2e] border-[#2d1b4e] text-white placeholder:text-gray-500 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-xl transition-all" 
+                  required
                 />
               </div>
             </div>
-          )}
-          
-          <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-white text-sm font-semibold">Email</Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-2.5 h-4 w-4 text-purple-400" />
-              <Input 
-                id="email" 
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                placeholder="Enter your email" 
-                className="pl-10 bg-white/5 border-white/20 text-white placeholder:text-gray-500 focus:border-purple-500/50 h-10" 
-                required
-              />
-            </div>
-          </div>
           
           <AnimatePresence mode="wait">
             {showOtpInput ? (
@@ -392,151 +400,150 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
                   </button>
                 </motion.div>
               </motion.div>
-          ) : !isForgotPassword && (
-            <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-white text-sm font-semibold">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-2.5 h-4 w-4 text-purple-400" />
-                <Input 
-                  id="password" 
-                  type={showPassword ? "text" : "password"}
-                  value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="Enter your password" 
-                  className="pl-10 pr-10 bg-white/5 border-white/20 text-white placeholder:text-gray-500 focus:border-purple-500/50 h-10"
-                  required
-                />
+            ) : !isForgotPassword && (
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-white text-sm font-medium">Password</Label>
+                <div className="relative">
+                  <Lock className="absolute left-3.5 top-3 h-5 w-5 text-purple-400" />
+                  <Input 
+                    id="password" 
+                    type={showPassword ? "text" : "password"}
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    placeholder="Enter your password" 
+                    className="pl-11 pr-12 h-12 bg-[#1a0f2e] border-[#2d1b4e] text-white placeholder:text-gray-500 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 rounded-xl transition-all"
+                    required
+                  />
+                  <button 
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-3 text-gray-400 hover:text-purple-400 transition-colors"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+            </AnimatePresence>
+            
+            {isLogin && !isForgotPassword && (
+              <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                  <Checkbox 
+                    id="remember" 
+                    className="border-[#2d1b4e] data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600" 
+                  />
+                  <Label htmlFor="remember" className="text-sm text-gray-400 cursor-pointer">Remember me</Label>
+                </div>
                 <button 
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-2.5 text-gray-400 hover:text-purple-400 transition-colors"
+                  onClick={() => setIsForgotPassword(true)}
+                  className="text-sm text-purple-400 hover:text-purple-300 transition-colors font-medium"
                 >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
+                  Forgot password?
                 </button>
               </div>
-            </div>
-          )}
-          </AnimatePresence>
-          
-          {isLogin && !isForgotPassword && (
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <Checkbox 
-                  id="remember" 
-                  className="border-white/30 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600" 
-                />
-                <Label htmlFor="remember" className="text-xs text-gray-300 cursor-pointer">Remember me</Label>
-              </div>
-              <button 
-                type="button"
-                onClick={() => setIsForgotPassword(true)}
-                className="text-xs text-purple-400 hover:text-purple-300 transition-colors"
-              >
-                Forgot password?
-              </button>
-            </div>
-          )}
-          
-          <div className="mt-2">
-            <StarBorder
-              as="button"
+            )}
+            
+            <Button
               type={showOtpInput ? "button" : "submit"}
               onClick={showOtpInput ? handleOtpVerify : undefined}
               disabled={loading}
-              color="#A855F7"
-              speed="5s"
-              className="w-full hover:scale-105 transition-transform disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              className="w-full h-12 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-xl shadow-lg shadow-purple-500/30 transition-all hover:shadow-purple-500/50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <span>Loading...</span>
+                <span className="flex items-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white" />
+                  Loading...
+                </span>
               ) : (
                 <span className="flex items-center justify-center gap-2">
-                  <Sparkles className="w-4 h-4" />
+                  <Sparkles className="w-5 h-5" />
                   {showOtpInput ? "Verify Code" : (isForgotPassword ? "Send Reset Link" : (isLogin ? "Sign In" : "Create Account"))}
                 </span>
               )}
-            </StarBorder>
-          </div>
+            </Button>
           
-          {!isForgotPassword && (
-            <>
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/20" />
-                </div>
-                <div className="relative flex justify-center text-sm">
-                  <span className="px-3 bg-gradient-to-br from-[#0f0520]/95 via-[#1a0b2e]/95 to-[#0a0a1f]/95 text-gray-400">
-                    Or continue with
-                  </span>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2.5">
-                <Button 
-                  type="button"
-                  variant="outline" 
-                  onClick={() => handleSocialAuth("GitHub")}
-                  className="bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/50 h-9 text-sm"
-                >
-                  <Github className="mr-2 h-4 w-4" />
-                  GitHub
-                </Button>
-                <Button 
-                  type="button"
-                  variant="outline"
-                  onClick={() => handleSocialAuth("Google")}
-                  className="bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/50 h-9 text-sm"
-                >
-                  <Chrome className="mr-2 h-4 w-4" />
-                  Google
-                </Button>
-              </div>
-            </>
-          )}
-          
-          <div className="text-center text-xs pt-1">
-            {showOtpInput ? (
-              <button 
-                type="button"
-                onClick={() => {
-                  setShowOtpInput(false)
-                  setOtp(['', '', '', '', '', ''])
-                }}
-                className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
-              >
-                ← Back to Sign Up
-              </button>
-            ) : isForgotPassword ? (
-              <button 
-                type="button"
-                onClick={() => {
-                  setIsForgotPassword(false)
-                  setFormData({ name: "", email: "", password: "" })
-                }}
-                className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
-              >
-                ← Back to Login
-              </button>
-            ) : (
+            {!isForgotPassword && (
               <>
-                <span className="text-gray-400">
-                  {isLogin ? "Don't have an account? " : "Already have an account? "}
-                </span>
-                <button 
-                  type="button"
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="text-purple-400 hover:text-purple-300 font-semibold transition-colors"
-                >
-                  {isLogin ? "Sign up" : "Sign in"}
-                </button>
+                <div className="relative my-6">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-[#2d1b4e]" />
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-4 bg-[#0a0118] text-gray-400">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-3">
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    onClick={() => handleSocialAuth("GitHub")}
+                    className="h-11 bg-[#1a0f2e] border-[#2d1b4e] text-white hover:bg-[#2d1b4e] hover:border-purple-500/50 rounded-xl transition-all"
+                  >
+                    <Github className="mr-2 h-5 w-5" />
+                    GitHub
+                  </Button>
+                  <Button 
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleSocialAuth("Google")}
+                    className="h-11 bg-[#1a0f2e] border-[#2d1b4e] text-white hover:bg-[#2d1b4e] hover:border-purple-500/50 rounded-xl transition-all"
+                  >
+                    <Chrome className="mr-2 h-5 w-5" />
+                    Google
+                  </Button>
+                </div>
               </>
             )}
-          </div>
-        </form>
+            
+            <div className="text-center text-sm pt-2">
+              {showOtpInput ? (
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setShowOtpInput(false)
+                    setOtp(['', '', '', '', '', ''])
+                  }}
+                  className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                >
+                  ← Back to Sign Up
+                </button>
+              ) : isForgotPassword ? (
+                <button 
+                  type="button"
+                  onClick={() => {
+                    setIsForgotPassword(false)
+                    setFormData({ name: "", email: "", password: "" })
+                  }}
+                  className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+                >
+                  ← Back to Login
+                </button>
+              ) : (
+                <>
+                  <span className="text-gray-400">
+                    {isLogin ? "Don't have an account? " : "Already have an account? "}
+                  </span>
+                  <button 
+                    type="button"
+                    onClick={() => setIsLogin(!isLogin)}
+                    className="text-purple-400 hover:text-purple-300 font-semibold transition-colors underline"
+                  >
+                    {isLogin ? "Sign up" : "Sign in"}
+                  </button>
+                </>
+              )}
+            </div>
+          </form>
+        </div>
       </DialogContent>
     </Dialog>
   )
