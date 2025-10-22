@@ -29,12 +29,17 @@ export function NotificationBell() {
   const fetchNotifications = async () => {
     try {
       const response = await fetch('/api/notifications')
+      if (!response.ok) {
+        // API endpoint not implemented yet, silently fail
+        return
+      }
       const data = await response.json()
       if (data.success) {
         setNotifications(data.data.notifications || [])
       }
-    } catch (error) {
-      console.error('Failed to fetch notifications:', error)
+    } catch {
+      // Silently fail if notifications API is not available
+      return
     }
   }
 
