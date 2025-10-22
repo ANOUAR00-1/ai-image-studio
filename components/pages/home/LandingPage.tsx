@@ -326,7 +326,7 @@ export default function LandingPage() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <BlurText
-              text="Simple, Transparent Pricing"
+              text="Choose Your Perfect Plan"
               delay={30}
               animateBy="words"
               direction="top"
@@ -338,34 +338,40 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto mt-8">
             {[
               { name: "Free", price: "$0", period: "/month", credits: "10 credits", features: ["Basic AI tools", "Standard quality", "Limited generations", "Community support"], popular: false },
               { name: "Pro", price: "$19", period: "/month", credits: "300 credits", features: ["All AI tools", "HD quality exports", "Priority processing", "Email support", "No watermarks"], popular: true },
               { name: "Business", price: "$59", period: "/month", credits: "1000 credits", features: ["Everything in Pro", "Team workspace", "API access", "Custom integrations", "Priority support"], popular: false }
             ].map((plan) => (
-              <SpotlightCard
-                key={plan.name}
-                className={`group transition-all duration-500 hover:scale-[1.02] relative ${
-                  plan.popular 
-                    ? 'border-2 border-purple-500 shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50' 
-                    : 'border-white/10 hover:border-purple-500/30 hover:shadow-xl hover:shadow-purple-500/10'
-                }`}
-                spotlightColor="rgba(168, 85, 247, 0.15)"
-              >
-                {plan.popular && (
-                  <Badge className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 border-0 px-6 py-2 text-sm font-bold shadow-lg">
-                    Most Popular
-                  </Badge>
+              <div key={plan.name} className="relative h-full">
+                <SpotlightCard
+                  className={`group transition-all duration-500 hover:scale-[1.02] h-full flex flex-col ${
+                    plan.popular 
+                      ? 'border-2 border-purple-500 shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50' 
+                      : 'border-white/10 hover:border-purple-500/30 hover:shadow-xl hover:shadow-purple-500/10'
+                  }`}
+                  spotlightColor="rgba(168, 85, 247, 0.15)"
+                >
+                {plan.popular ? (
+                  <div className="bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 py-2 px-4 -mx-8 -mt-8 mb-6 rounded-t-3xl">
+                    <div className="flex items-center justify-center gap-2">
+                      <span className="text-yellow-300 text-lg">⭐</span>
+                      <span className="text-white text-sm font-bold tracking-wide">MOST POPULAR</span>
+                      <span className="text-yellow-300 text-lg">⭐</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="h-10"></div>
                 )}
-                <div className="p-10 text-center">
+                <div className={`${plan.popular ? 'p-10 pt-0' : 'p-10 pt-0'} text-center flex-1 flex flex-col`}>
                   <h3 className="text-3xl font-black text-white mb-6 group-hover:text-purple-300 transition-colors">{plan.name}</h3>
                   <div className="mb-3">
                     <span className="text-6xl font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{plan.price}</span>
                     <span className="text-gray-400 text-xl">{plan.period}</span>
                   </div>
                   <p className="text-purple-400 font-bold text-lg mb-8">{plan.credits}</p>
-                  <ul className="space-y-4 mb-10 text-left">
+                  <ul className="space-y-4 mb-10 text-left flex-1">
                     {plan.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start text-gray-300">
                         <Check className="w-5 h-5 text-green-400 mr-3 flex-shrink-0 mt-0.5" />
@@ -385,6 +391,7 @@ export default function LandingPage() {
                   </Button>
                 </div>
               </SpotlightCard>
+              </div>
             ))}
           </div>
         </div>
