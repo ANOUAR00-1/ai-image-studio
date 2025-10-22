@@ -37,6 +37,13 @@ export class CreditsService {
     amount: number,
     description?: string
   ): Promise<boolean> {
+    // Check if admin first (admins have unlimited credits, no deduction needed)
+    const isAdmin = await this.isAdmin(userId)
+    if (isAdmin) {
+      console.log(`Admin user ${userId} - skipping credit deduction`)
+      return true
+    }
+
     const { data, error } = await supabaseAdmin.rpc('deduct_credits', {
       p_user_id: userId,
       p_amount: amount,

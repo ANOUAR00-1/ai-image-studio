@@ -73,31 +73,18 @@ export class ReplicateService {
   // Generate video
   static async generateVideo(
     prompt: string,
-    model: string = 'stable-video'
+    model: string = 'zeroscope'
   ): Promise<string> {
     try {
+      console.log(`🎬 Generating video with model: ${model}`)
+      console.log(`📝 Prompt: ${prompt}`)
+      
       let output
 
       switch (model) {
-        case 'stable-video':
-          // Stable Video Diffusion
-          output = await replicate.run(
-            'stability-ai/stable-video-diffusion:3f0457e4619daac51203dedb472816fd4af51f3149fa7a9e0b5ffcf1b8172438',
-            {
-              input: {
-                video_length: 14,
-                sizing_strategy: 'maintain_aspect_ratio',
-                motion_bucket_id: 127,
-                cond_aug: 0.02,
-                decoding_t: 14,
-                frames_per_second: 6,
-              },
-            }
-          )
-          break
-
         case 'zeroscope':
-          // Zeroscope V2 (text to video)
+          // Zeroscope V2 XL (text to video) - WORKS!
+          console.log('  → Using Zeroscope V2 XL...')
           output = await replicate.run(
             'anotherjesse/zeroscope-v2-xl:9f747673945c62801b13b84701c783929c0ee784e4748ec062204894dda1a351',
             {
@@ -105,19 +92,35 @@ export class ReplicateService {
                 prompt,
                 fps: 8,
                 num_frames: 24,
+                batch_size: 1,
+                num_inference_steps: 50,
               },
             }
           )
           break
 
+        case 'stable-video':
+          // Stable Video Diffusion (requires input image - not suitable for text-to-video)
+          throw new Error('Stable Video Diffusion requires an input image. Use zeroscope for text-to-video.')
+
         default:
-          throw new Error('Unknown video model')
+          throw new Error(`Unknown video model: ${model}`)
       }
 
+      console.log('  → Video generation complete!')
       const videoUrl = Array.isArray(output) ? output[0] : output
+      
+      if (!videoUrl) {
+        throw new Error('No video URL returned from Replicate')
+      }
+      
+      console.log(`  ✓ Video URL: ${String(videoUrl).substring(0, 50)}...`)
       return String(videoUrl)
     } catch (error) {
-      console.error('Replicate video generation error:', error)
+      console.error('❌ Replicate video generation error:', error)
+      if (error instanceof Error) {
+        throw new Error(`Failed to generate video: ${error.message}`)
+      }
       throw new Error('Failed to generate video with Replicate')
     }
   }
@@ -147,16 +150,10 @@ export class ReplicateService {
       ],
       videos: [
         {
-          id: 'stable-video',
-          name: 'Stable Video Diffusion',
-          credits: 8,
-          description: '2-3 second video clips',
-        },
-        {
           id: 'zeroscope',
           name: 'Zeroscope V2 XL',
-          credits: 10,
-          description: 'Text-to-video generation',
+          credits: 8,
+          description: 'Text-to-video generation, 24 frames',
         },
       ],
     }

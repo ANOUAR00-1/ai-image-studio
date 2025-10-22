@@ -330,7 +330,8 @@ export default function LandingPage() {
           >
             {[
               { icon: ImageIcon, title: "AI Image Generation", description: "Create stunning images from text prompts with state-of-the-art AI models", href: "/image-tools" },
-              { icon: Video, title: "AI Video Creation", description: "Generate professional videos from text or animate your images with AI", href: "/video-tools" },
+              // VIDEO COMMENTED OUT - NO FREE API
+              // { icon: Video, title: "AI Video Creation", description: "Generate professional videos from text or animate your images with AI", href: "/video-tools" },
               { icon: Wand2, title: "Advanced Editing", description: "Remove backgrounds, enhance quality, upscale, and inpaint with precision", href: "/image-tools" },
               { icon: Zap, title: "Lightning Fast", description: "Get your creations in seconds with our optimized AI processing pipeline", href: "/dashboard" },
               { icon: Shield, title: "Enterprise Ready", description: "Secure, scalable, and reliable platform trusted by creative professionals", href: "/about" },
