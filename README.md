@@ -6,14 +6,18 @@ AI-powered SaaS platform for image and video generation using cutting-edge AI mo
 
 ## ✨ Features
 
-- 🎨 **AI Image Generation** - DALL-E 3, Stable Diffusion
-- 🎬 **AI Video Generation** - Runway, Pika
+- 🎨 **AI Image Generation** - DALL-E 3, Stable Diffusion, Flux
+- 🎬 **AI Video Generation** - Runway, Pika, Luma AI
 - ✂️ **Image Editing** - Remove backgrounds, enhance, upscale
 - 💳 **Subscription Plans** - Free, Pro, Business
 - 🔐 **Authentication** - Secure login with Supabase Auth
-- 💰 **Credits System** - Pay-per-use pricing model
-- 📊 **Dashboard** - Track generations and usage
+- 💰 **Credits System** - Pay-per-use pricing model with admin unlimited credits
+- 📊 **Dashboard** - Track generations and usage with real-time stats
 - 🎯 **API Access** - Business plan includes API keys
+- ✨ **Interactive UI** - SpotlightCard effects with mouse tracking
+- 👑 **Admin Panel** - Monitor all generations and manage users
+- 🎭 **Examples Gallery** - Browse AI-generated content
+- 📱 **Responsive Design** - Works on all devices
 
 ---
 
