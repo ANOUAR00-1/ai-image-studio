@@ -41,26 +41,13 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     try {
-      // Get auth token from localStorage (client-side only)
-      const token = typeof window !== 'undefined' 
-        ? localStorage.getItem('access_token') 
-        : null
-
       console.log('🔍 API Request:', { 
-        endpoint, 
-        hasToken: !!token,
-        tokenPreview: token ? `${token.substring(0, 20)}...` : 'NULL'
+        endpoint,
+        method: options.method || 'GET'
       })
 
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-      }
-
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`
-        console.log('✅ Authorization header added')
-      } else {
-        console.error('❌ No token found in localStorage!')
       }
 
       // Merge with any additional headers
@@ -68,9 +55,11 @@ class ApiClient {
         Object.assign(headers, options.headers)
       }
 
+      // Use credentials: 'include' to send httpOnly cookies
       const response = await fetch(`${this.baseUrl}${endpoint}`, {
         ...options,
         headers,
+        credentials: 'include', // Important: send cookies with request
       })
 
       const data = await response.json()
