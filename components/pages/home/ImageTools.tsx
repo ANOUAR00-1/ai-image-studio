@@ -7,6 +7,9 @@ import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { 
   Wand2, 
   Upload, 
@@ -17,7 +20,8 @@ import {
   Zap,
   Palette,
   AlertCircle,
-  Check
+  Check,
+  Star
 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { api } from '@/utils/api'
@@ -25,6 +29,7 @@ import { ImageWithFallback } from '@/components/figma/ImageWithFallback'
 import AIGenerationLoader from '@/components/pages/shared/AIGenerationLoader'
 import StarBorder from '@/components/ui/StarBorder'
 import { BackButton } from '@/components/BackButton'
+import { toast } from 'sonner'
 
 export function ImageTools() {
   const { user, refreshUser } = useAuthStore()
@@ -45,6 +50,10 @@ export function ImageTools() {
   const [uploadedFileName, setUploadedFileName] = useState<string>('')
   const [showPricingModal, setShowPricingModal] = useState(false)
   const [showLoader, setShowLoader] = useState(false)
+  const [showAddToExamplesModal, setShowAddToExamplesModal] = useState(false)
+  const [exampleTitle, setExampleTitle] = useState('')
+  const [exampleCategory, setExampleCategory] = useState('portraits')
+  const [addingToExamples, setAddingToExamples] = useState(false)
 
   const tools = [
     {
@@ -252,6 +261,48 @@ export function ImageTools() {
     } else {
       // For other tools, reprocess the uploaded image
       handleProcessImage()
+    }
+  }
+
+  const handleAddToExamples = async () => {
+    if (!exampleTitle.trim()) {
+      toast.error('Please enter a title for this example')
+      return
+    }
+
+    setAddingToExamples(true)
+    try {
+      const response = await fetch('/api/admin/add-to-examples', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user?.accessToken}`
+        },
+        body: JSON.stringify({
+          title: exampleTitle,
+          category: exampleCategory,
+          prompt: result?.prompt || prompt,
+          image_url: result?.imageUrl,
+          model: activeTab,
+          credits_used: result?.creditsUsed || 0
+        })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        toast.success('✨ Added to Examples showcase!')
+        setShowAddToExamplesModal(false)
+        setExampleTitle('')
+        setExampleCategory('portraits')
+      } else {
+        toast.error(data.error || 'Failed to add to examples')
+      }
+    } catch (error) {
+      console.error('Add to examples error:', error)
+      toast.error('Failed to add to examples')
+    } finally {
+      setAddingToExamples(false)
     }
   }
 
@@ -703,7 +754,7 @@ export function ImageTools() {
                         <strong className="text-white">Enhanced Prompt:</strong> {result.prompt}
                       </p>
                       
-                      <div className="flex gap-3">
+                      <div className="flex gap-3 flex-wrap">
                         <Button 
                           size="sm" 
                           className="bg-white/10 border-white/20 text-white hover:bg-white/20"
@@ -721,6 +772,17 @@ export function ImageTools() {
                           <Wand2 className="w-4 h-4 mr-2" />
                           Regenerate
                         </Button>
+                        {user?.is_admin && activeTab === 'generate' && (
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border-yellow-500/30 text-yellow-300 hover:from-yellow-500/30 hover:to-orange-500/30"
+                            onClick={() => setShowAddToExamplesModal(true)}
+                          >
+                            <Star className="w-4 h-4 mr-2 fill-yellow-400" />
+                            Add to Examples
+                          </Button>
+                        )}
                       </div>
                       
                       <p className="text-xs text-gray-400 mt-3">
@@ -734,6 +796,87 @@ export function ImageTools() {
           </motion.div>
         </div>
       </div>
+
+      {/* Add to Examples Modal (Admin Only) */}
+      <Dialog open={showAddToExamplesModal} onOpenChange={setShowAddToExamplesModal}>
+        <DialogContent className="max-w-md bg-gradient-to-br from-[#1a1a3f] to-[#0a0a1f] border-white/10 text-white">
+          <DialogHeader>
+            <DialogTitle className="text-2xl bg-gradient-to-r from-yellow-400 via-orange-400 to-pink-400 bg-clip-text text-transparent flex items-center gap-2">
+              <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" />
+              Add to Examples Showcase
+            </DialogTitle>
+            <DialogDescription className="text-gray-400">
+              This image will be featured in the /examples page for everyone to see.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 mt-4">
+            <div className="space-y-2">
+              <Label htmlFor="example-title" className="text-gray-300">
+                Title *
+              </Label>
+              <Input
+                id="example-title"
+                placeholder="e.g., Stunning Mountain Sunset"
+                value={exampleTitle}
+                onChange={(e) => setExampleTitle(e.target.value)}
+                className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="example-category" className="text-gray-300">
+                Category *
+              </Label>
+              <Select value={exampleCategory} onValueChange={setExampleCategory}>
+                <SelectTrigger className="bg-white/5 border-white/10 text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1a1a3f] border-white/10 text-white">
+                  <SelectItem value="portraits">Portraits</SelectItem>
+                  <SelectItem value="landscapes">Landscapes</SelectItem>
+                  <SelectItem value="abstract">Abstract Art</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+              <p className="text-xs text-blue-300">
+                <strong>Prompt:</strong> {result?.prompt || prompt}
+              </p>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <Button
+                variant="outline"
+                onClick={() => setShowAddToExamplesModal(false)}
+                className="flex-1 bg-white/5 border-white/10 text-white hover:bg-white/10"
+                disabled={addingToExamples}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleAddToExamples}
+                className="flex-1 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white"
+                disabled={addingToExamples || !exampleTitle.trim()}
+              >
+                {addingToExamples ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Adding...
+                  </>
+                ) : (
+                  <>
+                    <Star className="w-4 h-4 mr-2" />
+                    Add to Examples
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
