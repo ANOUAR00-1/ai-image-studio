@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase/client'
 import { supabaseAdmin } from '@/lib/supabase/server'
+import { withRateLimit, RateLimits } from '@/backend/utils/rateLimit'
 
-export async function POST(request: Request) {
+export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) => {
   try {
     const { email, password } = await request.json()
 
@@ -108,4 +109,4 @@ export async function POST(request: Request) {
       { status: 500 }
     )
   }
-}
+})

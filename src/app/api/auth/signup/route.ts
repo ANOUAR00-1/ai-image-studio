@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase/client'
 import { supabaseAdmin } from '@/lib/supabase/server'
+import { withRateLimit, RateLimits } from '@/backend/utils/rateLimit'
 
-export async function POST(request: Request) {
+export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) => {
   try {
     const body = await request.json()
     console.log('Signup request received:', { email: body.email, name: body.name })
@@ -18,10 +19,20 @@ export async function POST(request: Request) {
       )
     }
 
-    if (password.length < 6) {
+    // Strong password validation
+    if (password.length < 8) {
       console.log('Validation failed: Password too short')
       return NextResponse.json(
-        { error: 'Password must be at least 6 characters' },
+        { error: 'Password must be at least 8 characters' },
+        { status: 400 }
+      )
+    }
+    
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
+    if (!passwordRegex.test(password)) {
+      console.log('Validation failed: Password complexity requirements not met')
+      return NextResponse.json(
+        { error: 'Password must include uppercase, lowercase, number, and special character (@$!%*?&)' },
         { status: 400 }
       )
     }
@@ -97,4 +108,4 @@ export async function POST(request: Request) {
       { status: 500 }
     )
   }
-}
+})
