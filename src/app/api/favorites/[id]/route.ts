@@ -1,36 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { verifyAuth } from '@/backend/utils/middleware'
+import { supabaseAdmin } from '@/lib/supabase/server'
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = await cookies()
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value
-          },
-        },
-      }
-    )
-    const { id } = await params
-    
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
-    if (authError || !user) {
+    // Verify authentication
+    const authResult = await verifyAuth(request)
+    if (!authResult.success || !authResult.userId) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { error } = await supabase
+    const { id } = await params
+
+    const { error } = await supabaseAdmin
       .from('favorites')
       .insert({
-        user_id: user.id,
+        user_id: authResult.userId,
         generation_id: id
       })
 
@@ -53,30 +41,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const cookieStore = await cookies()
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value
-          },
-        },
-      }
-    )
-    const { id } = await params
-    
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
-    if (authError || !user) {
+    // Verify authentication
+    const authResult = await verifyAuth(request)
+    if (!authResult.success || !authResult.userId) {
       return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { error } = await supabase
+    const { id } = await params
+
+    const { error } = await supabaseAdmin
       .from('favorites')
       .delete()
-      .eq('user_id', user.id)
+      .eq('user_id', authResult.userId)
       .eq('generation_id', id)
 
     if (error) {

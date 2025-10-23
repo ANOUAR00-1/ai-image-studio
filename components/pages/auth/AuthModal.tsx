@@ -231,8 +231,13 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
         toast.success("Account created successfully!")
       }
       
-      // Close modal and redirect
+      // Close modal
       onOpenChange(false)
+      
+      // Small delay to ensure cookies are set before redirect
+      await new Promise(resolve => setTimeout(resolve, 100))
+      
+      // Redirect to dashboard
       router.push("/dashboard")
       
       console.log('✅ Auth complete, redirecting to dashboard')

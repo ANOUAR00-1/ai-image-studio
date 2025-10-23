@@ -1,32 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerClient } from '@supabase/ssr'
-import { cookies } from 'next/headers'
+import { withAuth } from '@/backend/utils/middleware'
+import { supabaseAdmin } from '@/lib/supabase/server'
 
-export async function GET() {
+export const GET = withAuth(async (request: NextRequest, { userId }) => {
   try {
-    const cookieStore = await cookies()
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value
-          },
-        },
-      }
-    )
-    
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
-    if (authError || !user) {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
-    }
-
-    const { data: notifications, error } = await supabase
+    const { data: notifications, error } = await supabaseAdmin
       .from('notifications')
       .select('*')
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .limit(50)
 
@@ -49,36 +30,17 @@ export async function GET() {
       { status: 500 }
     )
   }
-}
+})
 
-export async function POST(request: NextRequest) {
+export const POST = withAuth(async (request: NextRequest, { userId }) => {
   try {
-    const cookieStore = await cookies()
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value
-          },
-        },
-      }
-    )
-    
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
-    if (authError || !user) {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 })
-    }
-
     const body = await request.json()
     const { title, message, type = 'info' } = body
 
-    const { data: notification, error } = await supabase
+    const { data: notification, error } = await supabaseAdmin
       .from('notifications')
       .insert({
-        user_id: user.id,
+        user_id: userId,
         title,
         message,
         type,
@@ -102,4 +64,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
-}
+})
