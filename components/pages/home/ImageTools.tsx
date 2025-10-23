@@ -276,8 +276,8 @@ export function ImageTools() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${user?.accessToken}`
         },
+        credentials: 'include', // Important: send cookies for auth
         body: JSON.stringify({
           title: exampleTitle,
           category: exampleCategory,
