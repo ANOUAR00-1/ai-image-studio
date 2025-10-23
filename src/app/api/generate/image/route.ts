@@ -5,6 +5,7 @@ import { ApiResponse } from '@/backend/utils/response'
 import { CreditsService } from '@/backend/services/credits.service'
 import { GenerationService } from '@/backend/services/generation.service'
 import { AIService } from '@/backend/services/ai.service'
+import { StorageService } from '@/backend/services/storage.service'
 import { CREDIT_COSTS } from '@/backend/config/constants'
 
 export const POST = withRateLimit(RateLimits.GENERATION, withAuth(async (request: NextRequest, { userId }) => {
@@ -71,11 +72,18 @@ export const POST = withRateLimit(RateLimits.GENERATION, withAuth(async (request
       let imageUrl: string
       
       if (imageResult instanceof Blob) {
-        console.log('Converting Blob to base64...')
-        // Convert Blob to base64
-        const buffer = await imageResult.arrayBuffer()
-        const base64 = Buffer.from(buffer).toString('base64')
-        imageUrl = `data:image/jpeg;base64,${base64}`
+        console.log('Uploading image to storage...')
+        // Upload to Supabase Storage
+        try {
+          imageUrl = await StorageService.uploadGeneratedImage(userId, imageResult)
+          console.log('Image uploaded successfully:', imageUrl)
+        } catch (uploadError) {
+          console.error('Storage upload failed, falling back to base64:', uploadError)
+          // Fallback to base64 if storage fails
+          const buffer = await imageResult.arrayBuffer()
+          const base64 = Buffer.from(buffer).toString('base64')
+          imageUrl = `data:image/jpeg;base64,${base64}`
+        }
       } else {
         imageUrl = imageResult
       }
