@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react"
-import { useRouter, usePathname } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -12,15 +12,9 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Checkbox } from "@/components/ui/checkbox"
 import { Sparkles, Mail, Lock, User, Chrome, Github, Eye, EyeOff } from "lucide-react"
 import { useAuthStore } from "@/store/auth"
-import { toast } from "sonner"
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp"
 import { toast } from "sonner"
 import { motion, AnimatePresence } from "framer-motion"
 import { staggerContainer, staggerItem } from "@/lib/animations"
@@ -40,7 +34,6 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
   
   const { login } = useAuthStore()
   const router = useRouter()
-  const pathname = usePathname()
 
   const handleOtpVerify = async () => {
     const otpCode = otp.join('')
@@ -78,12 +71,8 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
       // Small delay to ensure cookies are set
       await new Promise(resolve => setTimeout(resolve, 100))
       
-      // If on auth pages, redirect to dashboard, otherwise stay on current page
-      if (pathname === '/' || pathname === '/auth') {
-        router.push("/dashboard")
-      } else {
-        router.refresh() // Refresh to update protected route
-      }
+      // Always redirect to dashboard after OTP verification
+      router.push("/dashboard")
       
     } catch (error) {
       console.error('OTP verification error:', error)
@@ -250,14 +239,9 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
       // Small delay to ensure cookies are set before redirect
       await new Promise(resolve => setTimeout(resolve, 100))
       
-      // If on auth pages, redirect to dashboard, otherwise stay on current page
-      if (pathname === '/' || pathname === '/auth') {
-        router.push("/dashboard")
-        console.log('✅ Auth complete, redirecting to dashboard')
-      } else {
-        router.refresh() // Refresh to update protected route
-        console.log('✅ Auth complete, staying on current page:', pathname)
-      }
+      // Always redirect to dashboard after login
+      router.push("/dashboard")
+      console.log('✅ Auth complete, redirecting to dashboard')
       
     } catch (error) {
       console.error('Auth error:', error)
