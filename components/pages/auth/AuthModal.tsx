@@ -179,8 +179,15 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
       return
     }
     
-    if (formData.password.length < 6) {
-      toast.error("Password must be at least 6 characters")
+    // Strong password validation
+    if (formData.password.length < 8) {
+      toast.error("Password must be at least 8 characters")
+      return
+    }
+    
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
+    if (!passwordRegex.test(formData.password)) {
+      toast.error("Password must include uppercase, lowercase, number, and special character (@$!%*?&)")
       return
     }
     
@@ -207,12 +214,7 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
         data 
       })
       
-      if (!response.ok) {
-        console.error('❌ Auth failed:', data.error)
-        toast.error(data.error || 'Authentication failed')
-        return
-      }
-      
+     
       // Check if email confirmation is required (OTP)
       if (data.requiresEmailConfirmation || (!data.session && !data.accessToken && !isLogin)) {
         console.log('⚠️ OTP verification required')
