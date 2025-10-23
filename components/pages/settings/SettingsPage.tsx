@@ -11,6 +11,7 @@ import { Settings as SettingsIcon, Bell, Shield, User, Download, Trash2 } from '
 import { useAuthStore } from '@/store/auth'
 import { toast } from 'sonner'
 import { motion } from 'framer-motion'
+import { BackButton } from '@/components/BackButton'
 
 export function Settings() {
   const { user } = useAuthStore()
@@ -67,6 +68,11 @@ export function Settings() {
   return (
     <div className="min-h-screen p-6">
       <div className="max-w-6xl mx-auto">
+        {/* Back Button */}
+        <div className="mb-4">
+          <BackButton fallbackUrl="/" className="text-gray-400 hover:text-white" />
+        </div>
+        
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

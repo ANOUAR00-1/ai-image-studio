@@ -17,14 +17,14 @@ import {
   Zap,
   Palette,
   AlertCircle,
-  Check,
-  ArrowLeft
+  Check
 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { api } from '@/utils/api'
 import { ImageWithFallback } from '@/components/figma/ImageWithFallback'
 import AIGenerationLoader from '@/components/pages/shared/AIGenerationLoader'
 import StarBorder from '@/components/ui/StarBorder'
+import { BackButton } from '@/components/BackButton'
 
 export function ImageTools() {
   const { user, refreshUser } = useAuthStore()
@@ -381,15 +381,10 @@ export function ImageTools() {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center gap-4 mb-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => router.push('/dashboard')}
+            <BackButton 
+              fallbackUrl="/" 
               className="text-gray-400 hover:text-white hover:bg-white/10"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
-            </Button>
+            />
           </div>
           <motion.h1 
             initial={{ opacity: 0, y: -20 }}
