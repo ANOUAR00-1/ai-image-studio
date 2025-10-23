@@ -1,12 +1,17 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { supabase } from '@/lib/supabase/client'
 import { supabaseAdmin } from '@/lib/supabase/server'
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    // Get token from Authorization header
-    const authHeader = request.headers.get('authorization')
-    const token = authHeader?.replace('Bearer ', '')
+    // Get token from httpOnly cookie first, fallback to Authorization header
+    let token = request.cookies.get('auth_token')?.value
+    
+    if (!token) {
+      // Fallback to Authorization header for backward compatibility
+      const authHeader = request.headers.get('authorization')
+      token = authHeader?.replace('Bearer ', '')
+    }
 
     if (!token) {
       return NextResponse.json(

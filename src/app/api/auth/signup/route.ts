@@ -85,7 +85,7 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
     // Check if email confirmation is required (session will be null if confirmation needed)
     const requiresEmailConfirmation = !data.session
     
-    return NextResponse.json({
+    const response = NextResponse.json({
       user: {
         id: data.user.id,
         email: data.user.email,
@@ -94,13 +94,34 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
         credits: profile?.credits || 10,
         createdAt: data.user.created_at,
       },
-      session: data.session,
-      accessToken: data.session?.access_token,
       requiresEmailConfirmation,
       message: requiresEmailConfirmation 
         ? 'Account created! Please check your email to verify your account.'
         : 'Account created successfully!',
     })
+
+    // Set httpOnly cookies if session exists (no email confirmation required)
+    if (data.session?.access_token) {
+      response.cookies.set('auth_token', data.session.access_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 7,
+        path: '/'
+      })
+
+      if (data.session.refresh_token) {
+        response.cookies.set('refresh_token', data.session.refresh_token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 60 * 60 * 24 * 30,
+          path: '/'
+        })
+      }
+    }
+
+    return response
   } catch (error) {
     console.error('Signup error:', error)
     return NextResponse.json(

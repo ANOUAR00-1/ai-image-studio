@@ -12,9 +12,15 @@ export async function POST() {
       )
     }
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: 'Logged out successfully',
     })
+
+    // Clear httpOnly cookies
+    response.cookies.delete('auth_token')
+    response.cookies.delete('refresh_token')
+
+    return response
   } catch (error) {
     console.error('Logout error:', error)
     return NextResponse.json(

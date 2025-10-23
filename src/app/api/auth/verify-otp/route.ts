@@ -46,7 +46,7 @@ export async function POST(request: Request) {
 
     console.log('OTP verified successfully for:', email)
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       user: {
         id: data.user.id,
         email: data.user.email,
@@ -55,10 +55,29 @@ export async function POST(request: Request) {
         credits: profile?.credits || 10,
         createdAt: data.user.created_at,
       },
-      session: data.session,
-      accessToken: data.session.access_token,
       message: 'Email verified successfully!',
     })
+
+    // Set httpOnly cookies
+    response.cookies.set('auth_token', data.session.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7,
+      path: '/'
+    })
+
+    if (data.session.refresh_token) {
+      response.cookies.set('refresh_token', data.session.refresh_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30,
+        path: '/'
+      })
+    }
+
+    return response
   } catch (error) {
     console.error('Verify OTP error:', error)
     return NextResponse.json(

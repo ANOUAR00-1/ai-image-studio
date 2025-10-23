@@ -52,7 +52,8 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
       const response = await fetch('/api/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: formData.email, token: otpCode })
+        body: JSON.stringify({ email: formData.email, token: otpCode }),
+        credentials: 'include' // Important: include cookies
       })
       
       const data = await response.json()
@@ -62,15 +63,8 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
         return
       }
       
-      // Save token
-      const token = data.accessToken || data.session?.access_token
-      if (token) {
-        localStorage.setItem('access_token', token)
-        localStorage.setItem('supabase_session', JSON.stringify(data.session))
-      }
-      
-      // Login user
-      login({ ...data.user, accessToken: token })
+      // Login user (token is in httpOnly cookie)
+      login(data.user)
       
       toast.success("Email verified! Welcome!")
       
@@ -203,23 +197,19 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
+        credentials: 'include' // Important: include cookies
       })
       
       const data = await response.json()
       
-      console.log('📥 Auth response:', { 
-        ok: response.ok, 
-        status: response.status,
-        hasSession: !!data.session,
-        hasAccessToken: !!data.accessToken,
-        data 
-      })
+      if (!response.ok) {
+        toast.error(data.error || 'Authentication failed')
+        return
+      }
       
-     
       // Check if email confirmation is required (OTP)
-      if (data.requiresEmailConfirmation || (!data.session && !data.accessToken && !isLogin)) {
-        console.log('⚠️ OTP verification required')
+      if (data.requiresEmailConfirmation) {
         toast.success("Verification code sent! Check your email and enter the 6-digit code.", {
           duration: 6000,
         })
@@ -231,30 +221,8 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
         return
       }
       
-      // Save session to localStorage
-      if (data.session) {
-        localStorage.setItem('supabase_session', JSON.stringify(data.session))
-        console.log('✅ Session saved')
-      }
-      
-      // Save access token
-      const token = data.accessToken || data.session?.access_token
-      console.log('🎫 Token to save:', token ? `${token.substring(0, 20)}...` : 'NULL')
-      
-      if (token) {
-        localStorage.setItem('access_token', token)
-        console.log('✅ Token saved to localStorage')
-        console.log('🔍 Verify token in storage:', localStorage.getItem('access_token')?.substring(0, 20))
-      } else {
-        console.error('❌ No token received from API!')
-        toast.error("Session not created. Please check your email or try logging in.")
-        onOpenChange(false)
-        return
-      }
-      
-      // Login user
-      login({ ...data.user, accessToken: token })
-      console.log('✅ User logged in to store')
+      // Login user (no token needed - it's in httpOnly cookie)
+      login(data.user)
       
       // Show success
       if (isLogin) {

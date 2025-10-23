@@ -68,7 +68,7 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
         }
         
         // Use the newly created profile
-        return NextResponse.json({
+        const response = NextResponse.json({
           user: {
             id: data.user.id,
             email: data.user.email,
@@ -78,9 +78,28 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
             is_admin: newProfile.is_admin || false,
             createdAt: data.user.created_at,
           },
-          session: data.session,
-          accessToken: data.session.access_token,
         })
+
+        // Set httpOnly cookies
+        response.cookies.set('auth_token', data.session.access_token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 60 * 60 * 24 * 7,
+          path: '/'
+        })
+
+        if (data.session.refresh_token) {
+          response.cookies.set('refresh_token', data.session.refresh_token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'lax',
+            maxAge: 60 * 60 * 24 * 30,
+            path: '/'
+          })
+        }
+
+        return response
       }
       
       return NextResponse.json(
@@ -89,7 +108,8 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
       )
     }
 
-    return NextResponse.json({
+    // Create response with httpOnly cookie
+    const response = NextResponse.json({
       user: {
         id: data.user.id,
         email: data.user.email,
@@ -99,9 +119,30 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
         is_admin: profile.is_admin || false,
         createdAt: data.user.created_at,
       },
-      session: data.session,
-      accessToken: data.session.access_token,
+      // Don't send tokens in response body
     })
+
+    // Set httpOnly cookie for access token (secure, not accessible via JavaScript)
+    response.cookies.set('auth_token', data.session.access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/'
+    })
+
+    // Set refresh token cookie
+    if (data.session.refresh_token) {
+      response.cookies.set('refresh_token', data.session.refresh_token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+        path: '/'
+      })
+    }
+
+    return response
   } catch (error) {
     console.error('Login error:', error)
     return NextResponse.json(

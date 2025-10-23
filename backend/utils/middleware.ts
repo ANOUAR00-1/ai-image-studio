@@ -10,8 +10,14 @@ export async function verifyAuth(request: NextRequest): Promise<{
   error?: string
 }> {
   try {
-    const authHeader = request.headers.get('authorization')
-    const token = authHeader?.replace('Bearer ', '')
+    // Get token from httpOnly cookie first, fallback to Authorization header
+    let token = request.cookies.get('auth_token')?.value
+    
+    if (!token) {
+      // Fallback to Authorization header for backward compatibility
+      const authHeader = request.headers.get('authorization')
+      token = authHeader?.replace('Bearer ', '')
+    }
 
     if (!token) {
       return { success: false, error: 'No token provided' }

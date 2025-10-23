@@ -34,28 +34,27 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       
       login: (userData: User) => {
-        const token = userData.accessToken || null;
-        
-        // Save to localStorage
-        if (token && typeof window !== 'undefined') {
-          localStorage.setItem('access_token', token);
-        }
-        
+        // Don't store tokens - they're in httpOnly cookies now
         set({ 
           user: userData, 
           isLoggedIn: true, 
-          accessToken: token 
+          accessToken: null // No longer storing tokens in state
         });
       },
       
       logout: async () => {
         try {
-          // Call logout API
-          await fetch('/api/auth/logout', { method: 'POST' });
+          // Call logout API (will clear httpOnly cookies)
+          await fetch('/api/auth/logout', { 
+            method: 'POST',
+            credentials: 'include' // Important: include cookies
+          });
           
-          // Clear localStorage
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('supabase_session');
+          // Clear any legacy localStorage items
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('supabase_session');
+          }
           
           // Clear state
           set({ user: null, isLoggedIn: false, accessToken: null });
@@ -70,33 +69,31 @@ export const useAuthStore = create<AuthState>()(
       
       initialize: async () => {
         try {
-          // Check if we have a stored token
-          const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
-          
-          if (!token) {
-            set({ loading: false, isLoggedIn: false, user: null, accessToken: null });
-            return;
+          // Clean up legacy localStorage tokens (security improvement)
+          if (typeof window !== 'undefined') {
+            const legacyKeys = ['access_token', 'supabase_session', 'sb-qwambovteljtmkruyvfd-auth-token'];
+            legacyKeys.forEach(key => {
+              if (localStorage.getItem(key)) {
+                localStorage.removeItem(key);
+              }
+            });
           }
-          
+
           // If we have persisted user data, use it immediately while verifying in background
           const currentState = get();
           if (currentState.user && currentState.isLoggedIn) {
-            // User data is already loaded from persistence, just verify token in background
+            // User data is already loaded from persistence, just verify in background
             set({ loading: false });
             
-            // Verify token in background and update if needed
+            // Verify session in background and update if needed
             fetch('/api/auth/me', {
-              headers: { 'Authorization': `Bearer ${token}` }
+              credentials: 'include' // Include httpOnly cookies
             }).then(async (response) => {
               if (response.ok) {
                 const data = await response.json();
-                set({ user: { ...data.user, accessToken: token } });
+                set({ user: data.user });
               } else {
-                // Token invalid, clear session
-                if (typeof window !== 'undefined') {
-                  localStorage.removeItem('access_token');
-                  localStorage.removeItem('supabase_session');
-                }
+                // Session invalid, clear state
                 set({ isLoggedIn: false, user: null, accessToken: null });
               }
             }).catch(() => {
@@ -105,25 +102,21 @@ export const useAuthStore = create<AuthState>()(
             return;
           }
           
-          // No cached user data, verify token before proceeding
+          // No cached user data, verify session before proceeding
           const response = await fetch('/api/auth/me', {
-            headers: { 'Authorization': `Bearer ${token}` }
+            credentials: 'include' // Include httpOnly cookies
           });
           
           if (response.ok) {
             const data = await response.json();
             set({ 
-              user: { ...data.user, accessToken: token }, 
+              user: data.user, 
               isLoggedIn: true,
-              accessToken: token,
+              accessToken: null, // No longer storing tokens
               loading: false 
             });
           } else {
-            // Token invalid, clear it
-            if (typeof window !== 'undefined') {
-              localStorage.removeItem('access_token');
-              localStorage.removeItem('supabase_session');
-            }
+            // No valid session
             set({ loading: false, isLoggedIn: false, user: null, accessToken: null });
           }
         } catch (error) {
@@ -134,19 +127,13 @@ export const useAuthStore = create<AuthState>()(
       
       refreshUser: async () => {
         try {
-          const token = get().accessToken;
-          
-          if (!token) return;
-          
           const response = await fetch('/api/auth/me', {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
+            credentials: 'include' // Include httpOnly cookies
           });
           
           if (response.ok) {
             const data = await response.json();
-            set({ user: { ...data.user, accessToken: token } });
+            set({ user: data.user });
           }
         } catch (error) {
           console.error('Refresh user error:', error);
@@ -158,7 +145,7 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({ 
         user: state.user,
         isLoggedIn: state.isLoggedIn,
-        accessToken: state.accessToken
+        // Don't persist accessToken - it's in httpOnly cookies now
       }),
     }
   )
