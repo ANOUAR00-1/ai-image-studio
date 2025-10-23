@@ -2,6 +2,11 @@
 
 AI-powered SaaS platform for image and video generation using cutting-edge AI models.
 
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-green)](https://supabase.com/)
+
 ---
 
 ## ✨ Features
@@ -9,15 +14,15 @@ AI-powered SaaS platform for image and video generation using cutting-edge AI mo
 - 🎨 **AI Image Generation** - DALL-E 3, Stable Diffusion, Flux
 - 🎬 **AI Video Generation** - Runway, Pika, Luma AI
 - ✂️ **Image Editing** - Remove backgrounds, enhance, upscale
-- 💳 **Subscription Plans** - Free, Pro, Business
-- 🔐 **Authentication** - Secure login with Supabase Auth
-- 💰 **Credits System** - Pay-per-use pricing model with admin unlimited credits
-- 📊 **Dashboard** - Track generations and usage with real-time stats
-- 🎯 **API Access** - Business plan includes API keys
+- 💳 **Subscription Plans** - Free, Pro, Business with Stripe integration
+- 🔐 **Secure Authentication** - HttpOnly cookies, XSS/CSRF protection
+- 💰 **Credits System** - Pay-per-use pricing with admin unlimited credits
+- 📊 **Real-time Dashboard** - Track generations and usage stats
+- 🎯 **API Access** - RESTful API for Business plan users
 - ✨ **Interactive UI** - SpotlightCard effects with mouse tracking
 - 👑 **Admin Panel** - Monitor all generations and manage users
 - 🎭 **Examples Gallery** - Browse AI-generated content
-- 📱 **Responsive Design** - Works on all devices
+- 📱 **Responsive Design** - Mobile-first approach
 
 ---
 
@@ -44,21 +49,34 @@ AI-powered SaaS platform for image and video generation using cutting-edge AI mo
 
 ### 1. Clone & Install
 ```bash
-git clone <repo-url>
+git clone https://github.com/ANOUAR00-1/ai-image-studio.git
 cd pixfusion-ai-studio
 npm install
 ```
 
 ### 2. Set Up Supabase
-Follow the complete guide: **[SUPABASE_SETUP_GUIDE.md](./SUPABASE_SETUP_GUIDE.md)**
+1. Create a project at [supabase.com](https://supabase.com)
+2. Run the SQL schema: `supabase/schema.sql`
+3. Get your API keys from Settings → API
 
 ### 3. Configure Environment Variables
-Create `.env.local` file (see **[ENV_SETUP.md](./ENV_SETUP.md)**):
+Create `.env.local` file:
 ```bash
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-OPENAI_API_KEY=your-openai-key
+
+# AI APIs
+OPENAI_API_KEY=sk-your-openai-key
+
+# Stripe (Optional)
+STRIPE_SECRET_KEY=sk_test_your-key
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your-key
+
+# Security
+ADMIN_API_KEY=your-secure-admin-key
+JWT_SECRET=your-jwt-secret-min-32-chars
 ```
 
 ### 4. Run Development Server
@@ -67,6 +85,12 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000)
+
+### 5. Create Admin User
+```sql
+-- Run in Supabase SQL Editor
+UPDATE profiles SET is_admin = true WHERE email = 'your-email@example.com';
+```
 
 ---
 
@@ -105,14 +129,13 @@ pixfusion-ai-studio/
 
 ## 📚 Documentation
 
-| Document | Description |
-|----------|-------------|
-| [BACKEND_STATUS.md](./BACKEND_STATUS.md) | Current backend implementation status |
-| [BACKEND_READINESS_AUDIT.md](./BACKEND_READINESS_AUDIT.md) | Complete feature audit |
-| [QUICK_START_BACKEND.md](./QUICK_START_BACKEND.md) | Backend setup guide |
-| [SUPABASE_SETUP_GUIDE.md](./SUPABASE_SETUP_GUIDE.md) | Step-by-step Supabase setup |
-| [ENV_SETUP.md](./ENV_SETUP.md) | Environment variables guide |
-| [CLEANUP_SUMMARY.md](./CLEANUP_SUMMARY.md) | Recent cleanup changes |
+### Core Docs (in `/docs`)
+- **[API_DOCUMENTATION.md](./docs/API_DOCUMENTATION.md)** - Complete API reference
+- **[DEPLOYMENT.md](./docs/DEPLOYMENT.md)** - Production deployment guide
+- **[ENVIRONMENT_SETUP.md](./docs/ENVIRONMENT_SETUP.md)** - Environment variables
+
+### Guidelines
+- **[Guidelines.md](./guidelines/Guidelines.md)** - Development guidelines
 
 ---
 
@@ -136,14 +159,20 @@ pixfusion-ai-studio/
 
 ---
 
-## 🔐 Authentication
+## 🔐 Security & Authentication
 
-Uses Supabase Auth with:
-- Email/password authentication
-- JWT tokens
-- Row Level Security (RLS)
-- Session persistence
-- Protected API routes
+### Authentication
+- **Supabase Auth** - Email/password with OTP verification
+- **HttpOnly Cookies** - Tokens stored securely (not in localStorage)
+- **XSS Protection** - Cookies inaccessible via JavaScript
+- **CSRF Protection** - SameSite=lax cookies
+- **Row Level Security** - Database-level access control
+
+### Recent Security Improvements
+✅ **Migrated from localStorage to httpOnly cookies** (Oct 2025)
+- Tokens no longer visible in DevTools
+- Automatic cleanup of legacy tokens
+- Enhanced protection against XSS attacks
 
 ---
 
@@ -180,34 +209,77 @@ npm run lint
 ## 🚀 Deployment
 
 ### Vercel (Recommended)
-1. Push to GitHub
-2. Import project to Vercel
-3. Add environment variables
-4. Deploy
-
-### Manual
 ```bash
-npm run build
-npm start
+# 1. Push to GitHub
+git push origin main
+
+# 2. Deploy to Vercel
+npm i -g vercel
+vercel --prod
 ```
+
+**Important**: Add all environment variables in Vercel dashboard
+
+### Docker
+```bash
+docker build -t pixfusion-ai .
+docker run -p 3000:3000 --env-file .env.production pixfusion-ai
+```
+
+### Production Checklist
+- [ ] Environment variables configured
+- [ ] Database migrations run
+- [ ] HTTPS enabled (required for secure cookies)
+- [ ] CORS configured
+- [ ] Error monitoring setup (Sentry)
+- [ ] Analytics configured
+
+See [DEPLOYMENT.md](./docs/DEPLOYMENT.md) for detailed instructions.
 
 ---
 
-## 📝 License
+## 🔧 Troubleshooting
 
-[Add your license here]
+### Common Issues
+
+**"No token provided" error**
+- Ensure you're logged in
+- Check cookies are enabled
+- Clear browser cache and re-login
+
+**Image generation fails**
+- Verify OpenAI API key is valid
+- Check you have credits in OpenAI account
+- Ensure API key has proper permissions
+
+**Database connection issues**
+- Verify Supabase URL and keys
+- Check RLS policies are set up
+- Use service role key for server-side operations
+
+**Build fails**
+```bash
+rm -rf .next node_modules
+npm install
+npm run build
+```
 
 ---
 
 ## 🤝 Contributing
 
-Contributions welcome! Please read the contributing guidelines first.
+Contributions welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
 ---
 
 ## 📧 Support
 
-For support, email [your-email] or open an issue.
+- **Issues**: [GitHub Issues](https://github.com/ANOUAR00-1/ai-image-studio/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/ANOUAR00-1/ai-image-studio/discussions)
 
 ---
 
