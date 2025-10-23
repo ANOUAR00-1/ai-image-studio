@@ -3,8 +3,9 @@ import { HuggingFaceService } from './huggingface.service'
 import { ReplicateService } from './replicate.service'
 import { TogetherService } from './together.service'
 import { HFSpacesService } from './hfspaces.service'
+import { PollinationsService } from './pollinations.service'
 
-export type AIProvider = 'together' | 'huggingface' | 'replicate' | 'hfspaces' | 'auto'
+export type AIProvider = 'together' | 'huggingface' | 'replicate' | 'hfspaces' | 'pollinations' | 'auto'
 
 export class AIService {
   // Smart provider selection
@@ -14,13 +15,13 @@ export class AIService {
     const hasHuggingFace = !!process.env.HUGGINGFACE_API_KEY
     const hasReplicate = !!process.env.REPLICATE_API_TOKEN
 
-    // Priority: Together AI (best) > HuggingFace > Replicate > HF Spaces (fallback, always available)
+    // Priority: Together AI (best) > HuggingFace > Replicate > Pollinations (fallback, always works!)
     if (hasTogether) return 'together'
     if (hasHuggingFace) return 'huggingface'
     if (hasReplicate) return 'replicate'
     
-    // Fallback to HF Spaces (100% free, no API key needed!)
-    return 'hfspaces'
+    // Fallback to Pollinations (100% free, no API key needed, always works!)
+    return 'pollinations'
   }
 
   // Generate image (automatically picks best provider)
@@ -40,6 +41,9 @@ export class AIService {
       } else if (selectedProvider === 'replicate') {
         // Replicate returns URL directly
         return await ReplicateService.generateImage(prompt, model || 'sdxl')
+      } else if (selectedProvider === 'pollinations') {
+        // Pollinations returns base64 (100% FREE, no API key!)
+        return await PollinationsService.generateImage(prompt, model || 'flux')
       } else if (selectedProvider === 'hfspaces') {
         // HF Spaces returns URL or base64 (100% FREE!)
         return await HFSpacesService.generateImage(prompt, model || 'sdxl')
@@ -99,9 +103,9 @@ export class AIService {
       models.videos.push(...repModels.videos.map(m => ({ ...m, provider: 'replicate' })))
     }
 
-    // Always add HF Spaces (100% free, no API key needed!)
-    const hfSpacesModels = HFSpacesService.getAvailableModels()
-    models.images.push(...hfSpacesModels.images.map(m => ({ ...m, provider: 'hfspaces' })))
+    // Always add Pollinations (100% free, no API key needed!)
+    const pollinationsModels = PollinationsService.getAvailableModels()
+    models.images.push(...pollinationsModels.images.map(m => ({ ...m, provider: 'pollinations' })))
 
     return models
   }
