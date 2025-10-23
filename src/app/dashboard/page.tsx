@@ -1,20 +1,25 @@
 "use client"
 
-import { motion } from "motion/react"
-import { ModernDashboard } from "@/components/pages/dashboard/ModernDashboard"
+import dynamic from 'next/dynamic'
+import OptimizedPageWrapper from "@/components/OptimizedPageWrapper"
 import { ProtectedRoute } from "@/components/pages/shared/ProtectedRoute"
+
+// Dynamic import for dashboard - it's a heavy component
+const ModernDashboard = dynamic(() => import("@/components/pages/dashboard/ModernDashboard").then(mod => ({ default: mod.ModernDashboard })), {
+  loading: () => (
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] flex items-center justify-center">
+      <div className="text-white text-xl">Loading dashboard...</div>
+    </div>
+  ),
+  ssr: false, // Dashboard requires client-side auth
+})
 
 export default function DashboardPage() {
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f]"
-    >
+    <OptimizedPageWrapper className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f]">
       <ProtectedRoute feature="Dashboard">
         <ModernDashboard />
       </ProtectedRoute>
-    </motion.div>
+    </OptimizedPageWrapper>
   )
 }

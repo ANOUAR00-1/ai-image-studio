@@ -70,6 +70,7 @@ export function Navigation({}: NavigationProps = {}) {
                 <Link
                   key={item.name}
                   href={item.href}
+                  prefetch={true}
                   className="text-gray-300 hover:text-white transition-colors font-medium"
                 >
                   {item.name}
@@ -184,6 +185,7 @@ export function Navigation({}: NavigationProps = {}) {
                   <Link
                     key={item.name}
                     href={item.href}
+                    prefetch={true}
                     className="text-gray-300 hover:text-white transition-colors font-medium"
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -193,7 +195,7 @@ export function Navigation({}: NavigationProps = {}) {
                 <div className="pt-4 border-t border-white/10 space-y-3">
                   {isLoggedIn ? (
                     <>
-                      <Link href="/dashboard" onClick={() => setIsMenuOpen(false)}>
+                      <Link href="/dashboard" prefetch={true} onClick={() => setIsMenuOpen(false)}>
                         <Button 
                           variant="ghost" 
                           className="w-full text-white hover:bg-white/10"

@@ -1,20 +1,30 @@
 "use client"
 
-import { motion } from "motion/react"
+import dynamic from 'next/dynamic'
+import OptimizedPageWrapper from "@/components/OptimizedPageWrapper"
 import LandingPage from "@/components/pages/home/LandingPage"
-import { Footer } from "@/components/pages/shared/Footer"
-import { FeatureShowcase } from "@/components/pages/home/FeatureShowcase"
-import { Testimonials } from "@/components/pages/home/Testimonials"
-import { FAQ } from "@/components/pages/shared/FAQ"
+
+// Dynamic imports for below-the-fold content
+// These components load after the initial page render, improving FCP and LCP
+const FeatureShowcase = dynamic(() => import("@/components/pages/home/FeatureShowcase").then(mod => ({ default: mod.FeatureShowcase })), {
+  loading: () => <div className="h-96 animate-pulse bg-white/5" />,
+})
+
+const Testimonials = dynamic(() => import("@/components/pages/home/Testimonials").then(mod => ({ default: mod.Testimonials })), {
+  loading: () => <div className="h-96 animate-pulse bg-white/5" />,
+})
+
+const FAQ = dynamic(() => import("@/components/pages/shared/FAQ").then(mod => ({ default: mod.FAQ })), {
+  loading: () => <div className="h-96 animate-pulse bg-white/5" />,
+})
+
+const Footer = dynamic(() => import("@/components/pages/shared/Footer").then(mod => ({ default: mod.Footer })), {
+  loading: () => <div className="h-32 animate-pulse bg-white/5" />,
+})
 
 export default function Home() {
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="min-h-screen"
-    >
+    <OptimizedPageWrapper className="min-h-screen">
       <main>
         <LandingPage />
         <FeatureShowcase />
@@ -22,6 +32,6 @@ export default function Home() {
         <FAQ />
       </main>
       <Footer />
-    </motion.div>
+    </OptimizedPageWrapper>
   )
 }
