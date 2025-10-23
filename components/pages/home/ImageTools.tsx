@@ -172,40 +172,51 @@ export function ImageTools() {
     setResult(null)
 
     try {
-      // Start processing with loader
-      const processPromise = (async () => {
-        await new Promise(resolve => setTimeout(resolve, 2000))
-        // Credits are automatically deducted by the generation endpoint
-        // No need to manually deduct here
-      })()
-      
-      // Wait for loader animation
-      const loaderPromise = new Promise(resolve => {
-        setTimeout(() => {
-          resolve(true)
-        }, 13500)
+      // Determine API endpoint based on tool
+      let endpoint = ''
+      if (activeTab === 'remove-bg') {
+        endpoint = '/api/tools/remove-background'
+      } else if (activeTab === 'enhance') {
+        endpoint = '/api/tools/enhance'
+      } else if (activeTab === 'style-transfer') {
+        endpoint = '/api/tools/style-transfer'
+      }
+
+      // Call the real API
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          image: uploadedImage,
+          style: 'anime', // for style transfer
+        }),
       })
-      
-      await Promise.all([processPromise, loaderPromise])
-      
-      // Small delay to show completion
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
+
+      const data = await response.json()
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.error || 'Processing failed')
+      }
+
+      // Refresh user credits
       await refreshUser()
 
-      // For demo, return the uploaded image as result
-      // In production, this would be the processed image from the API
+      // Set result
       setResult({
-        imageUrl: uploadedImage,
+        imageUrl: data.data.imageUrl,
         prompt: `${currentTool?.title} applied to ${uploadedFileName}`,
-        creditsUsed: currentTool?.credits || 2,
-        remainingCredits: (user.credits ?? 0) - (currentTool?.credits || 2)
+        creditsUsed: data.data.creditsUsed,
+        remainingCredits: data.data.remainingCredits
       })
       
       setShowLoader(false)
     } catch (err: unknown) {
       const error = err as Error;
       setError(error.message || 'Failed to process image')
+      setShowLoader(false)
     } finally {
       setLoading(false)
     }
