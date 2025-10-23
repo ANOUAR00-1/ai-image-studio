@@ -39,7 +39,6 @@ export const useAuthStore = create<AuthState>()(
         // Save to localStorage
         if (token && typeof window !== 'undefined') {
           localStorage.setItem('access_token', token);
-          console.log('✅ Token saved to localStorage on login');
         }
         
         set({ 
@@ -71,30 +70,48 @@ export const useAuthStore = create<AuthState>()(
       
       initialize: async () => {
         try {
-          console.log('🔄 Initializing auth...');
-          
           // Check if we have a stored token
           const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
           
-          console.log('🔍 Token found:', token ? `${token.substring(0, 20)}...` : 'NULL');
-          
           if (!token) {
-            console.log('❌ No token found, user not logged in');
             set({ loading: false, isLoggedIn: false, user: null, accessToken: null });
             return;
           }
           
-          // Verify token and get user data
-          console.log('🔐 Verifying token...');
+          // If we have persisted user data, use it immediately while verifying in background
+          const currentState = get();
+          if (currentState.user && currentState.isLoggedIn) {
+            // User data is already loaded from persistence, just verify token in background
+            set({ loading: false });
+            
+            // Verify token in background and update if needed
+            fetch('/api/auth/me', {
+              headers: { 'Authorization': `Bearer ${token}` }
+            }).then(async (response) => {
+              if (response.ok) {
+                const data = await response.json();
+                set({ user: { ...data.user, accessToken: token } });
+              } else {
+                // Token invalid, clear session
+                if (typeof window !== 'undefined') {
+                  localStorage.removeItem('access_token');
+                  localStorage.removeItem('supabase_session');
+                }
+                set({ isLoggedIn: false, user: null, accessToken: null });
+              }
+            }).catch(() => {
+              // Network error, keep cached state
+            });
+            return;
+          }
+          
+          // No cached user data, verify token before proceeding
           const response = await fetch('/api/auth/me', {
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
+            headers: { 'Authorization': `Bearer ${token}` }
           });
           
           if (response.ok) {
             const data = await response.json();
-            console.log('✅ Token valid, user logged in:', data.user.email);
             set({ 
               user: { ...data.user, accessToken: token }, 
               isLoggedIn: true,
@@ -102,7 +119,6 @@ export const useAuthStore = create<AuthState>()(
               loading: false 
             });
           } else {
-            console.log('❌ Token invalid, clearing session');
             // Token invalid, clear it
             if (typeof window !== 'undefined') {
               localStorage.removeItem('access_token');
@@ -111,7 +127,7 @@ export const useAuthStore = create<AuthState>()(
             set({ loading: false, isLoggedIn: false, user: null, accessToken: null });
           }
         } catch (error) {
-          console.error('❌ Initialize error:', error);
+          console.error('Initialize error:', error);
           set({ loading: false, isLoggedIn: false, user: null, accessToken: null });
         }
       },

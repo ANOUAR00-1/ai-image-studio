@@ -21,8 +21,6 @@ export default function AuthCallbackPage() {
         const refreshToken = hashParams.get('refresh_token')
         const type = hashParams.get('type')
 
-        console.log('Auth callback:', { type, hasAccessToken: !!accessToken })
-
         if (type === 'signup' && accessToken && refreshToken) {
           // Set the session
           const { data: sessionData, error: sessionError } = await supabase.auth.setSession({

@@ -1,9 +1,8 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { SimpleCard } from "@/components/ui/cards"
-import { Sparkles, ImageIcon, Wand2, Zap, Shield, ArrowRight, Check, Lock, Award, Download, Video, Palette, Star } from "lucide-react"
+import { Sparkles, ImageIcon, Wand2, Zap, Shield, ArrowRight, Check, Lock, Award, Download, Palette, Star } from "lucide-react"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
@@ -114,14 +113,6 @@ export default function LandingPage() {
           transition={{ duration: 0.5 }}
           style={{ willChange: 'transform, opacity' }}
         >
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.5 }}>
-            <Badge 
-              className="mb-8 inline-flex items-center gap-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-200 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 px-4 py-2 backdrop-blur-xl"
-            >
-              <Sparkles className="w-4 h-4 animate-pulse" />
-              <span className="font-medium">Powered by Google Gemini AI</span>
-            </Badge>
-          </motion.div>
           
           <div className="mb-8 text-center">
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold leading-[1.1] tracking-tight">

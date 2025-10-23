@@ -25,8 +25,6 @@ export default function ResetPasswordPage() {
         const token = hashParams.get('access_token')
         const type = hashParams.get('type')
 
-        console.log('Reset password:', { type, hasToken: !!token })
-
         if (type === 'recovery' && token) {
           setIsValid(true)
           

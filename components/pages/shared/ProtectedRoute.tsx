@@ -18,10 +18,12 @@ export function ProtectedRoute({ children, feature = "this feature" }: Protected
   const [showAuthModal, setShowAuthModal] = useState(false)
 
   useEffect(() => {
+    // Initialize auth immediately without blocking render
     initialize()
   }, [initialize])
 
-  if (loading) {
+  // Show loading only if we're still checking auth AND no cached state
+  if (loading && !isLoggedIn) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
