@@ -122,11 +122,11 @@
   animation: star-movement-top linear infinite alternate;
 }
 
-/* SPA Navigation Optimization */
+/* SPA Navigation Optimization - SUPER FAST! */
 @keyframes pageIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(5px);
   }
   to {
     opacity: 1;
@@ -137,25 +137,25 @@
 @keyframes pageOut {
   from {
     opacity: 1;
-    transform: translateY(0);
   }
   to {
     opacity: 0;
-    transform: translateY(-10px);
   }
 }
 
 .page-enter {
-  animation: pageIn 0.3s ease-out;
+  animation: pageIn 0.15s ease-out;
 }
 
 .page-exit {
-  animation: pageOut 0.2s ease-in;
+  animation: pageOut 0.1s ease-in;
 }
 
-/* Smooth page transitions */
+/* Smooth & FAST page transitions */
 main {
-  animation: pageIn 0.3s ease-out;
+  animation: pageIn 0.15s ease-out;
+  will-change: opacity, transform;
+  contain: layout;
 }
 
 /* GPU acceleration for smooth scrolling */

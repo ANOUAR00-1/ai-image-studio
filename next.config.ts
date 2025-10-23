@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
       'framer-motion',
       'recharts',
     ],
+    // Speed up navigation
+    optimizeCss: true,
+    scrollRestoration: true,
   },
   
   // Image optimization
