@@ -1,21 +1,26 @@
 // Unified AI service that chooses the best FREE provider
 import { HuggingFaceService } from './huggingface.service'
 import { ReplicateService } from './replicate.service'
+import { TogetherService } from './together.service'
+import { HFSpacesService } from './hfspaces.service'
 
-export type AIProvider = 'huggingface' | 'replicate' | 'auto'
+export type AIProvider = 'together' | 'huggingface' | 'replicate' | 'hfspaces' | 'auto'
 
 export class AIService {
   // Smart provider selection
   static selectProvider(): AIProvider {
     // Check which API keys are available
+    const hasTogether = !!process.env.TOGETHER_API_KEY
     const hasHuggingFace = !!process.env.HUGGINGFACE_API_KEY
     const hasReplicate = !!process.env.REPLICATE_API_TOKEN
 
-    // Use HuggingFace first (more reliable free tier)
+    // Priority: Together AI (best) > HuggingFace > Replicate > HF Spaces (fallback, always available)
+    if (hasTogether) return 'together'
     if (hasHuggingFace) return 'huggingface'
     if (hasReplicate) return 'replicate'
     
-    throw new Error('No AI provider configured. Add HUGGINGFACE_API_KEY or REPLICATE_API_TOKEN to .env.local')
+    // Fallback to HF Spaces (100% free, no API key needed!)
+    return 'hfspaces'
   }
 
   // Generate image (automatically picks best provider)
@@ -29,9 +34,15 @@ export class AIService {
     console.log(`Generating image with ${selectedProvider}...`)
 
     try {
-      if (selectedProvider === 'replicate') {
+      if (selectedProvider === 'together') {
+        // Together AI returns base64 or URL
+        return await TogetherService.generateImage(prompt, model || 'stabilityai/stable-diffusion-xl-base-1.0')
+      } else if (selectedProvider === 'replicate') {
         // Replicate returns URL directly
         return await ReplicateService.generateImage(prompt, model || 'sdxl')
+      } else if (selectedProvider === 'hfspaces') {
+        // HF Spaces returns URL or base64 (100% FREE!)
+        return await HFSpacesService.generateImage(prompt, model || 'sdxl')
       } else {
         // HuggingFace returns Blob
         const blob = await HuggingFaceService.generateImage(
@@ -72,6 +83,11 @@ export class AIService {
       videos: [],
     }
 
+    if (process.env.TOGETHER_API_KEY) {
+      const togetherModels = TogetherService.getAvailableModels()
+      models.images.push(...togetherModels.images.map(m => ({ ...m, provider: 'together' })))
+    }
+
     if (process.env.HUGGINGFACE_API_KEY) {
       const hfModels = HuggingFaceService.getAvailableModels()
       models.images.push(...hfModels.images.map(m => ({ ...m, provider: 'huggingface' })))
@@ -82,6 +98,10 @@ export class AIService {
       models.images.push(...repModels.images.map(m => ({ ...m, provider: 'replicate' })))
       models.videos.push(...repModels.videos.map(m => ({ ...m, provider: 'replicate' })))
     }
+
+    // Always add HF Spaces (100% free, no API key needed!)
+    const hfSpacesModels = HFSpacesService.getAvailableModels()
+    models.images.push(...hfSpacesModels.images.map(m => ({ ...m, provider: 'hfspaces' })))
 
     return models
   }

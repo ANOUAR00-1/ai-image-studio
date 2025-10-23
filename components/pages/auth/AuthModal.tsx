@@ -179,16 +179,18 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
       return
     }
     
-    // Strong password validation
-    if (formData.password.length < 8) {
-      toast.error("Password must be at least 8 characters")
-      return
-    }
-    
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
-    if (!passwordRegex.test(formData.password)) {
-      toast.error("Password must include uppercase, lowercase, number, and special character (@$!%*?&)")
-      return
+    // Strong password validation (only for signup, not login)
+    if (!isLogin) {
+      if (formData.password.length < 8) {
+        toast.error("Password must be at least 8 characters")
+        return
+      }
+      
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/
+      if (!passwordRegex.test(formData.password)) {
+        toast.error("Password must include uppercase, lowercase, number, and special character (@$!%*?&)")
+        return
+      }
     }
     
     setLoading(true)

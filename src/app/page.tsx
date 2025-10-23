@@ -16,6 +16,7 @@ const Testimonials = dynamic(() => import("@/components/pages/home/Testimonials"
 
 const FAQ = dynamic(() => import("@/components/pages/shared/FAQ").then(mod => ({ default: mod.FAQ })), {
   loading: () => <div className="h-96 animate-pulse bg-white/5" />,
+  ssr: false, // Disable SSR to prevent hydration mismatch with Radix UI IDs
 })
 
 const Footer = dynamic(() => import("@/components/pages/shared/Footer").then(mod => ({ default: mod.Footer })), {
