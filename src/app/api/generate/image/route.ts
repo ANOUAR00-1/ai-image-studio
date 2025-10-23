@@ -66,7 +66,8 @@ export const POST = withRateLimit(RateLimits.GENERATION, withAuth(async (request
     try {
       console.log(`Generating image for user ${userId} with model ${model} (mapped to ${actualModel})`)
       
-      const imageResult = await AIService.generateImage(prompt, actualModel, 'auto')
+      // Force Pollinations for text-to-image (skip HuggingFace)
+      const imageResult = await AIService.generateImage(prompt, actualModel, 'pollinations')
       
       // Handle both Blob and string responses
       let imageUrl: string
