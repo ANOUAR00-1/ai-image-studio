@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, Zap, Crown, Rocket } from 'lucide-react'
-import { motion } from 'framer-motion'
+import { Check, Zap, Crown, Rocket, LogIn, X } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 import StarBorder from '@/components/ui/StarBorder'
+import { useRouter } from 'next/navigation'
 
 interface Plan {
   name: string
@@ -70,15 +71,16 @@ const creditPacks = [
 ]
 
 export default function PricingPage() {
+  const router = useRouter()
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'credits'>('monthly')
+  const [showLoginModal, setShowLoginModal] = useState(false)
 
   const handleSubscribe = async (plan: string) => {
     try {
       // Get token from localStorage (stored as 'access_token')
       const token = localStorage.getItem('access_token')
       if (!token) {
-        alert('Please login first')
-        window.location.href = '/'
+        setShowLoginModal(true)
         return
       }
 
@@ -97,7 +99,6 @@ export default function PricingPage() {
       }
     } catch (error) {
       console.error('Subscription error:', error)
-      alert('Failed to start subscription')
     }
   }
 
@@ -106,8 +107,7 @@ export default function PricingPage() {
       // Get token from localStorage (stored as 'access_token')
       const token = localStorage.getItem('access_token')
       if (!token) {
-        alert('Please login first')
-        window.location.href = '/'
+        setShowLoginModal(true)
         return
       }
 
@@ -126,7 +126,6 @@ export default function PricingPage() {
       }
     } catch (error) {
       console.error('Purchase error:', error)
-      alert('Failed to purchase credits')
     }
   }
 
@@ -400,6 +399,94 @@ export default function PricingPage() {
           </div>
         </motion.div>
       </div>
+
+      {/* Beautiful Login Modal */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowLoginModal(false)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            >
+              {/* Modal */}
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative bg-gradient-to-br from-[#1a0b2e] to-[#0f0520] border border-purple-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl"
+              >
+                {/* Close button */}
+                <button
+                  onClick={() => setShowLoginModal(false)}
+                  className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+
+                {/* Icon */}
+                <div className="flex justify-center mb-6">
+                  <div className="p-4 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl border border-purple-500/30">
+                    <LogIn className="w-12 h-12 text-purple-400" />
+                  </div>
+                </div>
+
+                {/* Title */}
+                <h3 className="text-3xl font-black text-center mb-3 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent">
+                  Login Required
+                </h3>
+
+                {/* Message */}
+                <p className="text-gray-300 text-center mb-8 text-lg">
+                  Please login or create an account to upgrade your plan and unlock premium features.
+                </p>
+
+                {/* Buttons */}
+                <div className="space-y-3">
+                  <button
+                    onClick={() => router.push('/')}
+                    className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/50"
+                  >
+                    Login / Sign Up
+                  </button>
+                  
+                  <button
+                    onClick={() => setShowLoginModal(false)}
+                    className="w-full py-4 bg-white/5 hover:bg-white/10 text-gray-300 font-semibold rounded-xl transition-all duration-300 border border-white/10"
+                  >
+                    Maybe Later
+                  </button>
+                </div>
+
+                {/* Features preview */}
+                <div className="mt-6 pt-6 border-t border-white/10">
+                  <p className="text-sm text-gray-400 text-center mb-3">
+                    What you&apos;ll get:
+                  </p>
+                  <div className="flex items-center justify-center gap-4 text-xs text-gray-500">
+                    <span className="flex items-center gap-1">
+                      <Check className="w-4 h-4 text-green-400" />
+                      More Credits
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Check className="w-4 h-4 text-green-400" />
+                      All Models
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Check className="w-4 h-4 text-green-400" />
+                      HD Quality
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   )
 }
