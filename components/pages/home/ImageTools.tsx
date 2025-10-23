@@ -17,7 +17,8 @@ import {
   Zap,
   Palette,
   AlertCircle,
-  Check
+  Check,
+  ArrowLeft
 } from 'lucide-react'
 import { useAuthStore } from '@/store/auth'
 import { api } from '@/utils/api'
@@ -368,6 +369,17 @@ export function ImageTools() {
 
         {/* Header */}
         <div className="mb-8">
+          <div className="flex items-center gap-4 mb-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => router.push('/dashboard')}
+              className="text-gray-400 hover:text-white hover:bg-white/10"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
+            </Button>
+          </div>
           <motion.h1 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
