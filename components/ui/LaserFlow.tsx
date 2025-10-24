@@ -27,13 +27,6 @@ export const LaserFlow: React.FC<Props> = ({
 };
 
 export default LaserFlow;
-#ifdef GL_ES
-#extension GL_OES_standard_derivatives : enable
-#endif
-precision highp float;
-precision mediump int;
-
-uniform float iTime;
 uniform vec3 iResolution;
 uniform vec4 iMouse;
 uniform float uWispDensity;
