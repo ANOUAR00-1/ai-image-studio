@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   // Performance optimizations
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
+    styledComponents: true,
   },
   
   // Experimental features for better performance
@@ -16,11 +17,16 @@ const nextConfig: NextConfig = {
       '@radix-ui/react-icons',
       'framer-motion',
       'recharts',
+      'clsx',
+      'tailwind-merge',
     ],
     // Speed up navigation
     optimizeCss: true,
     scrollRestoration: true,
   },
+  
+  // SwcMinify for better compression
+  swcMinify: true,
   
   // Image optimization
   images: {
