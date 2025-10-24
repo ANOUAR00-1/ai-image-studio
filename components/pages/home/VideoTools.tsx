@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import StarBorder from '@/components/ui/StarBorder'
 import { Textarea } from '@/components/ui/textarea'
