@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Image as ImageIcon, Video as VideoIcon, Search, Download, Eye, Trash2, CheckCircle, XCircle, Clock } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Image as ImageIcon, Video as VideoIcon, Search, Download, Eye, Trash2, CheckCircle, XCircle, Clock, ArrowLeft } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -22,6 +23,7 @@ interface Generation {
 }
 
 export default function AdminGenerationsPage() {
+  const router = useRouter()
   const [generations, setGenerations] = useState<Generation[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -79,12 +81,22 @@ export default function AdminGenerationsPage() {
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center justify-between"
       >
-        <div>
-          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-            <ImageIcon className="h-8 w-8 text-purple-400" />
-            Generations
-          </h1>
-          <p className="text-gray-400 mt-1">Monitor all AI generations</p>
+        <div className="flex items-center gap-4">
+          <Button
+            onClick={() => router.back()}
+            variant="ghost"
+            size="sm"
+            className="text-gray-400 hover:text-white"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+              <ImageIcon className="h-8 w-8 text-purple-400" />
+              Generations
+            </h1>
+            <p className="text-gray-400 mt-1">Monitor all AI generations</p>
+          </div>
         </div>
         <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
           <Download className="h-4 w-4 mr-2" />

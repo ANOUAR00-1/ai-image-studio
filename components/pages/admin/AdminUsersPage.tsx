@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Users, Search, Crown, CreditCard, Download, MoreVertical, Shield } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { Users, Search, Crown, CreditCard, Download, MoreVertical, Shield, ArrowLeft } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -20,6 +21,7 @@ interface User {
 }
 
 export default function AdminUsersPage() {
+  const router = useRouter()
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -74,12 +76,22 @@ export default function AdminUsersPage() {
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center justify-between"
       >
-        <div>
-          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-            <Users className="h-8 w-8 text-purple-400" />
-            User Management
-          </h1>
-          <p className="text-gray-400 mt-1">Manage all users and their subscriptions</p>
+        <div className="flex items-center gap-4">
+          <Button
+            onClick={() => router.back()}
+            variant="ghost"
+            size="sm"
+            className="text-gray-400 hover:text-white"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+              <Users className="h-8 w-8 text-purple-400" />
+              User Management
+            </h1>
+            <p className="text-gray-400 mt-1">Manage all users and their subscriptions</p>
+          </div>
         </div>
         <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
           <Download className="h-4 w-4 mr-2" />

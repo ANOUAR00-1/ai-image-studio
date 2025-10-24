@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { DollarSign, CreditCard, TrendingUp, Download, Search, CheckCircle, XCircle, Clock } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { DollarSign, CreditCard, TrendingUp, Download, Search, CheckCircle, XCircle, Clock, ArrowLeft } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -20,6 +21,7 @@ interface Payment {
 }
 
 export default function AdminPaymentsPage() {
+  const router = useRouter()
   const [payments, setPayments] = useState<Payment[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
@@ -79,12 +81,22 @@ export default function AdminPaymentsPage() {
         animate={{ opacity: 1, y: 0 }}
         className="flex items-center justify-between"
       >
-        <div>
-          <h1 className="text-3xl font-bold text-white flex items-center gap-3">
-            <DollarSign className="h-8 w-8 text-green-400" />
-            Payments & Revenue
-          </h1>
-          <p className="text-gray-400 mt-1">Track all transactions and revenue</p>
+        <div className="flex items-center gap-4">
+          <Button
+            onClick={() => router.back()}
+            variant="ghost"
+            size="sm"
+            className="text-gray-400 hover:text-white"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-white flex items-center gap-3">
+              <DollarSign className="h-8 w-8 text-green-400" />
+              Payments & Revenue
+            </h1>
+            <p className="text-gray-400 mt-1">Track all transactions and revenue</p>
+          </div>
         </div>
         <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
           <Download className="h-4 w-4 mr-2" />
