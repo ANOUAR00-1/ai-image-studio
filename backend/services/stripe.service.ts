@@ -1,9 +1,21 @@
 import Stripe from 'stripe'
 import { PLANS } from '../config/constants'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-09-30.clover',
-})
+// Initialize Stripe lazily to avoid build-time errors when API key is missing
+let stripe: Stripe | null = null
+
+function getStripe(): Stripe {
+  if (!stripe) {
+    const apiKey = process.env.STRIPE_SECRET_KEY
+    if (!apiKey) {
+      throw new Error('STRIPE_SECRET_KEY environment variable is not set')
+    }
+    stripe = new Stripe(apiKey, {
+      apiVersion: '2025-09-30.clover',
+    })
+  }
+  return stripe
+}
 
 export class StripeService {
   // Create checkout session for credit purchase
@@ -14,7 +26,7 @@ export class StripeService {
     price: number
   ) {
     try {
-      const session = await stripe.checkout.sessions.create({
+      const session = await getStripe().checkout.sessions.create({
         customer_email: userEmail,
         client_reference_id: userId,
         payment_method_types: ['card'],
@@ -61,7 +73,7 @@ export class StripeService {
         throw new Error(`Stripe price ID not configured for ${plan} plan`)
       }
 
-      const session = await stripe.checkout.sessions.create({
+      const session = await getStripe().checkout.sessions.create({
         customer_email: userEmail,
         client_reference_id: userId,
         payment_method_types: ['card'],
@@ -90,7 +102,7 @@ export class StripeService {
   // Cancel subscription
   static async cancelSubscription(subscriptionId: string) {
     try {
-      const subscription = await stripe.subscriptions.update(subscriptionId, {
+      const subscription = await getStripe().subscriptions.update(subscriptionId, {
         cancel_at_period_end: true,
       })
 
@@ -104,7 +116,7 @@ export class StripeService {
   // Resume subscription
   static async resumeSubscription(subscriptionId: string) {
     try {
-      const subscription = await stripe.subscriptions.update(subscriptionId, {
+      const subscription = await getStripe().subscriptions.update(subscriptionId, {
         cancel_at_period_end: false,
       })
 
@@ -118,7 +130,7 @@ export class StripeService {
   // Get customer portal link
   static async createCustomerPortalSession(customerId: string) {
     try {
-      const session = await stripe.billingPortal.sessions.create({
+      const session = await getStripe().billingPortal.sessions.create({
         customer: customerId,
         return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
       })
@@ -134,7 +146,7 @@ export class StripeService {
   static constructWebhookEvent(payload: string, signature: string) {
     try {
       const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
-      return stripe.webhooks.constructEvent(payload, signature, webhookSecret)
+      return getStripe().webhooks.constructEvent(payload, signature, webhookSecret)
     } catch (error) {
       console.error('Webhook verification error:', error)
       throw error
