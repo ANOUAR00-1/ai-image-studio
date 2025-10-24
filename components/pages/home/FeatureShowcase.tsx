@@ -46,14 +46,9 @@ export function FeatureShowcase() {
     <section className="py-24 bg-gradient-to-b from-black via-[#0a0118] to-[#0f0a1f]">
       <div className="container mx-auto px-4">
         <div className="text-center mb-20">
-          <BlurText
-            text="Powerful Features for Creators"
-            delay={30}
-            animateBy="words"
-            direction="top"
-            stepDuration={0.2}
-            className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 justify-center"
-          />
+          <BlurText delay={0.2} className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6 justify-center">
+            Powerful Features for Creators
+          </BlurText>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
             Everything you need to bring your creative vision to life
           </p>
