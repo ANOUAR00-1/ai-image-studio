@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import { withAuth } from '@/backend/utils/middleware'
 import { withRateLimit, RateLimits } from '@/backend/utils/rateLimit'
+import { withCors, handleCorsPreFlight } from '@/backend/utils/cors'
 import { ApiResponse } from '@/backend/utils/response'
 import { CreditsService } from '@/backend/services/credits.service'
 import { GenerationService } from '@/backend/services/generation.service'
@@ -8,7 +9,10 @@ import { AIService } from '@/backend/services/ai.service'
 import { StorageService } from '@/backend/services/storage.service'
 import { CREDIT_COSTS } from '@/backend/config/constants'
 
-export const POST = withRateLimit(RateLimits.GENERATION, withAuth(async (request: NextRequest, { userId }) => {
+// Handle CORS preflight
+export const OPTIONS = handleCorsPreFlight
+
+export const POST = withCors(withRateLimit(RateLimits.GENERATION, withAuth(async (request: NextRequest, { userId }) => {
   try {
     const body = await request.json()
     const { prompt, model = 'sdxl' } = body
@@ -131,7 +135,7 @@ export const POST = withRateLimit(RateLimits.GENERATION, withAuth(async (request
     console.error('Image generation endpoint error:', error)
     return ApiResponse.serverError()
   }
-}))
+})))
 
 // GET endpoint to list available models
 export const GET = withAuth(async (_request: NextRequest, { userId }) => {
