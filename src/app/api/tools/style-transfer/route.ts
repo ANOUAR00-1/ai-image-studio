@@ -1,20 +1,45 @@
-import { NextRequest } from 'next/server'
-import { withAuth } from '@/backend/utils/middleware'
+import { NextRequest, NextResponse } from 'next/server'
 import { ApiResponse } from '@/backend/utils/response'
+import { addCorsHeaders } from '@/backend/utils/cors'
 import { ImageProcessingService } from '@/backend/services/image-processing.service'
 import { CreditsService } from '@/backend/services/credits.service'
 import { supabaseAdmin } from '@/lib/supabase/server'
 
 export const maxDuration = 60
 
-export const POST = withAuth(async (request: NextRequest, { userId }) => {
+// OPTIONS for CORS preflight
+export async function OPTIONS(request: NextRequest) {
+  const response = new NextResponse(null, { status: 204 })
+  return addCorsHeaders(response, request.headers.get('origin') || undefined)
+}
+
+export async function POST(request: NextRequest) {
   try {
+    // Get auth token from cookies
+    const token = request.cookies.get('sb-access-token')?.value
+
+    if (!token) {
+      const response = ApiResponse.unauthorized()
+      return addCorsHeaders(response, request.headers.get('origin') || undefined)
+    }
+
+    // Verify token and get user
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
+
+    if (authError || !user) {
+      const response = ApiResponse.unauthorized()
+      return addCorsHeaders(response, request.headers.get('origin') || undefined)
+    }
+
+    const userId = user.id
+
     // Get image and style from request
     const body = await request.json()
     const { image, style = 'anime' } = body
 
     if (!image) {
-      return ApiResponse.error('Image is required', 400)
+      const response = ApiResponse.validationError('Image is required')
+      return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
 
     // Check if user is admin
@@ -49,17 +74,20 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
     // Get updated credits
     const remainingCredits = isAdmin ? -1 : await CreditsService.getUserCredits(userId)
 
-    return ApiResponse.success({
+    const response = ApiResponse.success({
       imageUrl: processedImage,
       creditsUsed: isAdmin ? 0 : creditsRequired,
       remainingCredits,
     })
+    return addCorsHeaders(response, request.headers.get('origin') || undefined)
 
   } catch (error) {
     console.error('Style transfer error:', error)
     
-    return ApiResponse.error(
-      error instanceof Error ? error.message : 'Failed to apply style transfer'
+    const response = ApiResponse.error(
+      error instanceof Error ? error.message : 'Failed to apply style transfer',
+      500
     )
+    return addCorsHeaders(response, request.headers.get('origin') || undefined)
   }
-})
+}
