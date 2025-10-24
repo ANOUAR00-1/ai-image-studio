@@ -18,12 +18,11 @@ import SpotlightCard from "@/components/ui/SpotlightCard"
 export default function LandingPage() {
   const [authModalOpen, setAuthModalOpen] = useState(false)
   const router = useRouter()
-  const { isLoggedIn, user } = useAuthStore()
+  const { isLoggedIn } = useAuthStore()
 
   const handleGetStarted = () => {
     if (isLoggedIn) {
-      // User is logged in, go to dashboard
-      toast.success(`Welcome back, ${user?.name || 'User'}! 🚀`)
+      // User is logged in, go to dashboard (no toast - only show on login)
       router.push('/dashboard')
     } else {
       // User not logged in, show auth modal
@@ -255,14 +254,9 @@ export default function LandingPage() {
       <section id="features" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <BlurText
-              text="Powerful AI Features at Your Fingertips"
-              delay={30}
-              animateBy="words"
-              direction="top"
-              stepDuration={0.2}
-              className="text-4xl sm:text-5xl font-bold mb-4 text-white justify-center"
-            />
+            <BlurText delay={0.2} className="text-4xl sm:text-5xl font-bold mb-4 text-white justify-center">
+              Powerful AI Features at Your Fingertips
+            </BlurText>
             <p className="text-lg text-gray-200 max-w-2xl mx-auto">
               Everything you need to create, edit, and transform visual content with AI
             </p>
@@ -300,14 +294,9 @@ export default function LandingPage() {
       <section className="py-20 bg-black/20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <BlurText
-              text="Everything You Need to Create"
-              delay={30}
-              animateBy="words"
-              direction="top"
-              stepDuration={0.2}
-              className="text-4xl sm:text-5xl font-bold mb-4 text-white justify-center"
-            />
+            <BlurText delay={0.2} className="text-4xl sm:text-5xl font-bold mb-4 text-white justify-center">
+              Everything You Need to Create
+            </BlurText>
             <p className="text-lg text-gray-200 max-w-2xl mx-auto">
               Professional-grade AI tools that make content creation accessible to everyone
             </p>
@@ -345,14 +334,9 @@ export default function LandingPage() {
       <section id="pricing" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <BlurText
-              text="Choose Your Perfect Plan"
-              delay={30}
-              animateBy="words"
-              direction="top"
-              stepDuration={0.2}
-              className="text-4xl sm:text-5xl font-bold mb-4 text-white justify-center"
-            />
+            <BlurText delay={0.2} className="text-4xl sm:text-5xl font-bold mb-4 text-white justify-center">
+              Choose Your Perfect Plan
+            </BlurText>
             <p className="text-lg text-gray-200 max-w-2xl mx-auto">
               Choose the plan that fits your creative needs. Start free, upgrade anytime.
             </p>
@@ -428,14 +412,9 @@ export default function LandingPage() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
             <div className="relative p-16 text-center">
-              <BlurText
-                text="Ready to Transform Your Ideas?"
-                delay={30}
-                animateBy="words"
-                direction="top"
-                stepDuration={0.2}
-                className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-tight text-white justify-center"
-              />
+              <BlurText delay={0.2} className="text-4xl sm:text-5xl lg:text-6xl font-black mb-6 leading-tight text-white justify-center">
+                Ready to Transform Your Ideas?
+              </BlurText>
               <p className="text-xl sm:text-2xl text-gray-100 mb-12 max-w-3xl mx-auto leading-relaxed font-light">
                 Join thousands of creators using <span className="text-transparent bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text font-medium">PixFusion AI</span> to bring their imagination to life.
               </p>
