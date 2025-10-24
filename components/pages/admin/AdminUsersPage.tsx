@@ -26,6 +26,8 @@ export default function AdminUsersPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterPlan, setFilterPlan] = useState<string>('all')
   const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [editForm, setEditForm] = useState({ credits: 0, plan: 'free' })
 
   useEffect(() => {
     fetchUsers()
@@ -43,6 +45,32 @@ export default function AdminUsersPage() {
       console.error('Failed to fetch users:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleEditUser = (user: User) => {
+    setEditingUser(user)
+    setEditForm({ credits: user.credits, plan: user.plan })
+  }
+
+  const handleSaveUser = async () => {
+    if (!editingUser) return
+    
+    setActionLoading(editingUser.id)
+    try {
+      const res = await fetch(`/api/admin/users/${editingUser.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm)
+      })
+      if (res.ok) {
+        await fetchUsers()
+        setEditingUser(null)
+      }
+    } catch (error) {
+      console.error('Failed to update user:', error)
+    } finally {
+      setActionLoading(null)
     }
   }
 
@@ -267,6 +295,7 @@ export default function AdminUsersPage() {
                         <Button
                           variant="ghost"
                           size="sm"
+                          onClick={() => handleEditUser(user)}
                           disabled={actionLoading === user.id}
                           className="text-blue-400 hover:text-blue-300"
                         >
@@ -297,6 +326,71 @@ export default function AdminUsersPage() {
           )}
         </SpotlightCard>
       </motion.div>
+
+      {/* Edit User Modal */}
+      {editingUser && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-[#1a0b2e] rounded-lg p-6 max-w-md w-full"
+          >
+            <h3 className="text-white text-xl font-bold mb-4">Edit User</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="text-gray-300 text-sm block mb-2">Email</label>
+                <input
+                  type="text"
+                  value={editingUser.email}
+                  disabled
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-400 cursor-not-allowed"
+                />
+              </div>
+
+              <div>
+                <label className="text-gray-300 text-sm block mb-2">Credits</label>
+                <input
+                  type="number"
+                  value={editForm.credits}
+                  onChange={(e) => setEditForm({ ...editForm, credits: parseInt(e.target.value) || 0 })}
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-gray-300 text-sm block mb-2">Plan</label>
+                <select
+                  value={editForm.plan}
+                  onChange={(e) => setEditForm({ ...editForm, plan: e.target.value })}
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="free">Free</option>
+                  <option value="pro">Pro</option>
+                  <option value="business">Business</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <Button
+                onClick={() => setEditingUser(null)}
+                variant="outline"
+                className="flex-1"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSaveUser}
+                disabled={actionLoading === editingUser.id}
+                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600"
+              >
+                {actionLoading === editingUser.id ? 'Saving...' : 'Save'}
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   )
 }

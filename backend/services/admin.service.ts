@@ -88,23 +88,13 @@ export class AdminService {
     try {
       const { data, error} = await supabaseAdmin
         .from('generations')
-        .select(`
-          id,
-          type,
-          model,
-          status,
-          created_at,
-          profiles!inner(email)
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(limit)
 
       if (error) throw error
       
-      return data?.map(gen => ({
-        ...gen,
-        user_email: (gen.profiles as unknown as { email: string })?.email || 'unknown',
-      }))
+      return data || []
     } catch (error) {
       console.error('Get recent generations error:', error)
       throw error
