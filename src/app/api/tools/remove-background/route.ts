@@ -15,17 +15,27 @@ export async function OPTIONS(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // Get auth token from cookies or Authorization header
-    let token = request.cookies.get('sb-access-token')?.value
-    
+    // Try multiple auth methods
+    let token: string | undefined
+
+    // Method 1: Check Authorization header
+    const authHeader = request.headers.get('authorization')
+    if (authHeader?.startsWith('Bearer ')) {
+      token = authHeader.slice(7)
+    }
+
+    // Method 2: Check cookies
     if (!token) {
-      const authHeader = request.headers.get('authorization')
-      if (authHeader?.startsWith('Bearer ')) {
-        token = authHeader.slice(7)
-      }
+      token = request.cookies.get('sb-access-token')?.value
+    }
+
+    // Method 3: Check alternative cookie names
+    if (!token) {
+      token = request.cookies.get('sb_access_token')?.value
     }
 
     if (!token) {
+      console.error('No auth token found in headers or cookies')
       const response = ApiResponse.unauthorized()
       return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
@@ -34,7 +44,7 @@ export async function POST(request: NextRequest) {
     const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
 
     if (authError || !user) {
-      console.error('Auth error:', authError)
+      console.error('Auth error:', authError, 'Token:', token.slice(0, 20) + '...')
       const response = ApiResponse.unauthorized()
       return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }

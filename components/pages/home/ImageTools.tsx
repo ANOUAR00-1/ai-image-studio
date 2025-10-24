@@ -191,13 +191,29 @@ export function ImageTools() {
         endpoint = '/api/tools/style-transfer'
       }
 
-      // Call the real API with credentials (httpOnly cookies sent automatically)
+      // Get auth token from cookies manually
+      const getCookie = (name: string) => {
+        const value = `; ${document.cookie}`
+        const parts = value.split(`; ${name}=`)
+        if (parts.length === 2) return parts.pop()?.split(';').shift()
+        return undefined
+      }
+
+      const token = getCookie('sb-access-token') || getCookie('sb_access_token')
+      
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+
+      // Call the real API
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include', // Sends httpOnly cookies automatically
+        headers,
+        credentials: 'include', // Also send cookies as backup
         body: JSON.stringify({
           image: uploadedImage,
           style: 'anime', // for style transfer

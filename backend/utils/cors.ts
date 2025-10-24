@@ -45,8 +45,9 @@ export function addCorsHeaders(
 
   response.headers.set('Access-Control-Allow-Origin', allowedOrigin)
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH')
-  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
-  response.headers.set('Access-Control-Allow-Credentials', allowedOrigin !== '*' ? 'true' : 'false')
+  response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Cookie')
+  // Always allow credentials when origin is specific, use true for wildcard in development
+  response.headers.set('Access-Control-Allow-Credentials', 'true')
   response.headers.set('Access-Control-Max-Age', '86400')
 
   return response
