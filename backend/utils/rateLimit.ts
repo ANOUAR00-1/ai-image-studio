@@ -89,13 +89,21 @@ export function rateLimit(config: RateLimitConfig) {
 }
 
 /**
- * Wrapper to apply rate limiting to API route handlers
+ * Route handler context type for Next.js 15
  */
-export function withRateLimit<T>(
+interface RouteContext {
+  params?: Promise<Record<string, string | string[]>>
+}
+
+/**
+ * Wrapper to apply rate limiting to API route handlers
+ * Compatible with Next.js 15 route handler signature
+ */
+export function withRateLimit(
   config: RateLimitConfig,
-  handler: (request: NextRequest, ...args: T[]) => Promise<NextResponse>
+  handler: (request: NextRequest, context?: RouteContext) => Promise<NextResponse>
 ) {
-  return async (request: NextRequest, ...args: T[]): Promise<NextResponse> => {
+  return async (request: NextRequest, context?: RouteContext): Promise<NextResponse> => {
     // Check rate limit
     const rateLimitResponse = await rateLimit(config)(request)
     
@@ -104,7 +112,7 @@ export function withRateLimit<T>(
     }
 
     // Continue with original handler
-    return handler(request, ...args)
+    return handler(request, context)
   }
 }
 
