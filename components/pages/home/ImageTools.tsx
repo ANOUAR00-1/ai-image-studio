@@ -191,12 +191,22 @@ export function ImageTools() {
         endpoint = '/api/tools/style-transfer'
       }
 
+      // Get auth token from store
+      const { session } = useAuthStore.getState()
+      const token = session?.access_token
+
       // Call the real API
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      }
+      
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         credentials: 'include',
         body: JSON.stringify({
           image: uploadedImage,

@@ -15,8 +15,15 @@ export async function OPTIONS(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    // Get auth token from cookies
-    const token = request.cookies.get('sb-access-token')?.value
+    // Get auth token from cookies or Authorization header
+    let token = request.cookies.get('sb-access-token')?.value
+    
+    if (!token) {
+      const authHeader = request.headers.get('authorization')
+      if (authHeader?.startsWith('Bearer ')) {
+        token = authHeader.slice(7)
+      }
+    }
 
     if (!token) {
       const response = ApiResponse.unauthorized()
@@ -27,6 +34,7 @@ export async function POST(request: NextRequest) {
     const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
 
     if (authError || !user) {
+      console.error('Auth error:', authError)
       const response = ApiResponse.unauthorized()
       return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
