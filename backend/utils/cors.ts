@@ -30,13 +30,9 @@ export function addCorsHeaders(
 /**
  * Handle CORS preflight requests
  */
-export function handleCorsPreFlight(request: NextRequest): NextResponse | null {
-  if (request.method === 'OPTIONS') {
-    const response = new NextResponse(null, { status: 204 })
-    return addCorsHeaders(response, request.headers.get('origin') || undefined)
-  }
-
-  return null
+export function handleCorsPreFlight(request: NextRequest): Response {
+  const response = new NextResponse(null, { status: 204 })
+  return addCorsHeaders(response, request.headers.get('origin') || undefined)
 }
 
 /**
@@ -47,9 +43,9 @@ export function withCors(
 ): (request: NextRequest, context?: Record<string, unknown>) => Promise<NextResponse> {
   return async (request: NextRequest, context?: Record<string, unknown>) => {
     // Handle preflight
-    const preflightResponse = handleCorsPreFlight(request)
-    if (preflightResponse) {
-      return preflightResponse
+    if (request.method === 'OPTIONS') {
+      const response = new NextResponse(null, { status: 204 })
+      return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
 
     // Call the actual handler

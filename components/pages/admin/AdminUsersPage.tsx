@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Users, Search, Crown, CreditCard, Download, Shield, ArrowLeft, Edit, Trash2 } from 'lucide-react'
+import { Users, Search, Crown, CreditCard, Download, Shield, ArrowLeft, Edit, Trash2, RefreshCw } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -32,6 +32,7 @@ export default function AdminUsersPage() {
   }, [])
 
   const fetchUsers = async () => {
+    setLoading(true)
     try {
       const res = await fetch('/api/admin/users')
       const data = await res.json()
@@ -112,10 +113,20 @@ export default function AdminUsersPage() {
             <p className="text-gray-400 mt-1">Manage all users and their subscriptions</p>
           </div>
         </div>
-        <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-          <Download className="h-4 w-4 mr-2" />
-          Export Users
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={fetchUsers}
+            variant="outline"
+            className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh
+          </Button>
+          <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+            <Download className="h-4 w-4 mr-2" />
+            Export Users
+          </Button>
+        </div>
       </motion.div>
 
       {/* Stats Cards */}

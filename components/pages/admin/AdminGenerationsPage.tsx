@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Image as ImageIcon, Video as VideoIcon, Search, Download, Eye, Trash2, CheckCircle, XCircle, Clock, ArrowLeft } from 'lucide-react'
+import { Image as ImageIcon, Video as VideoIcon, Search, Download, Eye, Trash2, CheckCircle, XCircle, Clock, ArrowLeft, RefreshCw } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -35,6 +35,7 @@ export default function AdminGenerationsPage() {
   }, [])
 
   const fetchGenerations = async () => {
+    setLoading(true)
     try {
       const res = await fetch('/api/admin/generations')
       const data = await res.json()
@@ -45,6 +46,24 @@ export default function AdminGenerationsPage() {
       console.error('Failed to fetch generations:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleDeleteGeneration = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this generation?')) return
+    
+    setActionLoading(id)
+    try {
+      const res = await fetch(`/api/admin/generations/${id}`, {
+        method: 'DELETE'
+      })
+      if (res.ok) {
+        setGenerations(generations.filter(g => g.id !== id))
+      }
+    } catch (error) {
+      console.error('Failed to delete generation:', error)
+    } finally {
+      setActionLoading(null)
     }
   }
 
@@ -99,10 +118,20 @@ export default function AdminGenerationsPage() {
             <p className="text-gray-400 mt-1">Monitor all AI generations</p>
           </div>
         </div>
-        <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-          <Download className="h-4 w-4 mr-2" />
-          Export Data
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={fetchGenerations}
+            variant="outline"
+            className="border-purple-500/50 text-purple-300 hover:bg-purple-500/20"
+          >
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh
+          </Button>
+          <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
+            <Download className="h-4 w-4 mr-2" />
+            Export Data
+          </Button>
+        </div>
       </motion.div>
 
       {/* Stats Cards */}
@@ -274,9 +303,9 @@ export default function AdminGenerationsPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="text-red-400"
+                    className="text-red-400 hover:bg-red-500/20"
                     disabled={actionLoading === gen.id}
-                    onClick={() => setActionLoading(gen.id)}
+                    onClick={() => handleDeleteGeneration(gen.id)}
                   >
                     <Trash2 className="h-3 w-3" />
                   </Button>
