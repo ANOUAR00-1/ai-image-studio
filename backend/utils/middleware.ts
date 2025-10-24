@@ -47,8 +47,7 @@ interface RouteContext {
 export function withAuth(
   handler: (request: NextRequest, context: { userId: string; user: { id: string; email: string } }) => Promise<NextResponse>
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return async (request: NextRequest, _context?: RouteContext) => {
+  return async (request: NextRequest, context: RouteContext) => {
     const authResult = await verifyAuth(request)
 
     if (!authResult.success) {
@@ -69,8 +68,7 @@ export function withAuth(
 export function withAdmin(
   handler: (request: NextRequest, context: { userId: string; user: { id: string; email: string } }) => Promise<NextResponse>
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  return async (request: NextRequest, _context?: RouteContext) => {
+  return async (request: NextRequest, context: RouteContext) => {
     const authResult = await verifyAuth(request)
 
     if (!authResult.success) {
