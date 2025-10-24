@@ -109,8 +109,8 @@ const IMAGE_PROMPTS = [
   }
 ]
 
-// Increase route timeout for long-running generation
-export const maxDuration = 600 // 10 minutes
+// Route timeout - Hobby plan max is 300 seconds (5 minutes)
+export const maxDuration = 300 // 5 minutes (Hobby plan limit)
 export const dynamic = 'force-dynamic'
 
 // Admin endpoint to generate example images and videos (protected)
