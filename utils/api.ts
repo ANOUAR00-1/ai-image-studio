@@ -33,7 +33,9 @@ class ApiClient {
   private baseUrl: string
 
   constructor() {
-    this.baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'
+    // Use empty string for same-origin requests (works for all deployments)
+    // Falls back to localhost for local development
+    this.baseUrl = typeof window !== 'undefined' ? '' : 'http://localhost:3001'
   }
 
   private async request<T>(
