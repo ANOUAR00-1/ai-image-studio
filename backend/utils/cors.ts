@@ -42,8 +42,10 @@ export function handleCorsPreFlight(request: NextRequest): NextResponse | null {
 /**
  * Middleware wrapper to add CORS to any API route
  */
-export function withCors(handler: any) {
-  return async (request: NextRequest, context?: any) => {
+export function withCors(
+  handler: (request: NextRequest, context?: Record<string, unknown>) => Promise<NextResponse>
+): (request: NextRequest, context?: Record<string, unknown>) => Promise<NextResponse> {
+  return async (request: NextRequest, context?: Record<string, unknown>) => {
     // Handle preflight
     const preflightResponse = handleCorsPreFlight(request)
     if (preflightResponse) {
