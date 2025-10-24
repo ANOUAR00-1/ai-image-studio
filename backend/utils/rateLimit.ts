@@ -92,7 +92,7 @@ export function rateLimit(config: RateLimitConfig) {
  * Route handler context type for Next.js 15
  */
 interface RouteContext {
-  params?: Promise<Record<string, string | string[]>>
+  params: Promise<Record<string, string | string[]>>
 }
 
 /**
@@ -101,9 +101,9 @@ interface RouteContext {
  */
 export function withRateLimit(
   config: RateLimitConfig,
-  handler: (request: NextRequest, context?: RouteContext) => Promise<NextResponse>
+  handler: (request: NextRequest, context: RouteContext) => Promise<NextResponse>
 ) {
-  return async (request: NextRequest, context?: RouteContext): Promise<NextResponse> => {
+  return async (request: NextRequest, context: RouteContext): Promise<NextResponse> => {
     // Check rate limit
     const rateLimitResponse = await rateLimit(config)(request)
     
