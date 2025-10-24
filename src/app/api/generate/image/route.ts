@@ -15,7 +15,7 @@ export async function OPTIONS(request: NextRequest) {
   return addCorsHeaders(response, request.headers.get('origin') || undefined)
 }
 
-const imageGenerationHandler = withRateLimit(RateLimits.GENERATION, withAuth(async (request: NextRequest, { userId }) => {
+const imageGenerationHandler = withRateLimit(RateLimits.GENERATION, withAuth(async (request: NextRequest, { userId }: any) => {
   try {
     const body = await request.json()
     const { prompt, model = 'sdxl' } = body
@@ -138,7 +138,7 @@ const imageGenerationHandler = withRateLimit(RateLimits.GENERATION, withAuth(asy
     console.error('Image generation endpoint error:', error)
     return ApiResponse.serverError()
   }
-})))
+}))
 
 // Wrap with CORS headers
 export const POST = async (request: NextRequest, context: any) => {

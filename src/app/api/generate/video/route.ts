@@ -13,7 +13,7 @@ export async function OPTIONS(request: NextRequest) {
   return addCorsHeaders(response, request.headers.get('origin') || undefined)
 }
 
-const videoGenerationHandler = withAuth(async (request: NextRequest, { userId }) => {
+const videoGenerationHandler = withAuth(async (request: NextRequest, { userId }: any) => {
   try {
     const body = await request.json()
     const { prompt, model = 'stable-video' } = body
@@ -114,7 +114,7 @@ export const POST = async (request: NextRequest, context: any) => {
 }
 
 // GET endpoint to list available video models
-const getVideoModelsHandler = withAuth(async (_request: NextRequest, { userId }) => {
+const getVideoModelsHandler = withAuth(async (_request: NextRequest, { userId }: any) => {
   try {
     const models = AIService.getAllModels()
     const userCredits = await CreditsService.getUserCredits(userId)
