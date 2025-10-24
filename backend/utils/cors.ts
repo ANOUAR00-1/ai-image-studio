@@ -37,8 +37,11 @@ export function handleCorsPreFlight(request: NextRequest): Response {
 
 /**
  * Middleware wrapper to add CORS to any API route
+ * Uses 'any' types to support multiple handler signatures (withAuth, withAdmin, etc.)
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function withCors(handler: any) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return async (request: NextRequest, context: any) => {
     // Handle preflight
     if (request.method === 'OPTIONS') {
