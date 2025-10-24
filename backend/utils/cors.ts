@@ -4,10 +4,26 @@ import { NextRequest, NextResponse } from 'next/server'
 const ALLOWED_ORIGINS = [
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://ai-image-studio.vercel.app',
-  'https://ai-image-studio-hsvqr6o3c-banouarofficiel-gmailcoms-projects.vercel.app',
-  // Add your production domain here
+  'https://ai-image-studio.vercel.app', // Production URL
+  // Preview URLs (optional - can be removed if only using production)
+  'https://ai-image-studio-*.vercel.app',
+  // Add your custom domain here
+  // 'https://yourdomain.com',
 ]
+
+/**
+ * Check if origin is allowed (supports wildcard patterns)
+ */
+function isOriginAllowed(origin: string): boolean {
+  return ALLOWED_ORIGINS.some(allowedOrigin => {
+    if (allowedOrigin.includes('*')) {
+      // Convert wildcard pattern to regex
+      const pattern = allowedOrigin.replace(/\*/g, '.*')
+      return new RegExp(`^${pattern}$`).test(origin)
+    }
+    return allowedOrigin === origin
+  })
+}
 
 /**
  * Add CORS headers to response
@@ -16,7 +32,7 @@ export function addCorsHeaders(
   response: NextResponse,
   origin?: string
 ): NextResponse {
-  const allowedOrigin = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0]
+  const allowedOrigin = origin && isOriginAllowed(origin) ? origin : ALLOWED_ORIGINS[0]
 
   response.headers.set('Access-Control-Allow-Origin', allowedOrigin)
   response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS, PATCH')
