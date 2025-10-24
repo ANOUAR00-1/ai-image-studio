@@ -54,7 +54,7 @@ export const POST = withAuth(async (request: NextRequest, { userId }) => {
     try {
       console.log(`Generating video for user ${userId} with model ${model}`)
       
-      const videoUrl = await AIService.generateVideo(prompt, model)
+      const videoUrl = await AIService.generateVideo()
       
       // Update generation record with result
       await GenerationService.updateGenerationStatus(
