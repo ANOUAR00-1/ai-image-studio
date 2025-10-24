@@ -329,63 +329,73 @@ export default function AdminUsersPage() {
 
       {/* Edit User Modal */}
       {editingUser && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-[#1a0b2e] rounded-lg p-6 max-w-md w-full"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="bg-gradient-to-br from-[#2a1a4e] to-[#1a0b2e] rounded-2xl p-8 max-w-md w-full border border-purple-500/20 shadow-2xl"
           >
-            <h3 className="text-white text-xl font-bold mb-4">Edit User</h3>
+            <div className="mb-6">
+              <h3 className="text-white text-2xl font-bold">Edit User</h3>
+              <p className="text-gray-400 text-sm mt-1">{editingUser.email}</p>
+            </div>
             
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="text-gray-300 text-sm block mb-2">Email</label>
+                <label className="text-gray-300 text-sm font-semibold block mb-3">Email Address</label>
                 <input
                   type="text"
                   value={editingUser.email}
                   disabled
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-gray-400 cursor-not-allowed"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-gray-400 cursor-not-allowed text-sm"
                 />
               </div>
 
               <div>
-                <label className="text-gray-300 text-sm block mb-2">Credits</label>
+                <label className="text-gray-300 text-sm font-semibold block mb-3">Credits</label>
                 <input
                   type="number"
                   value={editForm.credits}
                   onChange={(e) => setEditForm({ ...editForm, credits: parseInt(e.target.value) || 0 })}
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 bg-white/5 border border-purple-500/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm transition"
                 />
               </div>
 
               <div>
-                <label className="text-gray-300 text-sm block mb-2">Plan</label>
+                <label className="text-gray-300 text-sm font-semibold block mb-3">Subscription Plan</label>
                 <select
                   value={editForm.plan}
                   onChange={(e) => setEditForm({ ...editForm, plan: e.target.value })}
-                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 bg-white/5 border border-purple-500/30 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm transition appearance-none cursor-pointer"
+                  style={{
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a78bfa' d='M6 9L1 4h10z'/%3E%3C/svg%3E")`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'right 1rem center',
+                    paddingRight: '2.5rem'
+                  }}
                 >
-                  <option value="free">Free</option>
-                  <option value="pro">Pro</option>
-                  <option value="business">Business</option>
+                  <option value="free">Free Plan</option>
+                  <option value="pro">Pro Plan</option>
+                  <option value="business">Business Plan</option>
                 </select>
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div className="flex gap-3 mt-8">
               <Button
                 onClick={() => setEditingUser(null)}
                 variant="outline"
-                className="flex-1"
+                className="flex-1 border-white/20 text-gray-300 hover:bg-white/5"
               >
                 Cancel
               </Button>
               <Button
                 onClick={handleSaveUser}
                 disabled={actionLoading === editingUser.id}
-                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600"
+                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
-                {actionLoading === editingUser.id ? 'Saving...' : 'Save'}
+                {actionLoading === editingUser.id ? 'Saving...' : 'Save Changes'}
               </Button>
             </div>
           </motion.div>

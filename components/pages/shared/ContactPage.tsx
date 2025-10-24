@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,11 +16,38 @@ import {
   Globe,
   Users,
   Headphones,
-  Zap
+  Zap,
+  CheckCircle
 } from "lucide-react"
 import StarBorder from "@/components/ui/StarBorder"
 
 export function ContactPage() {
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' })
+  const [loading, setLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+
+      if (res.ok) {
+        setSubmitted(true)
+        setFormData({ name: '', email: '', subject: '', message: '' })
+        setTimeout(() => setSubmitted(false), 5000)
+      }
+    } catch (error) {
+      console.error('Failed to send message:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
   const contactInfo = [
     {
       icon: Mail,
@@ -150,53 +180,73 @@ export function ContactPage() {
                 <p className="text-gray-300 text-lg">We typically respond within 24 hours</p>
               </CardHeader>
               <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {submitted && (
+                  <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-400" />
+                    <div>
+                      <p className="text-green-300 font-semibold">Message sent successfully!</p>
+                      <p className="text-green-200 text-sm">We&apos;ll get back to you within 24 hours.</p>
+                    </div>
+                  </div>
+                )}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-white font-semibold mb-2">Name</label>
+                      <Input
+                        type="text"
+                        placeholder="Your full name"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required
+                        className="bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-500/50"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-white font-semibold mb-2">Email</label>
+                      <Input
+                        type="email"
+                        placeholder="your@email.com"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        required
+                        className="bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-500/50"
+                      />
+                    </div>
+                  </div>
                   <div>
-                    <label className="block text-white font-semibold mb-2">Name</label>
+                    <label className="block text-white font-semibold mb-2">Subject</label>
                     <Input
                       type="text"
-                      placeholder="Your full name"
+                      placeholder="How can we help you?"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      required
                       className="bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-500/50"
                     />
                   </div>
                   <div>
-                    <label className="block text-white font-semibold mb-2">Email</label>
-                    <Input
-                      type="email"
-                      placeholder="your@email.com"
+                    <label className="block text-white font-semibold mb-2">Message</label>
+                    <Textarea
+                      placeholder="Tell us more about your question or issue..."
+                      rows={6}
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      required
                       className="bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-500/50"
                     />
                   </div>
-                </div>
-                <div>
-                  <label className="block text-white font-semibold mb-2">Subject</label>
-                  <Input
-                    type="text"
-                    placeholder="How can we help you?"
-                    className="bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-500/50"
-                  />
-                </div>
-                <div>
-                  <label className="block text-white font-semibold mb-2">Message</label>
-                  <Textarea
-                    placeholder="Tell us more about your question or issue..."
-                    rows={6}
-                    className="bg-white/5 border-white/20 text-white placeholder:text-gray-400 focus:border-purple-500/50"
-                  />
-                </div>
-                <div className="text-center pt-4">
-                  <StarBorder
-                    as="button"
-                    color="#A855F7"
-                    speed="5s"
-                    className="hover:scale-105 transition-transform"
-                  >
-                    <span className="flex items-center gap-2">
+                  <div className="text-center pt-4">
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-8 py-3 rounded-lg flex items-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed transition"
+                    >
                       <Send className="w-4 h-4" />
-                      Send Message
-                    </span>
-                  </StarBorder>
-                </div>
+                      {loading ? 'Sending...' : 'Send Message'}
+                    </Button>
+                  </div>
+                </form>
               </CardContent>
             </Card>
           </div>
