@@ -5,8 +5,7 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
   'http://localhost:3001',
   'https://ai-image-studio.vercel.app', // Production URL
-  // Preview URLs (optional - can be removed if only using production)
-  'https://ai-image-studio-*.vercel.app',
+  'https://*.vercel.app', // All Vercel preview URLs
   // Add your custom domain here
   // 'https://yourdomain.com',
 ]
@@ -18,7 +17,9 @@ function isOriginAllowed(origin: string): boolean {
   return ALLOWED_ORIGINS.some(allowedOrigin => {
     if (allowedOrigin.includes('*')) {
       // Convert wildcard pattern to regex
-      const pattern = allowedOrigin.replace(/\*/g, '.*')
+      const pattern = allowedOrigin
+        .replace(/\./g, '\\.') // Escape dots
+        .replace(/\*/g, '[a-zA-Z0-9-]+') // Replace * with valid domain chars
       return new RegExp(`^${pattern}$`).test(origin)
     }
     return allowedOrigin === origin
