@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { Users, Search, Crown, CreditCard, Download, MoreVertical, Shield, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
+import { Users, Search, Crown, CreditCard, Download, Shield, ArrowLeft, Edit, Trash2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -21,11 +21,11 @@ interface User {
 }
 
 export default function AdminUsersPage() {
-  const router = useRouter()
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterPlan, setFilterPlan] = useState<string>('all')
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
 
   useEffect(() => {
     fetchUsers()
@@ -42,6 +42,24 @@ export default function AdminUsersPage() {
       console.error('Failed to fetch users:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleDeleteUser = async (userId: string) => {
+    if (!confirm('Are you sure you want to delete this user?')) return
+    
+    setActionLoading(userId)
+    try {
+      const res = await fetch(`/api/admin/users/${userId}`, {
+        method: 'DELETE'
+      })
+      if (res.ok) {
+        setUsers(users.filter(u => u.id !== userId))
+      }
+    } catch (error) {
+      console.error('Failed to delete user:', error)
+    } finally {
+      setActionLoading(null)
     }
   }
 
@@ -77,14 +95,15 @@ export default function AdminUsersPage() {
         className="flex items-center justify-between"
       >
         <div className="flex items-center gap-4">
-          <Button
-            onClick={() => router.back()}
-            variant="ghost"
-            size="sm"
-            className="text-gray-400 hover:text-white"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
+          <Link href="/admin">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-gray-400 hover:text-white"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
           <div>
             <h1 className="text-3xl font-bold text-white flex items-center gap-3">
               <Users className="h-8 w-8 text-purple-400" />
@@ -233,9 +252,25 @@ export default function AdminUsersPage() {
                       </span>
                     </td>
                     <td className="py-4 px-4">
-                      <Button variant="ghost" size="sm">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={actionLoading === user.id}
+                          className="text-blue-400 hover:text-blue-300"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteUser(user.id)}
+                          disabled={actionLoading === user.id}
+                          className="text-red-400 hover:text-red-300"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </td>
                   </motion.tr>
                 ))}
