@@ -1,7 +1,7 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { withAuth } from '@/backend/utils/middleware'
 import { withRateLimit, RateLimits } from '@/backend/utils/rateLimit'
-import { withCors } from '@/backend/utils/cors'
+import { addCorsHeaders } from '@/backend/utils/cors'
 import { ApiResponse } from '@/backend/utils/response'
 import { CreditsService } from '@/backend/services/credits.service'
 import { GenerationService } from '@/backend/services/generation.service'
@@ -9,7 +9,13 @@ import { AIService } from '@/backend/services/ai.service'
 import { StorageService } from '@/backend/services/storage.service'
 import { CREDIT_COSTS } from '@/backend/config/constants'
 
-export const POST = withCors(withRateLimit(RateLimits.GENERATION, withAuth(async (request: NextRequest, { userId }) => {
+// Handle CORS preflight
+export async function OPTIONS(request: NextRequest) {
+  const response = new NextResponse(null, { status: 204 })
+  return addCorsHeaders(response, request.headers.get('origin') || undefined)
+}
+
+const imageGenerationHandler = withRateLimit(RateLimits.GENERATION, withAuth(async (request: NextRequest, { userId }) => {
   try {
     const body = await request.json()
     const { prompt, model = 'sdxl' } = body
@@ -134,8 +140,14 @@ export const POST = withCors(withRateLimit(RateLimits.GENERATION, withAuth(async
   }
 })))
 
+// Wrap with CORS headers
+export const POST = async (request: NextRequest, context: any) => {
+  const response = await imageGenerationHandler(request, context)
+  return addCorsHeaders(response, request.headers.get('origin') || undefined)
+}
+
 // GET endpoint to list available models
-export const GET = withAuth(async (_request: NextRequest, { userId }) => {
+const getModelsHandler = withAuth(async (_request: NextRequest, { userId }) => {
   try {
     const models = AIService.getAllModels()
     const userCredits = await CreditsService.getUserCredits(userId)
@@ -149,3 +161,8 @@ export const GET = withAuth(async (_request: NextRequest, { userId }) => {
     return ApiResponse.serverError()
   }
 })
+
+export const GET = async (request: NextRequest, context: any) => {
+  const response = await getModelsHandler(request, context)
+  return addCorsHeaders(response, request.headers.get('origin') || undefined)
+}

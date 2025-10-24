@@ -1,13 +1,19 @@
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { withAuth } from '@/backend/utils/middleware'
-import { withCors } from '@/backend/utils/cors'
+import { addCorsHeaders } from '@/backend/utils/cors'
 import { ApiResponse } from '@/backend/utils/response'
 import { CreditsService } from '@/backend/services/credits.service'
 import { GenerationService } from '@/backend/services/generation.service'
 import { AIService } from '@/backend/services/ai.service'
 import { CREDIT_COSTS } from '@/backend/config/constants'
 
-export const POST = withCors(withAuth(async (request: NextRequest, { userId }) => {
+// Handle CORS preflight
+export async function OPTIONS(request: NextRequest) {
+  const response = new NextResponse(null, { status: 204 })
+  return addCorsHeaders(response, request.headers.get('origin') || undefined)
+}
+
+const videoGenerationHandler = withAuth(async (request: NextRequest, { userId }) => {
   try {
     const body = await request.json()
     const { prompt, model = 'stable-video' } = body
@@ -99,10 +105,16 @@ export const POST = withCors(withAuth(async (request: NextRequest, { userId }) =
     console.error('Video generation endpoint error:', error)
     return ApiResponse.serverError()
   }
-}))
+})
+
+// Wrap with CORS headers
+export const POST = async (request: NextRequest, context: any) => {
+  const response = await videoGenerationHandler(request, context)
+  return addCorsHeaders(response, request.headers.get('origin') || undefined)
+}
 
 // GET endpoint to list available video models
-export const GET = withAuth(async (_request: NextRequest, { userId }) => {
+const getVideoModelsHandler = withAuth(async (_request: NextRequest, { userId }) => {
   try {
     const models = AIService.getAllModels()
     const userCredits = await CreditsService.getUserCredits(userId)
@@ -116,3 +128,8 @@ export const GET = withAuth(async (_request: NextRequest, { userId }) => {
     return ApiResponse.serverError()
   }
 })
+
+export const GET = async (request: NextRequest, context: any) => {
+  const response = await getVideoModelsHandler(request, context)
+  return addCorsHeaders(response, request.headers.get('origin') || undefined)
+}
