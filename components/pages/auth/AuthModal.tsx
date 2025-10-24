@@ -223,8 +223,10 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
         return
       }
       
-      // Login user (no token needed - it's in httpOnly cookie)
+      // Login user (NO TOKEN - it's in httpOnly cookies only for security)
       login(data.user)
+      
+      console.log('✅ Logged in securely - Token stored in httpOnly cookies (XSS-proof)')
       
       // Show success
       if (isLogin) {

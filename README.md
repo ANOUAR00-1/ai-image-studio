@@ -9,7 +9,7 @@ AI-powered SaaS platform for image and video generation using cutting-edge AI mo
 
 ---
 
-## ✨ Features
+##  Features
 
 - 🎨 **AI Image Generation** - DALL-E 3, Stable Diffusion, Flux
 - 🎬 **AI Video Generation** - Runway, Pika, Luma AI

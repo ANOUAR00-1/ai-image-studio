@@ -34,11 +34,11 @@ export const useAuthStore = create<AuthState>()(
       accessToken: null,
       
       login: (userData: User) => {
-        // Don't store tokens - they're in httpOnly cookies now
+        // PRODUCTION-SECURE: No tokens in localStorage (httpOnly cookies only)
         set({ 
           user: userData, 
           isLoggedIn: true, 
-          accessToken: null // No longer storing tokens in state
+          accessToken: null // Never store tokens in state/localStorage
         });
       },
       
@@ -82,6 +82,8 @@ export const useAuthStore = create<AuthState>()(
           // If we have persisted user data, use it immediately while verifying in background
           const currentState = get();
           if (currentState.user && currentState.isLoggedIn) {
+            // PRODUCTION-SECURE: No token restoration (httpOnly cookies only)
+            
             // User data is already loaded from persistence, just verify in background
             set({ loading: false });
             
@@ -93,7 +95,7 @@ export const useAuthStore = create<AuthState>()(
                 const data = await response.json();
                 set({ user: data.user });
               } else {
-                // Session invalid, clear state
+                // Session invalid, clear state (no localStorage tokens to remove)
                 set({ isLoggedIn: false, user: null, accessToken: null });
               }
             }).catch(() => {
@@ -145,7 +147,7 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({ 
         user: state.user,
         isLoggedIn: state.isLoggedIn,
-        // Don't persist accessToken - it's in httpOnly cookies now
+        // NO TOKEN PERSISTED - httpOnly cookies only (PRODUCTION-SECURE)
       }),
     }
   )

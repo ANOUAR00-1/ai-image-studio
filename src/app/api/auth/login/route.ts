@@ -78,6 +78,7 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
             is_admin: newProfile.is_admin || false,
             createdAt: data.user.created_at,
           },
+          // NO TOKEN in response - httpOnly cookies only (XSS-proof)
         })
 
         // Set httpOnly cookies
@@ -108,7 +109,7 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
       )
     }
 
-    // Create response with httpOnly cookie
+    // Create response with httpOnly cookie (PRODUCTION-SECURE: No token in response body)
     const response = NextResponse.json({
       user: {
         id: data.user.id,
@@ -119,7 +120,7 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
         is_admin: profile.is_admin || false,
         createdAt: data.user.created_at,
       },
-      // Don't send tokens in response body
+      // NO TOKEN in response - it's in httpOnly cookies only (XSS-proof)
     })
 
     // Set httpOnly cookie for access token (secure, not accessible via JavaScript)
