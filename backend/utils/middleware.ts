@@ -41,7 +41,7 @@ export async function verifyAuth(request: NextRequest): Promise<{
 
 // Wrapper for protected API routes
 interface RouteContext {
-  params?: Promise<Record<string, string | string[]>>
+  params: Promise<Record<string, string | string[]>>
 }
 
 export function withAuth(
