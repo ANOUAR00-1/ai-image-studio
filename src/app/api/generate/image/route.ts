@@ -15,6 +15,7 @@ export async function OPTIONS(request: NextRequest) {
   return addCorsHeaders(response, request.headers.get('origin') || undefined)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const imageGenerationHandler = withRateLimit(RateLimits.GENERATION, withAuth(async (request: NextRequest, { userId }: any) => {
   try {
     const body = await request.json()
@@ -141,6 +142,7 @@ const imageGenerationHandler = withRateLimit(RateLimits.GENERATION, withAuth(asy
 }))
 
 // Wrap with CORS headers
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const POST = async (request: NextRequest, context: any) => {
   const response = await imageGenerationHandler(request, context)
   return addCorsHeaders(response, request.headers.get('origin') || undefined)
@@ -162,6 +164,7 @@ const getModelsHandler = withAuth(async (_request: NextRequest, { userId }) => {
   }
 })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const GET = async (request: NextRequest, context: any) => {
   const response = await getModelsHandler(request, context)
   return addCorsHeaders(response, request.headers.get('origin') || undefined)
