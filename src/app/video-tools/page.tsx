@@ -4,7 +4,7 @@
 // Replicate requires payment method, no truly free video generation exists
 // Re-enable when you have revenue to pay for video API costs
 
-import { motion } from "motion/react"
+import { motion } from "framer-motion"
 // import { VideoTools } from "@/components/pages/home/VideoTools"
 // import { ProtectedRoute } from "@/components/pages/shared/ProtectedRoute"
 import { Button } from "@/components/ui/button"

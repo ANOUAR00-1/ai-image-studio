@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "motion/react"
+import { motion } from "framer-motion"
 import { TermsPage } from "@/components/pages/shared/TermsPage"
 import { Footer } from "@/components/pages/shared/Footer"
 

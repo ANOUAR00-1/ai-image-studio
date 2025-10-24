@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "motion/react"
+import { motion } from "framer-motion"
 import { ModernAccountPage } from "@/components/pages/shared/ModernAccountPage"
 import { ProtectedRoute } from "@/components/pages/shared/ProtectedRoute"
 

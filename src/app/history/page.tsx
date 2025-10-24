@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "motion/react"
+import { motion } from "framer-motion"
 import { HistoryPage } from "@/components/pages/history/HistoryPage"
 import { ProtectedRoute } from "@/components/pages/shared/ProtectedRoute"
 

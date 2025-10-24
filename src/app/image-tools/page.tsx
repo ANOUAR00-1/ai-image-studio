@@ -1,6 +1,6 @@
 "use client"
 
-import { motion } from "motion/react"
+import { motion } from "framer-motion"
 import { ImageTools } from "@/components/pages/home/ImageTools"
 import { ProtectedRoute } from "@/components/pages/shared/ProtectedRoute"
 
