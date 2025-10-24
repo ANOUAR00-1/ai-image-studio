@@ -40,10 +40,15 @@ export async function verifyAuth(request: NextRequest): Promise<{
 }
 
 // Wrapper for protected API routes
+interface RouteContext {
+  params?: Promise<Record<string, string | string[]>>
+}
+
 export function withAuth(
   handler: (request: NextRequest, context: { userId: string; user: { id: string; email: string } }) => Promise<NextResponse>
 ) {
-  return async (request: NextRequest) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return async (request: NextRequest, _context?: RouteContext) => {
     const authResult = await verifyAuth(request)
 
     if (!authResult.success) {
@@ -64,7 +69,8 @@ export function withAuth(
 export function withAdmin(
   handler: (request: NextRequest, context: { userId: string; user: { id: string; email: string } }) => Promise<NextResponse>
 ) {
-  return async (request: NextRequest) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  return async (request: NextRequest, _context?: RouteContext) => {
     const authResult = await verifyAuth(request)
 
     if (!authResult.success) {
