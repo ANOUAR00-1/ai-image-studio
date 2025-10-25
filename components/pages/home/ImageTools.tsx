@@ -191,15 +191,10 @@ export function ImageTools() {
         endpoint = '/api/tools/style-transfer'
       }
 
-      // Get auth token from cookies manually
-      const getCookie = (name: string) => {
-        const value = `; ${document.cookie}`
-        const parts = value.split(`; ${name}=`)
-        if (parts.length === 2) return parts.pop()?.split(';').shift()
-        return undefined
-      }
-
-      const token = getCookie('sb-access-token') || getCookie('sb_access_token')
+      // Get auth token from Supabase client
+      const { supabase } = await import('@/lib/supabase/client')
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
       
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
