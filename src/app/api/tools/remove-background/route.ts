@@ -28,21 +28,33 @@ export async function POST(request: NextRequest) {
       console.log('✅ Token from Authorization header:', token.slice(0, 30) + '...')
     }
 
-    // Method 2: Check cookies
+    // Method 2: Check Supabase auth cookies
     if (!token) {
-      const cookieToken = request.cookies.get('sb-access-token')?.value
-      if (cookieToken) {
-        token = cookieToken
-        console.log('✅ Token from sb-access-token cookie')
-      }
-    }
-
-    // Method 3: Check alternative cookie names
-    if (!token) {
-      const altCookieToken = request.cookies.get('sb_access_token')?.value
-      if (altCookieToken) {
-        token = altCookieToken
-        console.log('✅ Token from sb_access_token cookie')
+      // Try different Supabase cookie patterns
+      const cookieNames = [
+        'sb-access-token',
+        'sb_access_token',
+        `sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0]}-auth-token`
+      ]
+      
+      for (const cookieName of cookieNames) {
+        if (cookieName) {
+          const cookieValue = request.cookies.get(cookieName)?.value
+          if (cookieValue) {
+            // If it's a JSON string, parse it to get access_token
+            try {
+              const parsed = JSON.parse(cookieValue)
+              token = parsed.access_token || parsed
+              console.log(`✅ Token from ${cookieName} cookie`)
+              break
+            } catch {
+              // Not JSON, use as-is
+              token = cookieValue
+              console.log(`✅ Token from ${cookieName} cookie (raw)`)
+              break
+            }
+          }
+        }
       }
     }
 

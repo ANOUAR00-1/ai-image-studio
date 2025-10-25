@@ -191,29 +191,14 @@ export function ImageTools() {
         endpoint = '/api/tools/style-transfer'
       }
 
-      // Get auth token from Supabase client
-      const { supabase } = await import('@/lib/supabase/client')
-      const { data: { session } } = await supabase.auth.getSession()
-      const token = session?.access_token
-      
-      console.log('🔑 Session exists:', !!session)
-      console.log('🔑 Token exists:', !!token)
-      console.log('🔑 Token preview:', token?.slice(0, 30) + '...')
-      
-      if (!token) {
-        throw new Error('Not authenticated. Please log in again.')
-      }
-      
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      }
-
-      // Call the real API
+      // Call the real API - auth via cookies
+      console.log('🔍 Calling endpoint:', endpoint)
       const response = await fetch(endpoint, {
         method: 'POST',
-        headers,
-        credentials: 'include', // Also send cookies as backup
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include', // Send httpOnly cookies for auth
         body: JSON.stringify({
           image: uploadedImage,
           style: 'anime', // for style transfer
