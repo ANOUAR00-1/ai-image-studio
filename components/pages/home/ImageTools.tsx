@@ -196,12 +196,17 @@ export function ImageTools() {
       const { data: { session } } = await supabase.auth.getSession()
       const token = session?.access_token
       
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
+      console.log('🔑 Session exists:', !!session)
+      console.log('🔑 Token exists:', !!token)
+      console.log('🔑 Token preview:', token?.slice(0, 30) + '...')
+      
+      if (!token) {
+        throw new Error('Not authenticated. Please log in again.')
       }
       
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       }
 
       // Call the real API

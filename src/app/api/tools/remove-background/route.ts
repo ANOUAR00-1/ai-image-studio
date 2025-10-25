@@ -15,40 +15,57 @@ export async function OPTIONS(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔍 Remove-background endpoint called')
+    
     // Try multiple auth methods
     let token: string | undefined
 
     // Method 1: Check Authorization header
     const authHeader = request.headers.get('authorization')
+    console.log('🔍 Auth header present:', !!authHeader)
     if (authHeader?.startsWith('Bearer ')) {
       token = authHeader.slice(7)
+      console.log('✅ Token from Authorization header:', token.slice(0, 30) + '...')
     }
 
     // Method 2: Check cookies
     if (!token) {
-      token = request.cookies.get('sb-access-token')?.value
+      const cookieToken = request.cookies.get('sb-access-token')?.value
+      if (cookieToken) {
+        token = cookieToken
+        console.log('✅ Token from sb-access-token cookie')
+      }
     }
 
     // Method 3: Check alternative cookie names
     if (!token) {
-      token = request.cookies.get('sb_access_token')?.value
+      const altCookieToken = request.cookies.get('sb_access_token')?.value
+      if (altCookieToken) {
+        token = altCookieToken
+        console.log('✅ Token from sb_access_token cookie')
+      }
     }
 
     if (!token) {
-      console.error('No auth token found in headers or cookies')
+      console.error('❌ No auth token found in headers or cookies')
+      console.error('Available headers:', Array.from(request.headers.keys()))
+      console.error('Available cookies:', request.cookies.getAll().map(c => c.name))
       const response = ApiResponse.unauthorized()
       return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
 
     // Verify token and get user
+    console.log('🔍 Verifying token with Supabase...')
     const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
 
     if (authError || !user) {
-      console.error('Auth error:', authError, 'Token:', token.slice(0, 20) + '...')
+      console.error('❌ Auth error:', authError?.message || 'Unknown error')
+      console.error('Token preview:', token.slice(0, 30) + '...')
       const response = ApiResponse.unauthorized()
       return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
 
+    console.log('✅ User authenticated:', user.id)
     const userId = user.id
 
     // Get image from request
