@@ -17,54 +17,23 @@ export async function POST(request: NextRequest) {
   try {
     console.log('🔍 Remove-background endpoint called')
     
-    // Try multiple auth methods
-    let token: string | undefined
-
-    // Method 1: Check Authorization header
-    const authHeader = request.headers.get('authorization')
-    console.log('🔍 Auth header present:', !!authHeader)
-    if (authHeader?.startsWith('Bearer ')) {
-      token = authHeader.slice(7)
-      console.log('✅ Token from Authorization header:', token.slice(0, 30) + '...')
-    }
-
-    // Method 2: Check Supabase auth cookies
+    // Get token from httpOnly cookie (same as /api/auth/me)
+    let token = request.cookies.get('auth_token')?.value
+    
     if (!token) {
-      // Try different Supabase cookie patterns
-      const cookieNames = [
-        'sb-access-token',
-        'sb_access_token',
-        `sb-${process.env.NEXT_PUBLIC_SUPABASE_URL?.split('//')[1]?.split('.')[0]}-auth-token`
-      ]
-      
-      for (const cookieName of cookieNames) {
-        if (cookieName) {
-          const cookieValue = request.cookies.get(cookieName)?.value
-          if (cookieValue) {
-            // If it's a JSON string, parse it to get access_token
-            try {
-              const parsed = JSON.parse(cookieValue)
-              token = parsed.access_token || parsed
-              console.log(`✅ Token from ${cookieName} cookie`)
-              break
-            } catch {
-              // Not JSON, use as-is
-              token = cookieValue
-              console.log(`✅ Token from ${cookieName} cookie (raw)`)
-              break
-            }
-          }
-        }
-      }
+      // Fallback to Authorization header
+      const authHeader = request.headers.get('authorization')
+      token = authHeader?.replace('Bearer ', '')
     }
 
     if (!token) {
-      console.error('❌ No auth token found in headers or cookies')
-      console.error('Available headers:', Array.from(request.headers.keys()))
+      console.error('❌ No auth token found')
       console.error('Available cookies:', request.cookies.getAll().map(c => c.name))
       const response = ApiResponse.unauthorized()
       return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
+
+    console.log('✅ Token found, verifying...')
 
     // Verify token and get user
     console.log('🔍 Verifying token with Supabase...')
