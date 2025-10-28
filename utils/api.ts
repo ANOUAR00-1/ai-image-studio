@@ -8,6 +8,7 @@ interface Generation {
   url: string
   prompt: string
   model?: string
+  provider?: string
   creditsUsed: number
   createdAt?: string
 }
@@ -43,7 +44,8 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     try {
-      console.log('🔍 API Request:', { 
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      console.log('📡 API Request:', { 
         endpoint,
         method: options.method || 'GET'
       })
@@ -67,12 +69,24 @@ class ApiClient {
       const data = await response.json()
 
       if (!response.ok) {
+        console.error('❌ API Error:', {
+          status: response.status,
+          error: data.error || data.message
+        })
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
         throw new Error(data.error || data.message || 'Request failed')
       }
 
+      console.log('✅ API Response:', {
+        success: data.success,
+        endpoint
+      })
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+
       return data
     } catch (error) {
-      console.error('API request error:', error)
+      console.error('❌ API request error:', error)
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error occurred',
@@ -82,10 +96,27 @@ class ApiClient {
 
   // Image generation
   async generateImage(prompt: string, model: string = 'sdxl'): Promise<ApiResponse<ImageGenerationResponse>> {
-    return this.request<ImageGenerationResponse>('/api/generate/image', {
+    console.log('🎨 Starting Image Generation...')
+    console.log('   Prompt:', prompt.substring(0, 80) + (prompt.length > 80 ? '...' : ''))
+    console.log('   Model:', model)
+    
+    const result = await this.request<ImageGenerationResponse>('/api/generate/image', {
       method: 'POST',
       body: JSON.stringify({ prompt, model }),
     })
+
+    if (result.success && result.data) {
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      console.log('✅ IMAGE GENERATED SUCCESSFULLY!')
+      console.log('   Provider:', result.data.generation.provider || 'unknown')
+      console.log('   Model:', result.data.generation.model || model)
+      console.log('   Credits Used:', result.data.generation.creditsUsed)
+      console.log('   Remaining Credits:', result.data.remainingCredits)
+      console.log('   Generation ID:', result.data.generation.id)
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    }
+
+    return result
   }
 
   // Video generation

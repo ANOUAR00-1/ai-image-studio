@@ -192,7 +192,12 @@ export function ImageTools() {
       }
 
       // Call the real API - auth via cookies
-      console.log('🔍 Calling endpoint:', endpoint)
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      console.log('🛠️  Image Tool Processing...')
+      console.log('   Tool:', currentTool?.title)
+      console.log('   Endpoint:', endpoint)
+      console.log('   File:', uploadedFileName)
+      
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
@@ -208,15 +213,24 @@ export function ImageTools() {
       const data = await response.json()
 
       if (!response.ok || !data.success) {
+        console.error('❌ Tool failed:', data.error || 'Processing failed')
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
         throw new Error(data.error || 'Processing failed')
       }
+
+      console.log('✅ TOOL PROCESSING SUCCESSFUL!')
+      console.log('   Model:', data.data.model || 'unknown')
+      console.log('   Provider:', data.data.provider || 'unknown')
+      console.log('   Credits Used:', data.data.creditsUsed)
+      console.log('   Remaining Credits:', data.data.remainingCredits)
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 
       // Refresh user credits
       await refreshUser()
 
       // Set result
       setResult({
-        imageUrl: data.data.imageUrl,
+        imageUrl: data.data.imageUrl || data.data.image,
         prompt: `${currentTool?.title} applied to ${uploadedFileName}`,
         creditsUsed: data.data.creditsUsed,
         remainingCredits: data.data.remainingCredits
