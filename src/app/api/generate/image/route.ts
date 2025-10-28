@@ -72,29 +72,37 @@ const imageGenerationHandler = withRateLimit(RateLimits.GENERATION, withAuth(asy
 
     // Generate image with AI
     try {
-      console.log(`Generating image for user ${userId} with model ${model} (mapped to ${actualModel})`)
+      console.log(`🎨 Generating image for user ${userId}`)
+      console.log(`   Model requested: ${model}`)
+      console.log(`   Mapped to: ${actualModel}`)
+      console.log(`   Prompt: ${prompt.substring(0, 50)}...`)
       
-      // Force Pollinations for text-to-image (skip HuggingFace)
+      // Generate image with smart fallbacks
       const imageResult = await AIService.generateImage(prompt, actualModel)
       
-      // Handle both Blob and string responses
+      // Track which provider was actually used
+      let usedProvider = 'unknown'
       let imageUrl: string
       
       if (imageResult instanceof Blob) {
-        console.log('Uploading image to storage...')
+        usedProvider = 'pollinations' // Pollinations returns Blob
+        console.log('✅ Image generated with Pollinations.ai (Blob)')
+        console.log('📤 Uploading to storage...')
         // Upload to Supabase Storage
         try {
           imageUrl = await StorageService.uploadGeneratedImage(userId, imageResult)
-          console.log('Image uploaded successfully:', imageUrl)
+          console.log('✅ Image uploaded successfully:', imageUrl)
         } catch (uploadError) {
-          console.error('Storage upload failed, falling back to base64:', uploadError)
+          console.error('⚠️ Storage upload failed, falling back to base64:', uploadError)
           // Fallback to base64 if storage fails
           const buffer = await imageResult.arrayBuffer()
           const base64 = Buffer.from(buffer).toString('base64')
           imageUrl = `data:image/jpeg;base64,${base64}`
         }
       } else {
+        usedProvider = 'huggingface' // HuggingFace returns base64 string
         imageUrl = imageResult
+        console.log('✅ Image generated with HuggingFace (base64)')
       }
       
       // Update generation record with result
@@ -104,7 +112,10 @@ const imageGenerationHandler = withRateLimit(RateLimits.GENERATION, withAuth(asy
         imageUrl
       )
 
-      console.log(`Image generated successfully: ${generation.id}`)
+      console.log(`✅ Generation complete!`)
+      console.log(`   Generation ID: ${generation.id}`)
+      console.log(`   Provider used: ${usedProvider}`)
+      console.log(`   Credits charged: ${creditCost}`)
 
       return ApiResponse.success({
         generation: {
@@ -112,6 +123,7 @@ const imageGenerationHandler = withRateLimit(RateLimits.GENERATION, withAuth(asy
           url: imageUrl,
           prompt,
           model,
+          provider: usedProvider, // NEW: Tell frontend which provider was used
           creditsUsed: creditCost,
           createdAt: generation.created_at,
         },

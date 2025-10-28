@@ -16,28 +16,48 @@ export class AIService {
     model?: string
   ): Promise<string | Blob> {
     console.log(`🎨 Generating image with smart fallbacks...`)
+    console.log(`📝 Prompt: "${prompt.substring(0, 80)}${prompt.length > 80 ? '...' : ''}"`)
+    console.log(`🎯 Model requested: ${model || 'default'}`)
 
     // Try providers in order until one works
     
     // 1. Try Pollinations first (no API key needed, fast)
     try {
-      console.log('  → Trying Pollinations.ai (100% FREE, no key needed)...')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      console.log('  🌸 ATTEMPT #1: Pollinations.ai')
+      console.log('     • 100% FREE')
+      console.log('     • No API key needed')
+      console.log('     • Model: Flux')
       const result = await PollinationsService.generateImage(prompt, model || 'flux')
-      console.log('  ✅ Pollinations success!')
+      console.log('  ✅ SUCCESS! Image generated with Pollinations.ai')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
       return result
     } catch (pollinationsError) {
-      console.log('  ⚠️ Pollinations failed, trying HuggingFace...', pollinationsError instanceof Error ? pollinationsError.message : '')
+      console.log('  ❌ Pollinations.ai failed:', pollinationsError instanceof Error ? pollinationsError.message : 'Unknown error')
+      console.log('  ↓ Falling back to HuggingFace...')
     }
 
     // 2. Fallback to HuggingFace + Gemini enhancement
     try {
-      console.log('  → Trying HuggingFace with Gemini prompt enhancement...')
-      const { imageUrl } = await SmartFallbackService.generateImage(prompt)
-      console.log('  ✅ HuggingFace success!')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      console.log('  🤗 ATTEMPT #2: HuggingFace')
+      console.log('     • FREE with API key')
+      console.log('     • Includes Gemini prompt enhancement')
+      console.log('     • Model: Stable Diffusion XL')
+      const { imageUrl, provider } = await SmartFallbackService.generateImage(prompt)
+      console.log(`  ✅ SUCCESS! Image generated with ${provider}`)
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
       return imageUrl
     } catch (fallbackError) {
-      console.error('  ❌ All providers failed:', fallbackError)
-      throw new Error('Unable to generate image. Please try again in a few moments.')
+      console.log('  ❌ HuggingFace also failed:', fallbackError instanceof Error ? fallbackError.message : 'Unknown error')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      console.error('  ❌ ALL PROVIDERS FAILED!')
+      console.error('  Please check:')
+      console.error('    1. HUGGINGFACE_API_KEY is set')
+      console.error('    2. Internet connection is working')
+      console.error('    3. Providers are not rate-limited')
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      throw new Error('Unable to generate image. All AI providers are currently unavailable. Please try again in a few moments.')
     }
   }
 

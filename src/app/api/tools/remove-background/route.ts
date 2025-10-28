@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ApiResponse } from '@/backend/utils/response'
 import { addCorsHeaders } from '@/backend/utils/cors'
-import { ImageProcessingService } from '@/backend/services/image-processing.service'
+import { FreeImageToolsService } from '@/backend/services/free-image-tools.service'
 import { CreditsService } from '@/backend/services/credits.service'
 import { supabaseAdmin } from '@/lib/supabase/server'
+
+const CREDIT_COST = 2 // Background removal costs 2 credits
 
 export const maxDuration = 60
 
@@ -15,8 +17,6 @@ export async function OPTIONS(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('🔍 Remove-background endpoint called')
-    
     // Get token from httpOnly cookie (same as /api/auth/me)
     let token = request.cookies.get('auth_token')?.value
     
@@ -28,84 +28,72 @@ export async function POST(request: NextRequest) {
 
     if (!token) {
       console.error('❌ No auth token found')
-      console.error('Available cookies:', request.cookies.getAll().map(c => c.name))
       const response = ApiResponse.unauthorized()
       return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
 
-    console.log('✅ Token found, verifying...')
-
     // Verify token and get user
-    console.log('🔍 Verifying token with Supabase...')
     const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token)
 
     if (authError || !user) {
       console.error('❌ Auth error:', authError?.message || 'Unknown error')
-      console.error('Token preview:', token.slice(0, 30) + '...')
       const response = ApiResponse.unauthorized()
       return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
 
-    console.log('✅ User authenticated:', user.id)
     const userId = user.id
 
     // Get image from request
     const body = await request.json()
     const { image } = body
-
+    
     if (!image) {
       const response = ApiResponse.validationError('Image is required')
       return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
 
-    // Validate image is base64
-    if (!image.startsWith('data:image/')) {
-      const response = ApiResponse.validationError('Invalid image format. Must be base64 data URL')
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+    console.log('🎨 BACKGROUND REMOVAL REQUEST')
+    console.log(`   User: ${userId}`)
+    console.log(`   Image size: ${(image.length / 1024).toFixed(2)} KB`)
+    console.log(`   Credits required: ${CREDIT_COST}`)
+
+    // Check credits
+    const hasCredits = await CreditsService.hasEnoughCredits(userId, CREDIT_COST)
+    if (!hasCredits) {
+      const available = await CreditsService.getUserCredits(userId)
+      console.log(`❌ Insufficient credits: ${available} available, ${CREDIT_COST} required`)
+      console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+      const response = ApiResponse.insufficientCredits(CREDIT_COST, available)
       return addCorsHeaders(response, request.headers.get('origin') || undefined)
     }
 
-    // Check if user is admin
-    const { data: profile } = await supabaseAdmin
-      .from('profiles')
-      .select('is_admin')
-      .eq('id', userId)
-      .single()
-
-    const isAdmin = profile?.is_admin || false
-
-    // Check credits (2 credits for background removal)
-    const creditsRequired = 2
-    
-    if (!isAdmin) {
-      const hasCredits = await CreditsService.hasEnoughCredits(userId, creditsRequired)
-      if (!hasCredits) {
-        const available = await CreditsService.getUserCredits(userId)
-        const response = ApiResponse.insufficientCredits(creditsRequired, available)
-        return addCorsHeaders(response, request.headers.get('origin') || undefined)
-      }
-
-      // Deduct credits
-      await CreditsService.deductCredits(userId, creditsRequired, 'remove_background')
-    } else {
-      console.log('Admin user - skipping credit deduction')
-    }
+    // Deduct credits
+    await CreditsService.deductCredits(userId, CREDIT_COST, 'Background removal')
+    console.log(`✅ Credits deducted: ${CREDIT_COST}`)
 
     // Process image
-    console.log('🎨 Removing background for user:', userId)
-    const processedImage = await ImageProcessingService.removeBackground(image)
-
-    // Get updated credits
-    const remainingCredits = isAdmin ? -1 : await CreditsService.getUserCredits(userId)
+    console.log('🤖 Processing with RMBG-1.4 model...')
+    console.log('   Provider: HuggingFace Inference API')
+    console.log('   Model: briaai/RMBG-1.4')
+    
+    const processedImage = await FreeImageToolsService.removeBackground(image)
+    
+    console.log('✅ Background removed successfully!')
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 
     const response = ApiResponse.success({
-      imageUrl: processedImage,
-      creditsUsed: isAdmin ? 0 : creditsRequired,
-      remainingCredits,
+      image: processedImage,
+      model: 'RMBG-1.4',
+      provider: 'huggingface',
+      creditsUsed: CREDIT_COST,
+      remainingCredits: await CreditsService.getUserCredits(userId),
     })
     return addCorsHeaders(response, request.headers.get('origin') || undefined)
 
   } catch (error) {
-    console.error('Remove background error:', error)
+    console.error('❌ Remove background error:', error)
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
     
     const response = ApiResponse.error(
       error instanceof Error ? error.message : 'Failed to remove background',
