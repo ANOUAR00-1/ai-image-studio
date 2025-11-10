@@ -181,7 +181,7 @@ export default function LandingPage() {
             <StarBorder
               as="button"
               onClick={handleGetStarted}
-              color="#A855F7"
+              color="#a855f7"
               speed="5s"
               className="group hover:scale-105 transition-transform duration-300"
             >
@@ -421,7 +421,7 @@ export default function LandingPage() {
               <div className="flex flex-col sm:flex-row gap-5 justify-center">
                 <button
                   onClick={handleGetStarted}
-                  className="group bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] backdrop-blur-xl border-2 border-purple-500/50 text-white hover:border-purple-400 transition-all duration-300 text-lg px-10 py-4 rounded-full hover:scale-105 cursor-pointer"
+                  className="group bg-gradient-to-br from-[#0f0520] via-[#1a0f2e] to-[#0a0118] backdrop-blur-xl border-2 border-purple-500/50 text-white hover:border-purple-400 transition-all duration-300 text-lg px-10 py-4 rounded-full hover:scale-105 cursor-pointer"
                 >
                   <span className="flex items-center gap-2 font-semibold">
                     {isLoggedIn ? 'Go to Dashboard' : "Start Creating Now - It's Free"}

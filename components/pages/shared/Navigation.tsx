@@ -73,7 +73,7 @@ export function Navigation({}: NavigationProps = {}) {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-gradient-to-r from-[#0f0520]/95 via-[#1a0b2e]/95 to-[#0a0a1f]/95 backdrop-blur-xl border-b border-white/10 will-change-transform">
+      <header className="sticky top-0 z-50 bg-gradient-to-r from-[#0f0520]/95 via-[#1a0f2e]/95 to-[#0a0118]/95 backdrop-blur-xl border-b border-white/10 will-change-transform">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             {/* Logo - Click to go home */}
@@ -130,7 +130,7 @@ export function Navigation({}: NavigationProps = {}) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent 
                       align="end" 
-                      className="w-56 bg-gradient-to-br from-[#0f0520]/95 via-[#1a0b2e]/95 to-[#0a0a1f]/95 backdrop-blur-2xl border border-white/20"
+                      className="w-56 bg-gradient-to-br from-[#0f0520]/95 via-[#1a0f2e]/95 to-[#0a0118]/95 backdrop-blur-2xl border border-white/20"
                     >
                       <DropdownMenuLabel className="text-white">My Account</DropdownMenuLabel>
                       <DropdownMenuSeparator className="bg-white/10" />

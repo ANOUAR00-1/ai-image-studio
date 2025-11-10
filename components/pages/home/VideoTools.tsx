@@ -200,11 +200,11 @@ export function VideoTools() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0a1f] via-[#1a1a3f] to-[#0a0a1f]">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a0118] via-[#1a0f2e] to-[#0a0118]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Pricing Modal */}
         <Dialog open={showPricingModal} onOpenChange={setShowPricingModal}>
-          <DialogContent className="max-w-5xl bg-gradient-to-br from-[#1a1a3f] to-[#0a0a1f] border-white/10 text-white">
+          <DialogContent className="max-w-5xl bg-gradient-to-br from-[#1a0f2e] to-[#0a0118] border-white/10 text-white">
             <DialogHeader>
               <DialogTitle className="text-3xl bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Insufficient Credits

@@ -38,7 +38,7 @@ export function TermsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#0a0a1f]">
+    <div className="min-h-screen bg-[#0a0118]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Header */}
         <motion.div

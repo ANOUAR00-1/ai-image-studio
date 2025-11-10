@@ -97,7 +97,7 @@ export function ContactPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f]">
+    <div className="min-h-screen bg-gradient-to-b from-[#0f0520] via-[#1a0f2e] to-[#0a0118]">
       {/* Header */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -321,7 +321,7 @@ export function ContactPage() {
                 <Link href="/#faq">
                   <StarBorder
                     as="button"
-                    color="#A855F7"
+                    color="#a855f7"
                     speed="5s"
                     className="hover:scale-105 transition-transform"
                   >

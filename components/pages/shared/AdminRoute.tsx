@@ -70,7 +70,7 @@ export function AdminRoute({ children }: AdminRouteProps) {
   // Show loading state during auth check or before check completes
   if (loading || !checkComplete) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0f2e] to-[#0a0118] flex items-center justify-center">
         <div className="text-center">
           <Shield className="w-16 h-16 text-purple-400 mx-auto mb-4 animate-pulse" />
           <p className="text-white text-xl">Verifying admin access...</p>
@@ -82,7 +82,7 @@ export function AdminRoute({ children }: AdminRouteProps) {
   // Show access denied if not admin (only after check completes)
   if (!isAdmin) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0f2e] to-[#0a0118] flex items-center justify-center p-4">
         <div className="max-w-2xl mx-auto text-center">
           <AlertCircle className="w-20 h-20 text-red-400 mx-auto mb-6" />
           <h1 className="text-4xl font-bold text-white mb-4">

@@ -130,7 +130,7 @@ export default function PricingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0b2e] to-[#0a0a1f] py-20 px-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[#0f0520] via-[#1a0f2e] to-[#0a0118] py-20 px-4 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div 
@@ -280,7 +280,7 @@ export default function PricingPage() {
                     <StarBorder
                       as="button"
                       onClick={() => handleSubscribe(plan.name.toLowerCase())}
-                      color={plan.popular ? "#A855F7" : "#EC4899"}
+                      color={plan.popular ? "#a855f7" : "#ec4899"}
                       speed={plan.popular ? "4s" : "5s"}
                       className="w-full hover:scale-105 transition-transform"
                     >
@@ -353,7 +353,7 @@ export default function PricingPage() {
                   <StarBorder
                     as="button"
                     onClick={() => handleBuyCredits(pack.credits, pack.price)}
-                    color={pack.popular ? "#10B981" : "#A855F7"}
+                    color={pack.popular ? "#10b981" : "#a855f7"}
                     speed="5s"
                     className="w-full hover:scale-105 transition-transform"
                   >
@@ -418,7 +418,7 @@ export default function PricingPage() {
                 animate={{ scale: 1, opacity: 1, y: 0 }}
                 exit={{ scale: 0.9, opacity: 0, y: 20 }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative bg-gradient-to-br from-[#1a0b2e] to-[#0f0520] border border-purple-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl"
+                className="relative bg-gradient-to-br from-[#1a0f2e] to-[#0f0520] border border-purple-500/30 rounded-3xl p-8 max-w-md w-full shadow-2xl"
               >
                 {/* Close button */}
                 <button
