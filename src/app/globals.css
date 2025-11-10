@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./components.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -43,37 +44,60 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: #0a0a14;
+  /* === CORE DESIGN SYSTEM === */
+  --radius: 0.75rem;
+  
+  /* Backgrounds (Standardized) */
+  --background: #0a0118;              /* Main dark background */
   --foreground: #ffffff;
-  --card: #1a1a2e;
+  --card: #1a0f2e;                    /* Elevated surfaces */
   --card-foreground: #ffffff;
-  --popover: #1a1a2e;
+  --popover: #0f0520;                 /* Overlays */
   --popover-foreground: #ffffff;
-  --primary: #a855f7;
+  --input: #1a0f2e;
+  
+  /* Brand Colors */
+  --primary: #a855f7;                 /* Purple 500 */
   --primary-foreground: #ffffff;
-  --secondary: #2d2d4e;
+  --primary-hover: #9333ea;           /* Purple 600 */
+  --primary-light: #c084fc;           /* Purple 400 */
+  
+  --secondary: #ec4899;               /* Pink 500 */
   --secondary-foreground: #ffffff;
-  --muted: #2d2d4e;
+  --secondary-hover: #db2777;         /* Pink 600 */
+  
+  /* Neutral Colors */
+  --muted: #2d1b4e;
   --muted-foreground: #9ca3af;
   --accent: #a855f7;
   --accent-foreground: #ffffff;
+  
+  /* System Colors */
   --destructive: #ef4444;
-  --border: #2d2d4e;
-  --input: #1a1a2e;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+  
+  /* Borders (Standardized) */
+  --border: rgba(168, 85, 247, 0.2);  /* purple-500/20 */
+  --border-hover: rgba(168, 85, 247, 0.4);
   --ring: #a855f7;
-  --chart-1: #a855f7;
-  --chart-2: #ec4899;
-  --chart-3: #8b5cf6;
-  --chart-4: #d946ef;
-  --chart-5: #c026d3;
-  --sidebar: #1a1a2e;
+  
+  /* Charts (Gradient Colors) */
+  --chart-1: #a855f7;                 /* Purple */
+  --chart-2: #ec4899;                 /* Pink */
+  --chart-3: #c084fc;                 /* Light Purple */
+  --chart-4: #f472b6;                 /* Light Pink */
+  --chart-5: #9333ea;                 /* Deep Purple */
+  
+  /* Sidebar */
+  --sidebar: #1a0f2e;
   --sidebar-foreground: #ffffff;
   --sidebar-primary: #a855f7;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #2d2d4e;
+  --sidebar-accent: #2d1b4e;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #2d2d4e;
+  --sidebar-border: rgba(168, 85, 247, 0.2);
   --sidebar-ring: #a855f7;
 }
 
@@ -86,7 +110,7 @@
   }
   body {
     @apply text-foreground;
-    background: linear-gradient(135deg, #0a0a14 0%, #1a1a2e 50%, #0a0a14 100%);
+    background: linear-gradient(135deg, #0a0118 0%, #1a0f2e 50%, #0a0118 100%);
     background-attachment: fixed;
   }
 }

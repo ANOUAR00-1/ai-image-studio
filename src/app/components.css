@@ -1,0 +1,238 @@
+/**
+ * PixFusion AI - Component Utility Classes
+ * Standardized, reusable component styles
+ */
+
+/* ===== BUTTONS ===== */
+
+.btn-primary {
+  @apply bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700;
+  @apply text-white font-semibold px-6 py-2.5 rounded-full;
+  @apply shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50;
+  @apply transition-all hover:scale-105;
+  @apply border-0;
+}
+
+.btn-secondary {
+  @apply border-2 border-purple-500/50 bg-transparent hover:bg-purple-500/10;
+  @apply text-white font-semibold px-6 py-2.5 rounded-full;
+  @apply transition-all hover:scale-105 hover:border-purple-400;
+}
+
+.btn-ghost {
+  @apply bg-transparent hover:bg-white/10;
+  @apply text-white font-medium px-4 py-2 rounded-lg;
+  @apply transition-colors;
+}
+
+.btn-icon {
+  @apply bg-transparent hover:bg-purple-500/10;
+  @apply text-white p-2 rounded-lg;
+  @apply transition-colors;
+}
+
+/* ===== CARDS ===== */
+
+.card-default {
+  @apply bg-[#1a0f2e] border border-purple-500/20 rounded-xl p-6;
+  @apply backdrop-blur-xl shadow-lg;
+}
+
+.card-elevated {
+  @apply bg-[#1a0f2e] border border-purple-500/20 rounded-xl p-6;
+  @apply hover:border-purple-500/40 hover:shadow-purple-500/20;
+  @apply transition-all cursor-pointer;
+}
+
+.card-featured {
+  @apply bg-gradient-to-br from-[#1a0f2e] to-[#0a0118];
+  @apply border-2 border-purple-500/50 rounded-xl p-6;
+  @apply shadow-lg shadow-purple-500/30;
+}
+
+.card-glass {
+  @apply bg-[#0f0520]/80 backdrop-blur-2xl;
+  @apply border border-white/20 rounded-xl p-6;
+}
+
+/* ===== BACKGROUNDS ===== */
+
+.bg-page {
+  @apply min-h-screen bg-[#0a0118];
+}
+
+.bg-page-gradient {
+  @apply min-h-screen bg-gradient-to-b from-[#0a0118] via-[#1a0f2e] to-[#0a0118];
+}
+
+.bg-section {
+  @apply bg-gradient-to-b from-[#0a0118] to-[#1a0f2e] py-24;
+}
+
+.bg-modal {
+  @apply bg-[#0f0520]/95 backdrop-blur-xl border border-white/20;
+}
+
+/* ===== TEXT STYLES ===== */
+
+.heading-1 {
+  @apply text-5xl font-bold text-white;
+}
+
+.heading-2 {
+  @apply text-3xl font-bold text-white;
+}
+
+.heading-3 {
+  @apply text-xl font-semibold text-white;
+}
+
+.text-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400;
+}
+
+.text-body {
+  @apply text-base text-gray-200;
+}
+
+.text-muted {
+  @apply text-sm text-gray-400;
+}
+
+.text-caption {
+  @apply text-xs text-gray-500;
+}
+
+/* ===== INPUTS ===== */
+
+.input-default {
+  @apply bg-[#1a0f2e] border border-purple-500/20;
+  @apply text-white placeholder:text-gray-500;
+  @apply focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20;
+  @apply rounded-xl px-4 py-3;
+  @apply transition-colors;
+}
+
+.input-error {
+  @apply bg-[#1a0f2e] border-2 border-red-500/50;
+  @apply text-white placeholder:text-gray-500;
+  @apply focus:border-red-500 focus:ring-2 focus:ring-red-500/20;
+  @apply rounded-xl px-4 py-3;
+}
+
+/* ===== BADGES ===== */
+
+.badge-primary {
+  @apply inline-flex items-center gap-2;
+  @apply bg-gradient-to-r from-purple-600/20 to-pink-600/20;
+  @apply border border-purple-500/30;
+  @apply text-purple-300 text-sm font-semibold;
+  @apply px-3 py-1 rounded-full;
+}
+
+.badge-success {
+  @apply inline-flex items-center gap-2;
+  @apply bg-green-500/10 border border-green-500/30;
+  @apply text-green-400 text-sm font-semibold;
+  @apply px-3 py-1 rounded-full;
+}
+
+.badge-warning {
+  @apply inline-flex items-center gap-2;
+  @apply bg-amber-500/10 border border-amber-500/30;
+  @apply text-amber-400 text-sm font-semibold;
+  @apply px-3 py-1 rounded-full;
+}
+
+.badge-error {
+  @apply inline-flex items-center gap-2;
+  @apply bg-red-500/10 border border-red-500/30;
+  @apply text-red-400 text-sm font-semibold;
+  @apply px-3 py-1 rounded-full;
+}
+
+/* ===== GRADIENTS ===== */
+
+.gradient-primary {
+  background: linear-gradient(to right, #9333ea, #db2777);
+}
+
+.gradient-primary-hover {
+  background: linear-gradient(to right, #7e22ce, #be185d);
+}
+
+.gradient-background {
+  background: linear-gradient(135deg, #0a0118 0%, #1a0f2e 50%, #0a0118 100%);
+}
+
+.gradient-overlay {
+  background: linear-gradient(to bottom right, #0f0520, #1a0b2e, #0a0118);
+}
+
+/* ===== GLOWS & SHADOWS ===== */
+
+.glow-sm {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+}
+
+.glow-md {
+  box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+}
+
+.glow-lg {
+  box-shadow: 0 0 60px rgba(168, 85, 247, 0.7);
+}
+
+/* ===== ANIMATIONS ===== */
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  }
+  to {
+    box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ===== UTILITIES ===== */
+
+.glass-effect {
+  @apply backdrop-blur-xl bg-white/5 border border-white/10;
+}
+
+.hover-lift {
+  @apply transition-transform hover:-translate-y-1 hover:shadow-lg;
+}
+
+.hover-scale {
+  @apply transition-transform hover:scale-105;
+}
+
+.focus-ring {
+  @apply focus:ring-2 focus:ring-purple-500/50 focus:outline-none;
+}
+
+.transition-smooth {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.transition-fast {
+  @apply transition-all duration-150 ease-out;
+}
