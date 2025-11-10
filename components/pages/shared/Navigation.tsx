@@ -27,7 +27,6 @@ import {
 import { AuthModal } from "@/components/pages/auth/AuthModal"
 import { useAuthStore } from "@/store/auth"
 import { NotificationBell } from "@/components/NotificationBell"
-import StarBorder from "@/components/ui/StarBorder"
 
 interface NavigationProps {
   currentPage?: string;
@@ -107,7 +106,7 @@ export function Navigation({}: NavigationProps = {}) {
               <Link
                 href="/referral"
                 prefetch={true}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-full shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all hover:scale-105"
               >
                 <Gift className="h-4 w-4" />
                 Refer & Earn
@@ -183,27 +182,20 @@ export function Navigation({}: NavigationProps = {}) {
                 </>
               ) : (
                 <>
-                  <StarBorder
-                    as="button"
+                  <Button
                     onClick={handleAuthModal}
-                    color="#6366F1"
-                    speed="6s"
-                    className="hover:scale-105 transition-transform duration-150"
+                    variant="outline"
+                    className="border-2 border-purple-500/50 bg-transparent hover:bg-purple-500/10 text-white font-semibold px-6 py-2 rounded-full transition-all hover:scale-105 hover:border-purple-400"
                   >
-                    <span className="flex items-center gap-2">
-                      <LogIn className="h-4 w-4" />
-                      Login
-                    </span>
-                  </StarBorder>
-                  <StarBorder
-                    as="button"
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Login
+                  </Button>
+                  <Button
                     onClick={handleAuthModal}
-                    color="#A855F7"
-                    speed="5s"
-                    className="hover:scale-105 transition-transform duration-150"
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2 rounded-full shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all hover:scale-105 border-0"
                   >
                     Get Started
-                  </StarBorder>
+                  </Button>
                 </>
               )}
             </div>
@@ -235,7 +227,7 @@ export function Navigation({}: NavigationProps = {}) {
                 ))}
                 {/* Referral Link for all users */}
                 <Link href="/referral" prefetch={true} onClick={closeMenu}>
-                  <div className="inline-flex items-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all">
+                  <div className="inline-flex items-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-full shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all">
                     <Gift className="h-4 w-4" />
                     Refer & Earn
                   </div>
@@ -264,15 +256,15 @@ export function Navigation({}: NavigationProps = {}) {
                   ) : (
                     <>
                       <Button 
-                        variant="ghost" 
-                        className="w-full text-white hover:bg-white/10 justify-start"
+                        variant="outline" 
+                        className="w-full border-2 border-purple-500/50 bg-transparent hover:bg-purple-500/10 text-white font-semibold rounded-full justify-start transition-all"
                         onClick={handleAuthModal}
                       >
                         <LogIn className="h-4 w-4 mr-2" />
                         Login
                       </Button>
                       <Button 
-                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 justify-start"
+                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-full shadow-lg shadow-purple-500/30 border-0 justify-start transition-all"
                         onClick={handleAuthModal}
                       >
                         Get Started
