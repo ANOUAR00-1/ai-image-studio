@@ -69,6 +69,7 @@ export function ReferralPage() {
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isUnauthorized, setIsUnauthorized] = useState(false)
 
   useEffect(() => {
     fetchReferralData()
@@ -82,9 +83,9 @@ export function ReferralPage() {
       })
 
       if (response.status === 401) {
-        // User not logged in - redirect to login
-        toast.error('Please login to access referrals')
-        setTimeout(() => router.push('/'), 2000)
+        // User not logged in - show login prompt
+        setIsUnauthorized(true)
+        setLoading(false)
         return
       }
 
@@ -134,10 +135,47 @@ export function ReferralPage() {
     window.open(shareUrls[platform], '_blank', 'width=600,height=400')
   }
 
+  // Show login required page
+  if (isUnauthorized) {
+    return (
+      <div className="min-h-screen bg-[#0a0118] flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center max-w-md"
+        >
+          <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/50">
+            <Gift className="w-12 h-12 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold text-white mb-4">
+            Login Required
+          </h1>
+          <p className="text-gray-400 text-lg mb-8">
+            Please login to access your referral dashboard and start earning credits!
+          </p>
+          <div className="space-y-3">
+            <Button
+              onClick={() => router.push('/')}
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-6 text-lg shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 transition-all"
+            >
+              Go to Home & Login
+            </Button>
+            <p className="text-gray-500 text-sm">
+              Don&apos;t have an account? Sign up to get started!
+            </p>
+          </div>
+        </motion.div>
+      </div>
+    )
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0a0118] flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500 border-t-transparent"></div>
+          <div className="text-white">Loading your referral dashboard...</div>
+        </div>
       </div>
     )
   }
