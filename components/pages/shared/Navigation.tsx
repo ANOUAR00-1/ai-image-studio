@@ -110,6 +110,14 @@ export function Navigation({}: NavigationProps = {}) {
               {isLoggedIn ? (
                 <>
                   <NotificationBell />
+                  {/* Referral Button */}
+                  <Button
+                    onClick={() => router.push('/referral')}
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all"
+                  >
+                    <Gift className="h-4 w-4 mr-2" />
+                    Refer & Earn
+                  </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button 
@@ -234,6 +242,14 @@ export function Navigation({}: NavigationProps = {}) {
                         >
                           <User className="h-4 w-4 mr-2" />
                           Dashboard
+                        </Button>
+                      </Link>
+                      <Link href="/referral" prefetch={true} onClick={closeMenu}>
+                        <Button 
+                          className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 justify-start shadow-lg shadow-purple-500/30"
+                        >
+                          <Gift className="h-4 w-4 mr-2" />
+                          Refer & Earn Credits
                         </Button>
                       </Link>
                       <Button 
