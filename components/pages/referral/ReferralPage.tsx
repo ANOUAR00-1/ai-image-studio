@@ -156,7 +156,7 @@ export function ReferralPage() {
           <div className="space-y-3">
             <Button
               onClick={() => router.push('/')}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-6 text-lg shadow-lg shadow-purple-500/50 hover:shadow-purple-500/70 transition-all"
+              className="w-full btn-primary py-6 text-lg"
             >
               Go to Home & Login
             </Button>
@@ -294,7 +294,7 @@ export function ReferralPage() {
               </div>
               <Button
                 onClick={() => copyToClipboard(data.referralLink)}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 px-6"
+                className="btn-primary px-6"
               >
                 {copied ? (
                   <>

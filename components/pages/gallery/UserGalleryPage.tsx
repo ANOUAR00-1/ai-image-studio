@@ -111,8 +111,8 @@ export function UserGalleryPage() {
                 size="sm"
                 className={
                   filter === type
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600'
-                    : 'border-white/20 text-white hover:bg-white/10'
+                    ? 'btn-primary'
+                    : 'btn-secondary'
                 }
               >
                 {type === 'all' ? <Filter className="h-4 w-4" /> : 
@@ -161,7 +161,7 @@ export function UserGalleryPage() {
           <p className="text-gray-400 mb-6">Start creating amazing AI content!</p>
           <Button
             onClick={() => window.location.href = '/image-tools'}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+            className="btn-primary"
           >
             Create Your First Image
           </Button>

@@ -94,7 +94,7 @@ export function AdminRoute({ children }: AdminRouteProps) {
           </p>
           <div className="flex gap-4 justify-center">
             <Link href="/dashboard">
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white">
+              <Button className="btn-primary">
                 Go to Dashboard
               </Button>
             </Link>

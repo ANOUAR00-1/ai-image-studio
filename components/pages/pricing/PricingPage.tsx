@@ -198,7 +198,7 @@ export default function PricingPage() {
               onClick={() => setBillingCycle('monthly')}
               className={`px-8 py-3 rounded-full font-medium transition-all duration-300 ${
                 billingCycle === 'monthly'
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50'
+                  ? 'btn-primary'
                   : 'text-gray-300 hover:text-white'
               }`}
             >
@@ -208,7 +208,7 @@ export default function PricingPage() {
               onClick={() => setBillingCycle('credits')}
               className={`px-8 py-3 rounded-full font-medium transition-all duration-300 ${
                 billingCycle === 'credits'
-                  ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50'
+                  ? 'btn-primary'
                   : 'text-gray-300 hover:text-white'
               }`}
             >
@@ -240,7 +240,7 @@ export default function PricingPage() {
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg shadow-purple-500/50">
+                    <span className="btn-primary inline-block text-sm">
                       Most Popular
                     </span>
                   </div>
@@ -449,7 +449,7 @@ export default function PricingPage() {
                 <div className="space-y-3">
                   <button
                     onClick={() => router.push('/')}
-                    className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-500/50"
+                    className="w-full btn-primary py-4 font-bold rounded-xl"
                   >
                     Login / Sign Up
                   </button>

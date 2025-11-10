@@ -114,7 +114,7 @@ export function BlogPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-12">
-                <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0 px-6 py-2">
+                <Badge className="btn-primary inline-flex px-6 py-2">
                   Featured Article
                 </Badge>
               </div>
@@ -158,7 +158,7 @@ export function BlogPage() {
                     ))}
                   </div>
 
-                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50">
+                  <Button className="btn-primary">
                     Read Full Article
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
@@ -178,8 +178,8 @@ export function BlogPage() {
                 key={idx}
                 variant={idx === 0 ? "default" : "outline"}
                 className={idx === 0
-                  ? "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
-                  : "bg-white/5 border-white/20 text-white hover:bg-white/10 hover:border-purple-500/50"
+                  ? "btn-primary"
+                  : "btn-secondary"
                 }
               >
                 {category}
@@ -261,7 +261,7 @@ export function BlogPage() {
                   placeholder="Enter your email"
                   className="flex-1 px-6 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder:text-gray-400 focus:outline-none focus:border-purple-500/50 backdrop-blur-sm"
                 />
-                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50 whitespace-nowrap">
+                <Button className="btn-primary whitespace-nowrap">
                   Subscribe
                 </Button>
               </div>

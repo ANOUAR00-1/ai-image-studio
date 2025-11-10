@@ -65,7 +65,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="flex gap-3 justify-center">
               <Button
                 onClick={() => this.setState({ hasError: false })}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                className="btn-primary"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Try Again

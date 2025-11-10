@@ -207,8 +207,8 @@ export function HistoryPage() {
               variant={filterType === 'all' ? 'default' : 'outline'}
               onClick={() => setFilterType('all')}
               className={filterType === 'all' 
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
-                : 'bg-white/5 border-white/10 text-white hover:bg-white/10'
+                ? 'btn-primary' 
+                : 'btn-secondary'
               }
             >
               <Filter className="w-4 h-4 mr-2" />
@@ -218,8 +218,8 @@ export function HistoryPage() {
               variant={filterType === 'image' ? 'default' : 'outline'}
               onClick={() => setFilterType('image')}
               className={filterType === 'image' 
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
-                : 'bg-white/5 border-white/10 text-white hover:bg-white/10'
+                ? 'btn-primary' 
+                : 'btn-secondary'
               }
             >
               <ImageIcon className="w-4 h-4 mr-2" />
@@ -229,8 +229,8 @@ export function HistoryPage() {
               variant={filterType === 'video' ? 'default' : 'outline'}
               onClick={() => setFilterType('video')}
               className={filterType === 'video' 
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white' 
-                : 'bg-white/5 border-white/10 text-white hover:bg-white/10'
+                ? 'btn-primary' 
+                : 'btn-secondary'
               }
             >
               <Video className="w-4 h-4 mr-2" />

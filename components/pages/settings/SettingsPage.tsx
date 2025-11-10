@@ -127,7 +127,7 @@ export function Settings() {
                   />
                   <p className="text-xs text-gray-400">Email cannot be changed</p>
                 </div>
-                <Button className="bg-gradient-to-r from-purple-600 to-pink-600">
+                <Button className="btn-primary">
                   Save Changes
                 </Button>
               </CardContent>
@@ -180,7 +180,7 @@ export function Settings() {
                   </div>
                 </div>
 
-                <Button onClick={handleSaveNotifications} disabled={loading} className="bg-gradient-to-r from-purple-600 to-pink-600">
+                <Button onClick={handleSaveNotifications} disabled={loading} className="btn-primary">
                   Save Preferences
                 </Button>
               </CardContent>
@@ -212,7 +212,7 @@ export function Settings() {
                     <Input type="password" placeholder="Current password" className="bg-white/5 border-white/10 text-white" />
                     <Input type="password" placeholder="New password" className="bg-white/5 border-white/10 text-white" />
                     <Input type="password" placeholder="Confirm new password" className="bg-white/5 border-white/10 text-white" />
-                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600">Update Password</Button>
+                    <Button className="btn-primary">Update Password</Button>
                   </div>
                 </div>
               </CardContent>
