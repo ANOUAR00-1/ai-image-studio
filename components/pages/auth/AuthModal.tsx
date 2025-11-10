@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -26,6 +26,7 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [otp, setOtp] = useState(['', '', '', '', '', ''])
+  const [referralCode, setReferralCode] = useState<string>('')
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -34,6 +35,32 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
   
   const { login } = useAuthStore()
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Check for referral code in URL params
+  useEffect(() => {
+    const refParam = searchParams.get('ref')
+    if (refParam && !isLogin) {
+      setReferralCode(refParam.toUpperCase())
+      validateReferralCode(refParam)
+    }
+  }, [searchParams, isLogin])
+
+  const validateReferralCode = async (code: string) => {
+    try {
+      const response = await fetch('/api/referral/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ referralCode: code })
+      })
+      const data = await response.json()
+      if (data.valid) {
+        toast.success(data.message)
+      }
+    } catch (error) {
+      console.error('Referral validation error:', error)
+    }
+  }
 
   const handleOtpVerify = async () => {
     const otpCode = otp.join('')
@@ -199,7 +226,10 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          referralCode: !isLogin && referralCode ? referralCode : undefined
+        }),
         credentials: 'include' // Important: include cookies
       })
       

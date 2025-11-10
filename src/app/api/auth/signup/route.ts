@@ -8,7 +8,7 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
     const body = await request.json()
     console.log('Signup request received:', { email: body.email, name: body.name })
     
-    const { email, password, name } = body
+    const { email, password, name, referralCode } = body
 
     // Validate input
     if (!email || !password || !name) {
@@ -46,6 +46,7 @@ export const POST = withRateLimit(RateLimits.AUTH, async (request: NextRequest) 
       options: {
         data: {
           name: name,
+          referral_code: referralCode || undefined, // Include referral code if provided
         },
         // Use email OTP instead of magic link
         emailRedirectTo: undefined,

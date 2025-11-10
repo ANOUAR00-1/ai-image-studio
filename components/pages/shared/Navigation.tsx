@@ -21,7 +21,8 @@ import {
   LogOut,
   Settings,
   LayoutDashboard,
-  CreditCard
+  CreditCard,
+  Gift
 } from "lucide-react"
 import { AuthModal } from "@/components/pages/auth/AuthModal"
 import { useAuthStore } from "@/store/auth"
@@ -152,6 +153,13 @@ export function Navigation({}: NavigationProps = {}) {
                       >
                         <CreditCard className="h-4 w-4 mr-2" />
                         Billing
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => router.push('/referral')}
+                        className="text-gray-300 focus:text-white focus:bg-white/10 cursor-pointer"
+                      >
+                        <Gift className="h-4 w-4 mr-2" />
+                        Referrals
                       </DropdownMenuItem>
                       <DropdownMenuSeparator className="bg-white/10" />
                       <DropdownMenuItem 
