@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -35,16 +35,21 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
   
   const { login } = useAuthStore()
   const router = useRouter()
-  const searchParams = useSearchParams()
 
-  // Check for referral code in URL params
+  // Check for referral code in URL params (safe for SSR)
   useEffect(() => {
-    const refParam = searchParams.get('ref')
-    if (refParam && !isLogin) {
-      setReferralCode(refParam.toUpperCase())
-      validateReferralCode(refParam)
+    try {
+      const urlParams = new URLSearchParams(window.location.search)
+      const refParam = urlParams.get('ref')
+      if (refParam && !isLogin) {
+        setReferralCode(refParam.toUpperCase())
+        validateReferralCode(refParam)
+      }
+    } catch {
+      // Ignore errors during SSR
+      console.log('Referral detection skipped during SSR')
     }
-  }, [searchParams, isLogin])
+  }, [isLogin])
 
   const validateReferralCode = async (code: string) => {
     try {
