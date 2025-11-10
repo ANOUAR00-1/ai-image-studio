@@ -36,8 +36,18 @@ export async function GET() {
       .single()
 
     if (profileError) {
+      console.error('Profile fetch error:', profileError)
       return NextResponse.json(
-        { error: 'Failed to fetch profile' },
+        { error: 'Failed to fetch profile', details: profileError.message },
+        { status: 500 }
+      )
+    }
+
+    // Check if referral_code column exists
+    if (!profile.referral_code) {
+      console.error('Profile missing referral_code - migration may not have run')
+      return NextResponse.json(
+        { error: 'Referral system not initialized. Please contact support.' },
         { status: 500 }
       )
     }
@@ -47,11 +57,9 @@ export async function GET() {
       .rpc('get_referral_stats', { p_user_id: user.id })
 
     if (statsError) {
-      console.error('Stats error:', statsError)
-      return NextResponse.json(
-        { error: 'Failed to fetch referral stats' },
-        { status: 500 }
-      )
+      console.error('Stats RPC error:', statsError)
+      // Don't fail if stats fail - continue with empty stats
+      console.warn('Continuing with empty stats')
     }
 
     // Get list of referrals

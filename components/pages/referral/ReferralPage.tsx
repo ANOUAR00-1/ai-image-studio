@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { toast } from 'sonner'
@@ -63,12 +64,15 @@ interface ReferralData {
 }
 
 export function ReferralPage() {
+  const router = useRouter()
   const [data, setData] = useState<ReferralData | null>(null)
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchReferralData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const fetchReferralData = async () => {
@@ -77,14 +81,26 @@ export function ReferralPage() {
         credentials: 'include'
       })
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch referral data')
+      if (response.status === 401) {
+        // User not logged in - redirect to login
+        toast.error('Please login to access referrals')
+        setTimeout(() => router.push('/'), 2000)
+        return
       }
 
-      const data = await response.json()
-      setData(data)
-    } catch (error) {
-      console.error('Referral fetch error:', error)
+      const responseData = await response.json()
+
+      if (!response.ok) {
+        console.error('API Error:', responseData)
+        setError(responseData.error || 'Failed to load referral data')
+        toast.error(responseData.error || 'Failed to load referral information')
+        return
+      }
+
+      setData(responseData)
+    } catch (err) {
+      console.error('Referral fetch error:', err)
+      setError('Network error - please try again')
       toast.error('Failed to load referral information')
     } finally {
       setLoading(false)
@@ -126,10 +142,23 @@ export function ReferralPage() {
     )
   }
 
+  if (!data && error) {
+    return (
+      <div className="min-h-screen bg-[#0a0118] flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-red-400 text-xl mb-4">⚠️ {error}</div>
+          <Button onClick={fetchReferralData} className="bg-purple-600 hover:bg-purple-700">
+            Try Again
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   if (!data) {
     return (
       <div className="min-h-screen bg-[#0a0118] flex items-center justify-center">
-        <div className="text-white">Failed to load referral data</div>
+        <div className="text-white">Initializing referral system...</div>
       </div>
     )
   }
