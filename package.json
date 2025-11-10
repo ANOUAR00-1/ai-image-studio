@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:clean": "rimraf .next && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "analyze": "cross-env ANALYZE=true next build",
     "test:perf": "npm run build && npm start",
-    "build:prod": "cross-env NODE_ENV=production next build"
+    "build:prod": "cross-env NODE_ENV=production next build",
+    "clean": "rimraf .next node_modules/.cache"
   },
   "dependencies": {
     "@huggingface/inference": "^4.11.3",
