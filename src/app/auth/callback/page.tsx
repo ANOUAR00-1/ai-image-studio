@@ -15,12 +15,61 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleCallback = async () => {
       try {
-        // Get the hash from the URL
+        // Get the hash and search params from URL (OAuth uses search params)
         const hashParams = new URLSearchParams(window.location.hash.substring(1))
-        const accessToken = hashParams.get('access_token')
-        const refreshToken = hashParams.get('refresh_token')
+        const searchParams = new URLSearchParams(window.location.search)
+        
+        const accessToken = hashParams.get('access_token') || searchParams.get('access_token')
+        const refreshToken = hashParams.get('refresh_token') || searchParams.get('refresh_token')
         const type = hashParams.get('type')
+        const code = searchParams.get('code')
 
+        // Handle OAuth callback (GitHub/Google)
+        if (code) {
+          setMessage('Completing OAuth sign-in...')
+          
+          const { data: sessionData, error: exchangeError } = await supabase.auth.exchangeCodeForSession(code)
+          
+          if (exchangeError) {
+            throw exchangeError
+          }
+
+          if (!sessionData.user) {
+            throw new Error('No user data received')
+          }
+
+          // Get user profile
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', sessionData.user.id)
+            .single()
+
+          // Save to localStorage
+          localStorage.setItem('access_token', sessionData.session.access_token)
+          localStorage.setItem('supabase_session', JSON.stringify(sessionData.session))
+
+          // Login to store
+          login({
+            id: sessionData.user.id,
+            email: sessionData.user.email!,
+            name: profile?.name || sessionData.user.user_metadata?.name || sessionData.user.user_metadata?.full_name,
+            plan: profile?.plan || 'free',
+            credits: profile?.credits || 10,
+            accessToken: sessionData.session.access_token,
+          })
+
+          setStatus('success')
+          setMessage('Successfully signed in! Redirecting to dashboard...')
+
+          setTimeout(() => {
+            router.push('/dashboard')
+          }, 2000)
+          
+          return
+        }
+
+        // Handle email verification callback
         if (type === 'signup' && accessToken && refreshToken) {
           // Set the session
           const { data: sessionData, error: sessionError } = await supabase.auth.setSession({

@@ -288,8 +288,33 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
     }
   }
 
-  const handleSocialAuth = (provider: string) => {
-    toast.info(`${provider} authentication coming soon!`)
+  const handleSocialAuth = async (provider: 'github' | 'google') => {
+    try {
+      setLoading(true)
+      
+      const response = await fetch('/api/auth/oauth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        toast.error(data.error || `Failed to authenticate with ${provider}`)
+        return
+      }
+
+      // Redirect to OAuth provider
+      if (data.url) {
+        window.location.href = data.url
+      }
+    } catch (error) {
+      console.error('OAuth error:', error)
+      toast.error('Authentication failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -500,8 +525,9 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
                   <Button 
                     type="button"
                     variant="outline" 
-                    onClick={() => handleSocialAuth("GitHub")}
-                    className="h-11 bg-[#1a0f2e] border-[#2d1b4e] text-white hover:bg-[#2d1b4e] hover:border-purple-500/50 rounded-xl transition-all"
+                    onClick={() => handleSocialAuth("github")}
+                    disabled={loading}
+                    className="h-11 bg-[#1a0f2e] border-[#2d1b4e] text-white hover:bg-[#2d1b4e] hover:border-purple-500/50 rounded-xl transition-all disabled:opacity-50"
                   >
                     <Github className="mr-2 h-5 w-5" />
                     GitHub
@@ -509,8 +535,9 @@ export function AuthModal({ open, onOpenChange }: { open: boolean; onOpenChange:
                   <Button 
                     type="button"
                     variant="outline"
-                    onClick={() => handleSocialAuth("Google")}
-                    className="h-11 bg-[#1a0f2e] border-[#2d1b4e] text-white hover:bg-[#2d1b4e] hover:border-purple-500/50 rounded-xl transition-all"
+                    onClick={() => handleSocialAuth("google")}
+                    disabled={loading}
+                    className="h-11 bg-[#1a0f2e] border-[#2d1b4e] text-white hover:bg-[#2d1b4e] hover:border-purple-500/50 rounded-xl transition-all disabled:opacity-50"
                   >
                     <Chrome className="mr-2 h-5 w-5" />
                     Google
