@@ -52,16 +52,16 @@
 ### 🎯 **Core Color Palette** (Production-Ready)
 
 ```css
-/* === PRIMARY COLORS (Love Couple Theme 💕) === */
---color-primary: #ec4899;           /* Pink 500 - Main brand */
---color-primary-hover: #db2777;     /* Pink 600 - Hover states */
---color-primary-light: #f472b6;     /* Pink 400 - Accents */
---color-primary-dark: #be185d;      /* Pink 700 - Deep states */
+/* === PRIMARY COLORS (Love Couple Theme 💙❤️) === */
+--color-primary: #3a6186;           /* Blue Teal - Main brand */
+--color-primary-hover: #2a4d6b;     /* Darker Blue - Hover states */
+--color-primary-light: #5b8fc4;     /* Lighter Blue - Accents */
+--color-primary-dark: #1f3a52;      /* Deep Blue - Deep states */
 
 /* === SECONDARY COLORS === */
---color-secondary: #e11d48;         /* Rose 600 - Gradient pair */
---color-secondary-hover: #be123c;   /* Rose 700 - Hover */
---color-secondary-light: #f43f5e;   /* Rose 500 - Accents */
+--color-secondary: #89253e;         /* Burgundy Wine - Gradient pair */
+--color-secondary-hover: #6b1d2f;   /* Darker Burgundy - Hover */
+--color-secondary-light: #c94b6b;   /* Lighter Burgundy - Accents */
 
 /* === BACKGROUND SYSTEM === */
 --bg-primary: #0a0118;              /* Main dark background */
@@ -76,21 +76,21 @@
 --text-disabled: #6b7280;           /* Disabled (gray-500) */
 
 /* === BORDER SYSTEM === */
---border-default: rgba(236, 72, 153, 0.2);   /* pink-500/20 */
---border-hover: rgba(236, 72, 153, 0.4);     /* pink-500/40 */
---border-active: rgba(236, 72, 153, 0.6);    /* pink-500/60 */
+--border-default: rgba(137, 37, 62, 0.2);    /* burgundy/20 */
+--border-hover: rgba(137, 37, 62, 0.4);      /* burgundy/40 */
+--border-active: rgba(137, 37, 62, 0.6);     /* burgundy/60 */
 --border-subtle: rgba(255, 255, 255, 0.1);   /* white/10 */
 
-/* === GRADIENTS (Love Couple 💕) === */
---gradient-primary: linear-gradient(to right, #ec4899, #e11d48);     /* pink-500 -> rose-600 */
---gradient-primary-hover: linear-gradient(to right, #db2777, #be123c); /* pink-600 -> rose-700 */
+/* === GRADIENTS (Love Couple 💙❤️) === */
+--gradient-primary: linear-gradient(to right, #3a6186, #89253e);     /* blue-teal -> burgundy */
+--gradient-primary-hover: linear-gradient(to right, #2a4d6b, #6b1d2f); /* darker blue -> darker burgundy */
 --gradient-background: linear-gradient(135deg, #0a0118 0%, #1a0f2e 50%, #0a0118 100%);
 --gradient-overlay: linear-gradient(to bottom right, #0f0520, #1a0b2e, #0a0118);
 
 /* === SHADOWS (GLOW EFFECTS) === */
---shadow-pink-sm: 0 0 20px rgba(236, 72, 153, 0.3);
---shadow-pink-md: 0 0 40px rgba(236, 72, 153, 0.5);
---shadow-pink-lg: 0 0 60px rgba(236, 72, 153, 0.7);
+--shadow-burgundy-sm: 0 0 20px rgba(137, 37, 62, 0.3);
+--shadow-burgundy-md: 0 0 40px rgba(137, 37, 62, 0.5);
+--shadow-burgundy-lg: 0 0 60px rgba(137, 37, 62, 0.7);
 
 /* === STATUS COLORS === */
 --color-success: #10b981;           /* Green 500 */

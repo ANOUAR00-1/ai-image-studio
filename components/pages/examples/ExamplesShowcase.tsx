@@ -98,7 +98,7 @@ export function ExamplesShowcase() {
             </p>
 
             <Link href="/image-tools">
-              <Button className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white border-0 shadow-lg shadow-pink-500/50 text-lg px-8 py-6 h-auto">
+              <Button className="text-white border-0 shadow-lg hover:shadow-xl text-lg px-8 py-6 h-auto" style={{ background: 'linear-gradient(to right, #3a6186, #89253e)' }}>
                 Start Creating
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>

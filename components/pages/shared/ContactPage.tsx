@@ -240,7 +240,8 @@ export function ContactPage() {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold px-8 py-3 rounded-lg flex items-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed transition"
+                      className="text-white font-semibold px-8 py-3 rounded-lg flex items-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg hover:shadow-xl"
+                      style={{ background: loading ? '#555' : 'linear-gradient(to right, #3a6186, #89253e)' }}
                     >
                       <Send className="w-4 h-4" />
                       {loading ? 'Sending...' : 'Send Message'}

@@ -156,7 +156,7 @@ export function GettingStartedDocs() {
               </p>
               <div className="flex flex-wrap gap-4 justify-center">
                 <Link href="/image-tools">
-                  <Button className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white border-0 shadow-lg shadow-pink-500/50">
+                  <Button className="text-white border-0 shadow-lg hover:shadow-xl" style={{ background: 'linear-gradient(to right, #3a6186, #89253e)' }}>
                     Start Creating
                     <ArrowRight className="ml-2 w-4 h-4" />
                   </Button>
