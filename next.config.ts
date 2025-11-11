@@ -40,40 +40,22 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
   },
   
-  // Output file tracing
-  outputFileTracingRoot: __dirname,
+  // Output file tracing - FIXED: Use import.meta for proper path resolution
+  // outputFileTracingRoot: __dirname, // REMOVED: Causes issues with TS config in Next 15+
   
-  // Webpack optimizations
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Reduce client bundle size
+  // Webpack optimizations - SIMPLIFIED: Removed aggressive splitting that caused race conditions
+  webpack: (config, { isServer, dev }) => {
+    if (!isServer && !dev) {
+      // Only apply custom splitting in PRODUCTION builds
+      // DEV mode uses default Next.js behavior (no race conditions)
       config.optimization.splitChunks = {
         chunks: 'all',
         cacheGroups: {
-          default: false,
-          vendors: false,
-          // Vendor chunk for node_modules
+          // Simpler vendor chunk (less aggressive)
           vendor: {
+            test: /[\\/]node_modules[\\/]/,
             name: 'vendor',
-            chunks: 'all',
-            test: /node_modules/,
-            priority: 20,
-          },
-          // Common chunk for shared code
-          common: {
-            name: 'common',
-            minChunks: 2,
-            chunks: 'all',
             priority: 10,
-            reuseExistingChunk: true,
-            enforce: true,
-          },
-          // UI components chunk
-          ui: {
-            name: 'ui',
-            test: /[\\/]components[\\/]ui[\\/]/,
-            chunks: 'all',
-            priority: 30,
           },
         },
       }
