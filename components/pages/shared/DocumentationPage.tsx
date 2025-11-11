@@ -131,7 +131,7 @@ export function DocumentationPage() {
                 </div>
                 <div className="text-center pt-6">
                   <Link href="/documentation/getting-started">
-                    <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50">
+                    <Button className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white border-0 shadow-lg shadow-pink-500/50">
                       Start Your Journey
                       <ChevronRight className="ml-2 w-4 h-4" />
                     </Button>
@@ -230,7 +230,7 @@ export function DocumentationPage() {
                   </div>
                 </div>
                 <Link href="/documentation/api">
-                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0 shadow-lg shadow-purple-500/50">
+                  <Button className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white border-0 shadow-lg shadow-pink-500/50">
                     View API Documentation
                     <ExternalLink className="ml-2 w-4 h-4" />
                   </Button>

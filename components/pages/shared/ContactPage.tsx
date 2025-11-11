@@ -240,7 +240,7 @@ export function ContactPage() {
                     <Button
                       type="submit"
                       disabled={loading}
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-8 py-3 rounded-lg flex items-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed transition"
+                      className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold px-8 py-3 rounded-lg flex items-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed transition"
                     >
                       <Send className="w-4 h-4" />
                       {loading ? 'Sending...' : 'Send Message'}

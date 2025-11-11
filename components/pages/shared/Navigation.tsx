@@ -104,7 +104,7 @@ export function Navigation({}: NavigationProps = {}) {
               <Link
                 href="/referral"
                 prefetch={true}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-full shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold rounded-full shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 transition-all hover:scale-105"
               >
                 <Gift className="h-4 w-4" />
                 Refer & Earn
@@ -190,7 +190,7 @@ export function Navigation({}: NavigationProps = {}) {
                   </Button>
                   <Button
                     onClick={handleAuthModal}
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-6 py-2 rounded-full shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all hover:scale-105 border-0"
+                    className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold px-6 py-2 rounded-full shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 transition-all hover:scale-105 border-0"
                   >
                     Get Started
                   </Button>
@@ -225,7 +225,7 @@ export function Navigation({}: NavigationProps = {}) {
                 ))}
                 {/* Referral Link for all users */}
                 <Link href="/referral" prefetch={true} onClick={closeMenu}>
-                  <div className="inline-flex items-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-full shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all">
+                  <div className="inline-flex items-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold rounded-full shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50 transition-all">
                     <Gift className="h-4 w-4" />
                     Refer & Earn
                   </div>
@@ -262,7 +262,7 @@ export function Navigation({}: NavigationProps = {}) {
                         Login
                       </Button>
                       <Button 
-                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-full shadow-lg shadow-purple-500/30 border-0 justify-start transition-all"
+                        className="w-full bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 text-white font-semibold rounded-full shadow-lg shadow-pink-500/30 border-0 justify-start transition-all"
                         onClick={handleAuthModal}
                       >
                         Get Started
