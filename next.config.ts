@@ -20,10 +20,15 @@ const nextConfig: NextConfig = {
       'clsx',
       'tailwind-merge',
     ],
-    // Speed up navigation
+    // ⚡ Speed up navigation
     optimizeCss: true,
     scrollRestoration: true,
+    // 🚀 Preload more aggressively for instant navigation
+    ppr: false, // Keep false for now (experimental)
   },
+  
+  // ⚡ Faster page transitions
+  reactStrictMode: true,
   
   // SwcMinify for better compression
   swcMinify: true,

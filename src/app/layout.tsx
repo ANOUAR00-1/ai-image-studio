@@ -8,11 +8,17 @@ import { Toaster } from "sonner";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: 'swap', // ⚡ Show text immediately with fallback font
+  preload: true,
+  fallback: ['system-ui', 'arial'],
 });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: 'swap', // ⚡ Show text immediately with fallback font
+  preload: true,
+  fallback: ['Courier New', 'monospace'],
 });
 
 export const metadata: Metadata = {

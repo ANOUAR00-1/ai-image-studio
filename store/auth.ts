@@ -69,7 +69,7 @@ export const useAuthStore = create<AuthState>()(
       
       initialize: async () => {
         try {
-          // Clean up legacy localStorage tokens (security improvement)
+          // Clean up legacy localStorage tokens (security improvement) - sync operation, fast
           if (typeof window !== 'undefined') {
             const legacyKeys = ['access_token', 'supabase_session', 'sb-qwambovteljtmkruyvfd-auth-token'];
             legacyKeys.forEach(key => {
@@ -79,48 +79,51 @@ export const useAuthStore = create<AuthState>()(
             });
           }
 
-          // If we have persisted user data, use it immediately while verifying in background
+          // If we have persisted user data, use it immediately and show UI
           const currentState = get();
           if (currentState.user && currentState.isLoggedIn) {
-            // PRODUCTION-SECURE: No token restoration (httpOnly cookies only)
-            
-            // User data is already loaded from persistence, just verify in background
+            // ⚡ INSTANT: Set loading to false immediately - show UI right away
             set({ loading: false });
             
-            // Verify session in background and update if needed
+            // 🔄 BACKGROUND: Verify session in background (non-blocking)
             fetch('/api/auth/me', {
-              credentials: 'include' // Include httpOnly cookies
+              credentials: 'include'
             }).then(async (response) => {
               if (response.ok) {
                 const data = await response.json();
                 set({ user: data.user });
               } else {
-                // Session invalid, clear state (no localStorage tokens to remove)
+                // Session invalid, clear state
                 set({ isLoggedIn: false, user: null, accessToken: null });
               }
             }).catch(() => {
-              // Network error, keep cached state
+              // Network error, keep cached state (graceful degradation)
             });
             return;
           }
           
-          // No cached user data, verify session before proceeding
-          const response = await fetch('/api/auth/me', {
-            credentials: 'include' // Include httpOnly cookies
-          });
+          // ⚡ INSTANT: No cached data? Set loading false immediately anyway
+          set({ loading: false });
           
-          if (response.ok) {
-            const data = await response.json();
-            set({ 
-              user: data.user, 
-              isLoggedIn: true,
-              accessToken: null, // No longer storing tokens
-              loading: false 
-            });
-          } else {
-            // No valid session
-            set({ loading: false, isLoggedIn: false, user: null, accessToken: null });
-          }
+          // 🔄 BACKGROUND: Check session in background (non-blocking)
+          fetch('/api/auth/me', {
+            credentials: 'include'
+          }).then(async (response) => {
+            if (response.ok) {
+              const data = await response.json();
+              set({ 
+                user: data.user, 
+                isLoggedIn: true,
+                accessToken: null
+              });
+            } else {
+              // No valid session - already set to false above
+              set({ isLoggedIn: false, user: null, accessToken: null });
+            }
+          }).catch((error) => {
+            console.error('Initialize error:', error);
+            // Keep defaults - already set above
+          });
         } catch (error) {
           console.error('Initialize error:', error);
           set({ loading: false, isLoggedIn: false, user: null, accessToken: null });

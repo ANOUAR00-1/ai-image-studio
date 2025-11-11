@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState, useEffect, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
@@ -36,11 +36,9 @@ export function Navigation({}: NavigationProps = {}) {
   const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const { isLoggedIn, logout, initialize } = useAuthStore()
+  const { isLoggedIn, logout } = useAuthStore()
 
-  useEffect(() => {
-    initialize()
-  }, [initialize])
+  // Auth is initialized in AuthProvider - no need to duplicate here
 
   // Memoize navigation items for performance
   const navItems = [

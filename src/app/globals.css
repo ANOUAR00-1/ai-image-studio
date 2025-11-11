@@ -115,6 +115,51 @@
   }
 }
 
+/* ⚡ INSTANT PAGE TRANSITIONS */
+@view-transition {
+  navigation: auto;
+}
+
+/* Smooth fade transition for page changes */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.2s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Fast page enter animation */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: page-enter 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Reduce animation for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+  
+  .page-enter {
+    animation: none;
+  }
+  
+  * {
+    animation-duration: 0.001s !important;
+    transition-duration: 0.001s !important;
+  }
+}
+
 /* StarBorder Animations */
 @keyframes star-movement-bottom {
   0% {
