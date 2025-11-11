@@ -52,16 +52,16 @@
 ### 🎯 **Core Color Palette** (Production-Ready)
 
 ```css
-/* === PRIMARY COLORS === */
---color-primary: #a855f7;           /* Purple 500 - Main brand */
---color-primary-hover: #9333ea;     /* Purple 600 - Hover states */
---color-primary-light: #c084fc;     /* Purple 400 - Accents */
---color-primary-dark: #7e22ce;      /* Purple 700 - Deep states */
+/* === PRIMARY COLORS (Love Couple Theme 💕) === */
+--color-primary: #ec4899;           /* Pink 500 - Main brand */
+--color-primary-hover: #db2777;     /* Pink 600 - Hover states */
+--color-primary-light: #f472b6;     /* Pink 400 - Accents */
+--color-primary-dark: #be185d;      /* Pink 700 - Deep states */
 
 /* === SECONDARY COLORS === */
---color-secondary: #ec4899;         /* Pink 500 - Gradient pair */
---color-secondary-hover: #db2777;   /* Pink 600 - Hover */
---color-secondary-light: #f472b6;   /* Pink 400 - Accents */
+--color-secondary: #e11d48;         /* Rose 600 - Gradient pair */
+--color-secondary-hover: #be123c;   /* Rose 700 - Hover */
+--color-secondary-light: #f43f5e;   /* Rose 500 - Accents */
 
 /* === BACKGROUND SYSTEM === */
 --bg-primary: #0a0118;              /* Main dark background */
@@ -76,21 +76,21 @@
 --text-disabled: #6b7280;           /* Disabled (gray-500) */
 
 /* === BORDER SYSTEM === */
---border-default: rgba(168, 85, 247, 0.2);   /* purple-500/20 */
---border-hover: rgba(168, 85, 247, 0.4);     /* purple-500/40 */
---border-active: rgba(168, 85, 247, 0.6);    /* purple-500/60 */
+--border-default: rgba(236, 72, 153, 0.2);   /* pink-500/20 */
+--border-hover: rgba(236, 72, 153, 0.4);     /* pink-500/40 */
+--border-active: rgba(236, 72, 153, 0.6);    /* pink-500/60 */
 --border-subtle: rgba(255, 255, 255, 0.1);   /* white/10 */
 
-/* === GRADIENTS (STANDARDIZED) === */
---gradient-primary: linear-gradient(to right, #9333ea, #db2777);     /* purple-600 -> pink-600 */
---gradient-primary-hover: linear-gradient(to right, #7e22ce, #be185d); /* purple-700 -> pink-700 */
+/* === GRADIENTS (Love Couple 💕) === */
+--gradient-primary: linear-gradient(to right, #ec4899, #e11d48);     /* pink-500 -> rose-600 */
+--gradient-primary-hover: linear-gradient(to right, #db2777, #be123c); /* pink-600 -> rose-700 */
 --gradient-background: linear-gradient(135deg, #0a0118 0%, #1a0f2e 50%, #0a0118 100%);
 --gradient-overlay: linear-gradient(to bottom right, #0f0520, #1a0b2e, #0a0118);
 
 /* === SHADOWS (GLOW EFFECTS) === */
---shadow-purple-sm: 0 0 20px rgba(168, 85, 247, 0.3);
---shadow-purple-md: 0 0 40px rgba(168, 85, 247, 0.5);
---shadow-purple-lg: 0 0 60px rgba(168, 85, 247, 0.7);
+--shadow-pink-sm: 0 0 20px rgba(236, 72, 153, 0.3);
+--shadow-pink-md: 0 0 40px rgba(236, 72, 153, 0.5);
+--shadow-pink-lg: 0 0 60px rgba(236, 72, 153, 0.7);
 
 /* === STATUS COLORS === */
 --color-success: #10b981;           /* Green 500 */

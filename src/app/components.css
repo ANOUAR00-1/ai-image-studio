@@ -6,9 +6,9 @@
 /* ===== BUTTONS ===== */
 
 .btn-primary {
-  @apply bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700;
+  @apply bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700;
   @apply text-white font-semibold px-6 py-2.5 rounded-full;
-  @apply shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50;
+  @apply shadow-lg shadow-pink-500/30 hover:shadow-pink-500/50;
   @apply transition-all hover:scale-105;
   @apply border-0;
 }
@@ -88,7 +88,7 @@
 }
 
 .text-gradient {
-  @apply text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400;
+  @apply text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-400;
 }
 
 .text-body {
@@ -124,9 +124,9 @@
 
 .badge-primary {
   @apply inline-flex items-center gap-2;
-  @apply bg-gradient-to-r from-purple-600/20 to-pink-600/20;
-  @apply border border-purple-500/30;
-  @apply text-purple-300 text-sm font-semibold;
+  @apply bg-gradient-to-r from-pink-500/20 to-rose-600/20;
+  @apply border border-pink-500/30;
+  @apply text-pink-300 text-sm font-semibold;
   @apply px-3 py-1 rounded-full;
 }
 
@@ -154,11 +154,11 @@
 /* ===== GRADIENTS ===== */
 
 .gradient-primary {
-  background: linear-gradient(to right, #9333ea, #db2777);
+  background: linear-gradient(to right, #ec4899, #e11d48);
 }
 
 .gradient-primary-hover {
-  background: linear-gradient(to right, #7e22ce, #be185d);
+  background: linear-gradient(to right, #db2777, #be123c);
 }
 
 .gradient-background {
@@ -172,15 +172,15 @@
 /* ===== GLOWS & SHADOWS ===== */
 
 .glow-sm {
-  box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
 }
 
 .glow-md {
-  box-shadow: 0 0 40px rgba(168, 85, 247, 0.5);
+  box-shadow: 0 0 40px rgba(236, 72, 153, 0.5);
 }
 
 .glow-lg {
-  box-shadow: 0 0 60px rgba(168, 85, 247, 0.7);
+  box-shadow: 0 0 60px rgba(236, 72, 153, 0.7);
 }
 
 /* ===== ANIMATIONS ===== */
@@ -191,10 +191,10 @@
 
 @keyframes glow {
   from {
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
   }
   to {
-    box-shadow: 0 0 40px rgba(168, 85, 247, 0.6);
+    box-shadow: 0 0 40px rgba(236, 72, 153, 0.6);
   }
 }
 
